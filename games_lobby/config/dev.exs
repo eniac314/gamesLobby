@@ -52,7 +52,7 @@ config :phoenix, :stacktrace_depth, 20
 config :games_lobby, GamesLobby.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  password: "postgres",
+  password: "rcLRZZQSY9jwqjCu",
   database: "games_lobby_dev",
   hostname: "localhost",
   pool_size: 10
