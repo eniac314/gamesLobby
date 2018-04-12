@@ -22,3 +22,6 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 hexaboard-*.tar
 
+# Elm
+/assets/elm/elm-stuff
+/assets/js/main.js

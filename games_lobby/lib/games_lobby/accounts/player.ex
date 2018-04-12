@@ -9,6 +9,7 @@ defmodule GamesLobby.Accounts.Player do
     field :username, :string, unique: true
     field :password, :string, virtual: true
     field :password_digest, :string
+    field :is_admin, :boolean, default: false
 
     timestamps()
   end
@@ -16,7 +17,7 @@ defmodule GamesLobby.Accounts.Player do
   @doc false
   def changeset(%Player{} = player, attrs) do
     player
-    |> cast(attrs, [:username, :password])
+    |> cast(attrs, [:username, :password, :high_score, :is_admin])
     |> validate_required([:username])
     |> unique_constraint(:username)
     |> validate_length(:password, min: 6, max: 100)

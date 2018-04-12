@@ -8,7 +8,7 @@
   </li>
 
   <li>
-    <strong>Score:</strong>
+    <strong>High score:</strong>
     <%= @player.high_score %>
   </li>
 
