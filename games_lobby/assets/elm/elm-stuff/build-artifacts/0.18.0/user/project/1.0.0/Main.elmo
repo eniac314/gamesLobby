@@ -1,0 +1,200 @@
+var _user$project$Main$debugView = function (model) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_mdgriffith$stylish_elephants$Element$paragraph,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$text(model.authToken),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$paragraph,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$text(model.authSalt),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$paragraph,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$text(model.wsUrl),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$initPhoenixChannel = function (topic) {
+	return _fbonetti$elm_phoenix_socket$Phoenix_Channel$init(topic);
+};
+var _user$project$Main$Flags = F3(
+	function (a, b, c) {
+		return {authToken: a, authSalt: b, wsUrl: c};
+	});
+var _user$project$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {authToken: a, wsUrl: b, authSalt: c, phxSocket: d, log: e, errors: f};
+	});
+var _user$project$Main$ServerError = function (a) {
+	return {ctor: 'ServerError', _0: a};
+};
+var _user$project$Main$JoinChannel = {ctor: 'JoinChannel'};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element$layout,
+		{ctor: '[]'},
+		A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$el,
+					{ctor: '[]'},
+					_mdgriffith$stylish_elephants$Element$text('Hello stylish friend!')),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$debugView(model),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element_Input$button,
+							{ctor: '[]'},
+							{
+								onPress: _elm_lang$core$Maybe$Just(_user$project$Main$JoinChannel),
+								label: _mdgriffith$stylish_elephants$Element$text('Join channel')
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			}));
+};
+var _user$project$Main$ServerMsg = function (a) {
+	return {ctor: 'ServerMsg', _0: a};
+};
+var _user$project$Main$initialSocket = function (flags) {
+	var wsUrlWithAuth = A2(
+		_elm_lang$core$Basics_ops['++'],
+		flags.wsUrl,
+		A2(_elm_lang$core$Basics_ops['++'], '?token=', flags.authToken));
+	return A4(
+		_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+		'greetings',
+		'lobby:chat',
+		_user$project$Main$ServerMsg,
+		_fbonetti$elm_phoenix_socket$Phoenix_Socket$init(wsUrlWithAuth));
+};
+var _user$project$Main$init = function (flags) {
+	return A2(
+		_elm_lang$core$Platform_Cmd_ops['!'],
+		{
+			authToken: flags.authToken,
+			authSalt: flags.authSalt,
+			wsUrl: flags.wsUrl,
+			phxSocket: _user$project$Main$initialSocket(flags),
+			log: '',
+			errors: ''
+		},
+		{ctor: '[]'});
+};
+var _user$project$Main$PhoenixMsg = function (a) {
+	return {ctor: 'PhoenixMsg', _0: a};
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'ServerMsg':
+				var _p1 = A2(
+					_elm_lang$core$Json_Decode$decodeValue,
+					A2(_elm_lang$core$Json_Decode$field, 'content', _elm_lang$core$Json_Decode$string),
+					_p0._0);
+				if (_p1.ctor === 'Ok') {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{log: _p1._0}),
+						{ctor: '[]'});
+				} else {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{errors: _p1._0}),
+						{ctor: '[]'});
+				}
+			case 'JoinChannel':
+				var channel = _user$project$Main$initPhoenixChannel('lobby:chat');
+				var _p2 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, channel, model.phxSocket);
+				var newSocket = _p2._0;
+				var phxCmd = _p2._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{phxSocket: newSocket}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd),
+						_1: {ctor: '[]'}
+					});
+			case 'PhoenixMsg':
+				var _p3 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p0._0, model.phxSocket);
+				var newSocket = _p3._0;
+				var phxCmd = _p3._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{phxSocket: newSocket}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd)
+				};
+			case 'ServerError':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+		}
+	});
+var _user$project$Main$subscriptions = function (model) {
+	return A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, model.phxSocket, _user$project$Main$PhoenixMsg);
+};
+var _user$project$Main$main = _elm_lang$html$Html$programWithFlags(
+	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})(
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (authSalt) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (authToken) {
+					return A2(
+						_elm_lang$core$Json_Decode$andThen,
+						function (wsUrl) {
+							return _elm_lang$core$Json_Decode$succeed(
+								{authSalt: authSalt, authToken: authToken, wsUrl: wsUrl});
+						},
+						A2(_elm_lang$core$Json_Decode$field, 'wsUrl', _elm_lang$core$Json_Decode$string));
+				},
+				A2(_elm_lang$core$Json_Decode$field, 'authToken', _elm_lang$core$Json_Decode$string));
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'authSalt', _elm_lang$core$Json_Decode$string)));
+var _user$project$Main$Default = {ctor: 'Default'};

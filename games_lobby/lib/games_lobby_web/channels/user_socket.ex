@@ -2,7 +2,7 @@ defmodule GamesLobbyWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", GamesLobbyWeb.RoomChannel
+  channel "lobby:*", GamesLobbyWeb.LobbyChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -19,9 +19,17 @@ defmodule GamesLobbyWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  def connect(%{"token" => token}, socket) do
+    case Phoenix.Token.verify(socket, "salt", token, max_age: 86400) do
+      {:ok, player} -> 
+        IO.inspect(socket)
+        {:ok, assign(socket, :current_player, player)}
+      {:error, _reason} -> 
+        :error    
+    end
   end
+
+  def connect(_params, _socket), do: :error
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #

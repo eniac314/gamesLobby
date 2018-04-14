@@ -56,3 +56,6 @@ config :games_lobby, GamesLobby.Repo,
   database: "games_lobby_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :games_lobby, GamesLobbyWeb.Endpoint,
+  ws_url: "ws://localhost:4000/socket/websocket"
