@@ -1,6 +1,8 @@
 defmodule GamesLobbyWeb.UserSocket do
   use Phoenix.Socket
 
+  alias GamesLobby.Accounts.Player
+
   ## Channels
   channel "lobby:*", GamesLobbyWeb.LobbyChannel
 
@@ -19,14 +21,15 @@ defmodule GamesLobbyWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(%{"token" => token}, socket) do
-    case Phoenix.Token.verify(socket, "salt", token, max_age: 86400) do
-      {:ok, player} -> 
-        IO.inspect(socket)
+  def connect(%{"token" => token, "salt" => salt}, socket) do
+    case Phoenix.Token.verify(socket, salt, token, max_age: 86400) do
+      {:ok, %Player{} = player} -> 
+        IO.inspect(player)
+        IO.puts("player decoded")
         {:ok, assign(socket, :current_player, player)}
       {:error, _reason} -> 
-        :error    
-    end
+        :error 
+      end
   end
 
   def connect(_params, _socket), do: :error

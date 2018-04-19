@@ -14,7 +14,7 @@ defmodule GamesLobbyWeb.PlayerSessionController do
     		conn 
     		|> put_flash(:info, "Welcome back!")
     		|> redirect(to: page_path(conn, :index))
-    	{:error, _reason} -> 
+    	{:error, _reason, conn} -> 
     		conn
     		|> put_flash(:error, "Invalid username/password")
     		|> render("new.html")
@@ -43,6 +43,7 @@ defmodule GamesLobbyWeb.PlayerSessionController do
   end
 
   defp sign_out(conn) do 
+    # assign(conn, :current_player, nil)
   	configure_session(conn, drop: true)
   end
 

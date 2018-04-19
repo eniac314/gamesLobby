@@ -9,11 +9,12 @@ defmodule GamesLobbyWeb.PageController do
     conn 
     |> assign(:auth_salt, salt)
     |> assign(:auth_token, generate_auth_token(conn, salt))
+    |> assign(:custom_css, true)
     |> render("index.html")
   end 
 
   defp authenticate(conn, _opts) do 
-	  if conn.assigns.current_user() do 
+	  if conn.assigns.current_player() do 
 	  	conn 
   	else 
 	  	conn
@@ -24,8 +25,9 @@ defmodule GamesLobbyWeb.PageController do
   end
 
  defp generate_auth_token(conn, salt) do
-  current_player = get_session(conn, :current_player)
-  Phoenix.Token.sign(conn, "salt", current_player)
+  current_player = Map.get(conn.assigns, :current_player)
+  # IO.inspect(current_player)
+  Phoenix.Token.sign(conn, salt, current_player)
  end
 
  defp random_string(length) do

@@ -14,6 +14,7 @@ defmodule GamesLobby.Application do
       supervisor(GamesLobbyWeb.Endpoint, []),
       # Start your own worker by calling: GamesLobby.Worker.start_link(arg1, arg2, arg3)
       # worker(GamesLobby.Worker, [arg1, arg2, arg3]),
+      supervisor(GamesLobbyWeb.Presence, []),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

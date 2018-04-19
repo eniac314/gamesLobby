@@ -9,7 +9,7 @@ defmodule GamesLobbyWeb.Plugs.PlayerSignInPlug do
 	
   def call(conn, %Player{} = player) do
     conn 
-    |> assign(:current_user, player)
+    |> assign(:current_player, player)
     |> put_session(:player_id, player.id)
     |> configure_session(renew: true)
   end

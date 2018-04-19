@@ -7,18 +7,28 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hello GamesLobby!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <title>GamesLobby!</title>
+
+    <%= if assigns[:custom_css] do %>
+      <style>
+        #authBlock{
+          float: right;
+          padding: 15px;
+        }
+      </style>
+    <% else %>
+      <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <% end %> 
   </head>
 
   <body>
     <div class="container">
       <header class="header">
-        <nav role="navigation">
+        <nav role="navigation" id="authBlock">
           <ul class="nav nav-pills pull-right">
-           <%= if @current_user do %> 
-             <p class="small">Signed in as <strong><%= @current_user.username %></strong></p>
-             <%= link "Sign Out", to: player_session_path(@conn, :delete, @current_user), method: "delete", class: "btn btn-sm btn-danger" %>
+           <%= if @current_player do %> 
+             <p class="small">Signed in as <strong><%= @current_player.username %></strong></p>
+             <%= link "Sign Out", to: player_session_path(@conn, :delete, @current_player), method: "delete", class: "btn btn-sm btn-danger" %>
            <% else %>  
              <%= link "Sign Up", to: player_path(@conn, :new), class: "btn btn-sm btn-success" %>
              <%= link "Sign In", to: player_session_path(@conn, :new), class: "btn btn-sm btn-primary" %>
@@ -27,9 +37,17 @@
         </nav>
         <span class="logo"></span>
       </header>
+      
+      <%= if assigns[:custom_css] && @current_player do %>
+      
+        <span></span>
+      
+      <% else %>
 
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+        <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      
+      <% end %> 
 
       <main role="main">
         <%= render @view_module, @view_template, assigns %>
