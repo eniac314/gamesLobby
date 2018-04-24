@@ -1,0 +1,491 @@
+var _user$project$MainLobbyView$channelStatusView = F2(
+	function (model, topic) {
+		var _p0 = A2(_elm_lang$core$Dict$get, topic, model.phxSocket.channels);
+		if (_p0.ctor === 'Nothing') {
+			return A2(
+				_mdgriffith$stylish_elephants$Element$el,
+				{ctor: '[]'},
+				_mdgriffith$stylish_elephants$Element$text('no channel corresponding to that topic'));
+		} else {
+			var _p2 = _p0._0;
+			var controlButton = function () {
+				var _p1 = _p2.state;
+				if (_p1.ctor === 'Joined') {
+					return A2(
+						_mdgriffith$stylish_elephants$Element_Input$button,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightRed),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$padding(10),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{
+							onPress: _elm_lang$core$Maybe$Just(
+								_user$project$MainLobbyTypes$LeaveChannel(topic)),
+							label: _mdgriffith$stylish_elephants$Element$text('Leave channel!')
+						});
+				} else {
+					return A2(
+						_mdgriffith$stylish_elephants$Element_Input$button,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$padding(10),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{
+							onPress: _elm_lang$core$Maybe$Just(
+								_user$project$MainLobbyTypes$JoinChannel(topic)),
+							label: _mdgriffith$stylish_elephants$Element$text('Join channel!')
+						});
+				}
+			}();
+			return A2(
+				_mdgriffith$stylish_elephants$Element$column,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$spacing(15),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Channel status: ',
+							_elm_lang$core$Basics$toString(_p2.state))),
+					_1: {
+						ctor: '::',
+						_0: controlButton,
+						_1: {ctor: '[]'}
+					}
+				});
+		}
+	});
+var _user$project$MainLobbyView$debugView = function (model) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_mdgriffith$stylish_elephants$Element$paragraph,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$text(
+						A2(_elm_lang$core$Basics_ops['++'], 'log: ', model.log)),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$paragraph,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$text(
+							A2(_elm_lang$core$Basics_ops['++'], 'errors: ', model.errors)),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$paragraph,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$text(
+								_elm_lang$core$Basics$toString(model.gamesMeta)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$paragraph,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$text(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'presences: ',
+										_elm_lang$core$Basics$toString(model.presences))),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$stylish_elephants$Element$paragraph,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$text(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'gamesSetup: ',
+											_elm_lang$core$Basics$toString(model.gamesSetup))),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$MainLobbyView$prettyDate = function (timeStamp) {
+	var minute = _elm_lang$core$Date$minute(timeStamp);
+	var hour = _elm_lang$core$Date$hour(timeStamp);
+	var year = _elm_lang$core$Date$year(timeStamp);
+	var month = _elm_lang$core$Date$month(timeStamp);
+	var day = _elm_lang$core$Date$day(timeStamp);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		A3(
+			_elm_lang$core$String$padLeft,
+			2,
+			_elm_lang$core$Native_Utils.chr('0'),
+			_elm_lang$core$Basics$toString(hour)),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			':',
+			A3(
+				_elm_lang$core$String$padLeft,
+				2,
+				_elm_lang$core$Native_Utils.chr('0'),
+				_elm_lang$core$Basics$toString(minute))));
+};
+var _user$project$MainLobbyView$chatLogView = function (model) {
+	var messageView = function (_p3) {
+		var _p4 = _p3;
+		return A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$spacing(3),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$row,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$bold,
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$centerY,
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							_mdgriffith$stylish_elephants$Element$text(_p4.author.username)),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$stylish_elephants$Element$el,
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$alignRight,
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$grey),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$centerY,
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								},
+								_mdgriffith$stylish_elephants$Element$text(
+									_user$project$MainLobbyView$prettyDate(_p4.timeStamp))),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$paragraph,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$family(
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$typeface('monospace'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$text(_p4.message),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	};
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$padding(10),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element_Border$solid,
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Border$width(2),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Border$color(_elm_lang$core$Color$lightGrey),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$width(
+										_mdgriffith$stylish_elephants$Element$px(400)),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$height(
+											_mdgriffith$stylish_elephants$Element$px(300)),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$scrollbarY,
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$htmlAttribute(
+													_elm_lang$html$Html_Attributes$id('chatLogContainer')),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		_elm_lang$core$List$reverse(
+			A2(_elm_lang$core$List$map, messageView, model.chatLog)));
+};
+var _user$project$MainLobbyView$presencesView = function (model) {
+	var players = _elm_lang$core$Dict$keys(model.presences);
+	var playerView = function (player) {
+		return A2(
+			_mdgriffith$stylish_elephants$Element$el,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$padding(5),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$grey),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Element$text(player));
+	};
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(15),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$text('players online:'),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$paragraph,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+						_1: {ctor: '[]'}
+					},
+					A2(_elm_lang$core$List$map, playerView, players)),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$MainLobbyView$view = function (model) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element$layout,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$padding(15),
+			_1: {ctor: '[]'}
+		},
+		A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$spacing(15),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$row,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(20),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$column,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _user$project$MainLobbyView$chatLogView(model),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_mdgriffith$stylish_elephants$Element$row,
+										{
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: A2(
+												_mdgriffith$stylish_elephants$Element_Input$text,
+												{
+													ctor: '::',
+													_0: _mdgriffith$stylish_elephants$Element$width(
+														_mdgriffith$stylish_elephants$Element$px(300)),
+													_1: {
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element_Events$onFocus(_user$project$MainLobbyTypes$FocusChatMessageBox),
+														_1: {
+															ctor: '::',
+															_0: _mdgriffith$stylish_elephants$Element_Events$onLoseFocus(_user$project$MainLobbyTypes$UnfocusChatMessageBox),
+															_1: {ctor: '[]'}
+														}
+													}
+												},
+												{
+													onChange: _elm_lang$core$Maybe$Just(_user$project$MainLobbyTypes$ChatMessageInput),
+													text: model.chatMessageInput,
+													placeholder: _elm_lang$core$Maybe$Nothing,
+													label: A2(
+														_mdgriffith$stylish_elephants$Element_Input$labelAbove,
+														{ctor: '[]'},
+														_mdgriffith$stylish_elephants$Element$text('message: '))
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_mdgriffith$stylish_elephants$Element_Input$button,
+													{
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+														_1: {
+															ctor: '::',
+															_0: _mdgriffith$stylish_elephants$Element$padding(10),
+															_1: {
+																ctor: '::',
+																_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+																_1: {
+																	ctor: '::',
+																	_0: _mdgriffith$stylish_elephants$Element$alignBottom,
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													},
+													{
+														onPress: _elm_lang$core$Maybe$Just(
+															_user$project$MainLobbyTypes$RequestDate(_user$project$MainLobbyTypes$SendChatMessage)),
+														label: _mdgriffith$stylish_elephants$Element$text('Send')
+													}),
+												_1: {ctor: '[]'}
+											}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$stylish_elephants$Element$column,
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _user$project$MainLobbyView$presencesView(model),
+									_1: {
+										ctor: '::',
+										_0: A2(_user$project$MainLobbyView$channelStatusView, model, 'lobby:chat'),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _user$project$MainLobbyView$debugView(model),
+					_1: {ctor: '[]'}
+				}
+			}));
+};

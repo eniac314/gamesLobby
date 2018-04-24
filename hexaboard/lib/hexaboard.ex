@@ -2,7 +2,7 @@ defmodule Hexaboard do
   use Application
   
   def start(_type, _args) do 
-    IO.puts("starting Hexaboard...")
+    IO.puts("Starting the hexaboard application...")
     children = [
       {Registry, keys: :unique, name: Hexaboard.GameRegistry},
       Hexaboard.GameSupervisor

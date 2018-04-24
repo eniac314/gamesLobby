@@ -24,8 +24,8 @@ defmodule GamesLobbyWeb.UserSocket do
   def connect(%{"token" => token, "salt" => salt}, socket) do
     case Phoenix.Token.verify(socket, salt, token, max_age: 86400) do
       {:ok, %Player{} = player} -> 
-        IO.inspect(player)
-        IO.puts("player decoded")
+        # IO.inspect(player)
+        # IO.puts("player decoded")
         {:ok, assign(socket, :current_player, player)}
       {:error, _reason} -> 
         :error 

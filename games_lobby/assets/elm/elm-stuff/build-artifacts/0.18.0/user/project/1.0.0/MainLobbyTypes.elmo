@@ -1,0 +1,116 @@
+var _user$project$MainLobbyTypes$Flags = F3(
+	function (a, b, c) {
+		return {authToken: a, authSalt: b, wsUrl: c};
+	});
+var _user$project$MainLobbyTypes$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return function (m) {
+													return function (n) {
+														return {wsUrl: a, authToken: b, authSalt: c, phxSocket: d, playerInfo: e, log: f, errors: g, presences: h, chatMessageInput: i, chatLog: j, chatMessageBoxFocused: k, gamesMeta: l, gamesSetup: m, currentSelectedGame: n};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$MainLobbyTypes$GameMeta = F4(
+	function (a, b, c, d) {
+		return {name: a, minPlayers: b, maxPlayer: c, hasIA: d};
+	});
+var _user$project$MainLobbyTypes$GameSetup = F4(
+	function (a, b, c, d) {
+		return {gameMeta: a, joined: b, host: c, gameId: d};
+	});
+var _user$project$MainLobbyTypes$ChatMessage = F3(
+	function (a, b, c) {
+		return {timeStamp: a, author: b, message: c};
+	});
+var _user$project$MainLobbyTypes$Player = F2(
+	function (a, b) {
+		return {onlineAt: a, username: b};
+	});
+var _user$project$MainLobbyTypes$defPlayer = A2(_user$project$MainLobbyTypes$Player, '', '');
+var _user$project$MainLobbyTypes$StartGame = {ctor: 'StartGame'};
+var _user$project$MainLobbyTypes$LeaveGame = {ctor: 'LeaveGame'};
+var _user$project$MainLobbyTypes$JoinGame = function (a) {
+	return {ctor: 'JoinGame', _0: a};
+};
+var _user$project$MainLobbyTypes$DeleteGame = {ctor: 'DeleteGame'};
+var _user$project$MainLobbyTypes$HostGame = {ctor: 'HostGame'};
+var _user$project$MainLobbyTypes$UnSelectGame = {ctor: 'UnSelectGame'};
+var _user$project$MainLobbyTypes$SelectGame = function (a) {
+	return {ctor: 'SelectGame', _0: a};
+};
+var _user$project$MainLobbyTypes$RequestDate = function (a) {
+	return {ctor: 'RequestDate', _0: a};
+};
+var _user$project$MainLobbyTypes$KeyDown = function (a) {
+	return {ctor: 'KeyDown', _0: a};
+};
+var _user$project$MainLobbyTypes$UnfocusChatMessageBox = {ctor: 'UnfocusChatMessageBox'};
+var _user$project$MainLobbyTypes$FocusChatMessageBox = {ctor: 'FocusChatMessageBox'};
+var _user$project$MainLobbyTypes$ReceiveGamesSetup = function (a) {
+	return {ctor: 'ReceiveGamesSetup', _0: a};
+};
+var _user$project$MainLobbyTypes$ReceiveGamesMeta = function (a) {
+	return {ctor: 'ReceiveGamesMeta', _0: a};
+};
+var _user$project$MainLobbyTypes$ReceiveChatMessage = function (a) {
+	return {ctor: 'ReceiveChatMessage', _0: a};
+};
+var _user$project$MainLobbyTypes$SendChatMessage = function (a) {
+	return {ctor: 'SendChatMessage', _0: a};
+};
+var _user$project$MainLobbyTypes$ChatMessageInput = function (a) {
+	return {ctor: 'ChatMessageInput', _0: a};
+};
+var _user$project$MainLobbyTypes$ServerError = function (a) {
+	return {ctor: 'ServerError', _0: a};
+};
+var _user$project$MainLobbyTypes$ServerMsg = function (a) {
+	return {ctor: 'ServerMsg', _0: a};
+};
+var _user$project$MainLobbyTypes$UpdateChatLog = function (a) {
+	return {ctor: 'UpdateChatLog', _0: a};
+};
+var _user$project$MainLobbyTypes$ReceivePresenceDiff = function (a) {
+	return {ctor: 'ReceivePresenceDiff', _0: a};
+};
+var _user$project$MainLobbyTypes$ReceivePresenceState = function (a) {
+	return {ctor: 'ReceivePresenceState', _0: a};
+};
+var _user$project$MainLobbyTypes$ReceivePlayerInfo = function (a) {
+	return {ctor: 'ReceivePlayerInfo', _0: a};
+};
+var _user$project$MainLobbyTypes$LeaveChannel = function (a) {
+	return {ctor: 'LeaveChannel', _0: a};
+};
+var _user$project$MainLobbyTypes$JoinChannels = {ctor: 'JoinChannels'};
+var _user$project$MainLobbyTypes$JoinChannel = function (a) {
+	return {ctor: 'JoinChannel', _0: a};
+};
+var _user$project$MainLobbyTypes$PhoenixMsg = function (a) {
+	return {ctor: 'PhoenixMsg', _0: a};
+};
+var _user$project$MainLobbyTypes$DropRes = function (a) {
+	return {ctor: 'DropRes', _0: a};
+};
+var _user$project$MainLobbyTypes$Default = {ctor: 'Default'};

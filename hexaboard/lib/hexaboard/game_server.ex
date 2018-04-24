@@ -1,12 +1,12 @@
 defmodule Hexaboard.GameServer do 
-alias Hexaboard.Game 
+  alias Hexaboard.Game 
 
-use GenServer
-alias Hexaboard.RandNames
+  use GenServer
+  alias Hexaboard.RandNames
 
-require Logger
+  require Logger
 
-# Client API
+  # Client API
   
   @doc """
   Starts the genServer.
@@ -73,7 +73,7 @@ require Logger
   end  
   
   defp my_game_name do
-    Registry.keys(Bingo.GameRegistry, self()) |> List.first
+    Registry.keys(Hexaboard.GameRegistry, self()) |> List.first
   end
   
   @doc """
@@ -101,36 +101,36 @@ require Logger
   def handle_call({:set_player_piece, player_id, piece}, _from, state) do
     case Game.set_player_piece(player_id, piece, state) do 
       {:ok, new_game} -> 
-        {:noreply, new_game}
+        {:reply, new_game, new_game}
        _ -> 
-       	{:noreply, state}
+       	{:reply, state, state}
     end 
   end
 
   def handle_call(:compute_turns, _from, state) do
     case Game.compute_turns(state) do 
       {:ok, new_game} -> 
-        {:noreply, new_game}
+        {:reply, new_game, new_game}
        _ -> 
-       	{:noreply, state}
+        {:reply, state, state}
     end
   end
 
   def handle_call({:select_turn, turn}, _from, state) do
     case Game.select_turn(turn, state) do 
       {:ok, new_game} -> 
-        {:noreply, new_game}
+        {:reply, new_game, new_game}
        _ -> 
-       	{:noreply, state}
+        {:reply, state, state}
     end
   end 
 
   def handle_call({:put_down_piece, player_id, position}, _from, state) do
     case Game.put_down_piece(player_id, position, state) do 
       {:ok, new_game} -> 
-        {:noreply, new_game}
+        {:reply, new_game, new_game}
        _ -> 
-       	{:noreply, state}
+        {:reply, state, state}
     end
   end	
 

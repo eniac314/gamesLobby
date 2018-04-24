@@ -1,0 +1,507 @@
+var _user$project$MainLobby$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, model.phxSocket, _user$project$MainLobbyTypes$PhoenixMsg),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$keyboard$Keyboard$downs(_user$project$MainLobbyTypes$KeyDown),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$MainLobby$initialSocket = function (flags) {
+	var wsUrlWithAuth = A2(
+		_elm_lang$core$Basics_ops['++'],
+		flags.wsUrl,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'?token=',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				flags.authToken,
+				A2(_elm_lang$core$Basics_ops['++'], '&salt=', flags.authSalt))));
+	return _fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
+		A4(
+			_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+			'games_setup',
+			'lobby:mainlobby',
+			_user$project$MainLobbyTypes$ReceiveGamesSetup,
+			A4(
+				_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+				'games_meta',
+				'lobby:mainlobby',
+				_user$project$MainLobbyTypes$ReceiveGamesMeta,
+				A4(
+					_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+					'chat_history',
+					'lobby:chat',
+					_user$project$MainLobbyTypes$UpdateChatLog,
+					A4(
+						_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+						'new_chat_message',
+						'lobby:chat',
+						_user$project$MainLobbyTypes$ReceiveChatMessage,
+						A4(
+							_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+							'presence_diff',
+							'lobby:chat',
+							_user$project$MainLobbyTypes$ReceivePresenceDiff,
+							A4(
+								_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+								'presence_state',
+								'lobby:chat',
+								_user$project$MainLobbyTypes$ReceivePresenceState,
+								A4(
+									_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+									'greetings',
+									'lobby:chat',
+									_user$project$MainLobbyTypes$ReceivePlayerInfo,
+									_fbonetti$elm_phoenix_socket$Phoenix_Socket$init(wsUrlWithAuth)))))))));
+};
+var _user$project$MainLobby$initPhoenixChannel = function (topic) {
+	return _fbonetti$elm_phoenix_socket$Phoenix_Channel$init(topic);
+};
+var _user$project$MainLobby$update = F2(
+	function (msg, model) {
+		update:
+		while (true) {
+			var _p0 = msg;
+			switch (_p0.ctor) {
+				case 'ServerMsg':
+					var _p1 = A2(
+						_elm_lang$core$Json_Decode$decodeValue,
+						A2(_elm_lang$core$Json_Decode$field, 'content', _elm_lang$core$Json_Decode$string),
+						_p0._0);
+					if (_p1.ctor === 'Ok') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{log: _p1._0}),
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p1._0}),
+							{ctor: '[]'});
+					}
+				case 'ServerError':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'ReceivePlayerInfo':
+					var _p2 = _user$project$MainLobbyComs$decodePlayerInfo(_p0._0);
+					if (_p2.ctor === 'Ok') {
+						var currPlInf = model.playerInfo;
+						var newPlInf = _elm_lang$core$Native_Utils.update(
+							currPlInf,
+							{username: _p2._0.username});
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{playerInfo: newPlInf}),
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p2._0}),
+							{ctor: '[]'});
+					}
+				case 'ReceivePresenceState':
+					var presences = A2(
+						_elm_lang$core$Result$map,
+						function (state) {
+							return A2(_fbonetti$elm_phoenix_socket$Phoenix_Presence$syncState, state, model.presences);
+						},
+						_user$project$MainLobbyComs$decodePresenceState(_p0._0));
+					var _p3 = presences;
+					if (_p3.ctor === 'Ok') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{presences: _p3._0}),
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p3._0}),
+							{ctor: '[]'});
+					}
+				case 'ReceivePresenceDiff':
+					var presences = A2(
+						_elm_lang$core$Result$map,
+						function (diff) {
+							return A2(_fbonetti$elm_phoenix_socket$Phoenix_Presence$syncDiff, diff, model.presences);
+						},
+						_user$project$MainLobbyComs$decodePresenceDiff(_p0._0));
+					var _p4 = presences;
+					if (_p4.ctor === 'Ok') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{presences: _p4._0}),
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p4._0}),
+							{ctor: '[]'});
+					}
+				case 'JoinChannels':
+					var lobbyMainlobby = _user$project$MainLobby$initPhoenixChannel('lobby:mainlobby');
+					var lobbyChat = _user$project$MainLobby$initPhoenixChannel('lobby:chat');
+					var _p5 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyChat, model.phxSocket);
+					var newSocket1 = _p5._0;
+					var phxCmd1 = _p5._1;
+					var _p6 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
+					var newSocket2 = _p6._0;
+					var phxCmd2 = _p6._1;
+					var phxCmd = _elm_lang$core$Platform_Cmd$batch(
+						{
+							ctor: '::',
+							_0: phxCmd1,
+							_1: {
+								ctor: '::',
+								_0: phxCmd2,
+								_1: {ctor: '[]'}
+							}
+						});
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{phxSocket: newSocket2}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
+				case 'JoinChannel':
+					var channel = _user$project$MainLobby$initPhoenixChannel(_p0._0);
+					var _p7 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, channel, model.phxSocket);
+					var newSocket = _p7._0;
+					var phxCmd = _p7._1;
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{phxSocket: newSocket}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
+				case 'LeaveChannel':
+					var _p8 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$leave, _p0._0, model.phxSocket);
+					var newSocket = _p8._0;
+					var phxCmd = _p8._1;
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{phxSocket: newSocket}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
+				case 'PhoenixMsg':
+					var _p9 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p0._0, model.phxSocket);
+					var newSocket = _p9._0;
+					var phxCmd = _p9._1;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{phxSocket: newSocket}),
+						_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd)
+					};
+				case 'ChatMessageInput':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{chatMessageInput: _p0._0}),
+						{ctor: '[]'});
+				case 'SendChatMessage':
+					var payload = _user$project$MainLobbyComs$encodeChatMessage(
+						{message: model.chatMessageInput, author: model.playerInfo, timeStamp: _p0._0});
+					var pushMsg = A2(
+						_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+						_user$project$MainLobbyTypes$ServerError,
+						A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+							payload,
+							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'new_chat_message', 'lobby:chat')));
+					var _p10 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+					var newSocket = _p10._0;
+					var phxCmd = _p10._1;
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{log: 'message sent', phxSocket: newSocket, chatMessageInput: ''}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
+				case 'ReceiveChatMessage':
+					var _p11 = _user$project$MainLobbyComs$decodeChatMessage(_p0._0);
+					if (_p11.ctor === 'Ok') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{
+									chatLog: {ctor: '::', _0: _p11._0, _1: model.chatLog}
+								}),
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$Task$attempt,
+									_user$project$MainLobbyTypes$DropRes,
+									_elm_lang$dom$Dom_Scroll$toBottom('chatLogContainer')),
+								_1: {ctor: '[]'}
+							});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p11._0}),
+							{ctor: '[]'});
+					}
+				case 'ReceiveGamesMeta':
+					var _p12 = _user$project$MainLobbyComs$decodeGamesMeta(_p0._0);
+					if (_p12.ctor === 'Ok') {
+						var gamesMetaDict = _elm_lang$core$Dict$fromList(
+							A2(
+								_elm_lang$core$List$map,
+								function (gm) {
+									return {ctor: '_Tuple2', _0: gm.name, _1: gm};
+								},
+								_p12._0));
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{gamesMeta: gamesMetaDict}),
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p12._0}),
+							{ctor: '[]'});
+					}
+				case 'ReceiveGamesSetup':
+					var _p13 = A2(_user$project$MainLobbyComs$decodeGamesSetup, model, _p0._0);
+					if (_p13.ctor === 'Ok') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{gamesSetup: _p13._0}),
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p13._0}),
+							{ctor: '[]'});
+					}
+				case 'UpdateChatLog':
+					var _p14 = _user$project$MainLobbyComs$decodeChatHistory(_p0._0);
+					if (_p14.ctor === 'Ok') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{chatLog: _p14._0}),
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$Task$attempt,
+									_user$project$MainLobbyTypes$DropRes,
+									_elm_lang$dom$Dom_Scroll$toBottom('chatLogContainer')),
+								_1: {ctor: '[]'}
+							});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p14._0}),
+							{ctor: '[]'});
+					}
+				case 'FocusChatMessageBox':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{chatMessageBoxFocused: true}),
+						{ctor: '[]'});
+				case 'UnfocusChatMessageBox':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{chatMessageBoxFocused: false}),
+						{ctor: '[]'});
+				case 'KeyDown':
+					if (_elm_lang$core$Native_Utils.eq(_p0._0, 13) && model.chatMessageBoxFocused) {
+						var _v9 = _user$project$MainLobbyTypes$RequestDate(_user$project$MainLobbyTypes$SendChatMessage),
+							_v10 = model;
+						msg = _v9;
+						model = _v10;
+						continue update;
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							model,
+							{ctor: '[]'});
+					}
+				case 'RequestDate':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Task$perform, _p0._0, _elm_lang$core$Date$now),
+							_1: {ctor: '[]'}
+						});
+				case 'DropRes':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'SelectGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{
+								currentSelectedGame: _elm_lang$core$Maybe$Just(_p0._0)
+							}),
+						{ctor: '[]'});
+				case 'UnSelectGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{currentSelectedGame: _elm_lang$core$Maybe$Nothing}),
+						{ctor: '[]'});
+				case 'HostGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'DeleteGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'JoinGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'LeaveGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'StartGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				default:
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+			}
+		}
+	});
+var _user$project$MainLobby$init = function (flags) {
+	var lobbyMainlobby = _user$project$MainLobby$initPhoenixChannel('lobby:mainlobby');
+	var lobbyChat = _user$project$MainLobby$initPhoenixChannel('lobby:chat');
+	var _p15 = A2(
+		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
+		lobbyChat,
+		_user$project$MainLobby$initialSocket(flags));
+	var newSocket1 = _p15._0;
+	var phxCmd1 = _p15._1;
+	var _p16 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
+	var newSocket2 = _p16._0;
+	var phxCmd2 = _p16._1;
+	var phxCmd = _elm_lang$core$Platform_Cmd$batch(
+		{
+			ctor: '::',
+			_0: phxCmd1,
+			_1: {
+				ctor: '::',
+				_0: phxCmd2,
+				_1: {ctor: '[]'}
+			}
+		});
+	return A2(
+		_elm_lang$core$Platform_Cmd_ops['!'],
+		{
+			wsUrl: flags.wsUrl,
+			authToken: flags.authToken,
+			authSalt: flags.authSalt,
+			phxSocket: newSocket2,
+			playerInfo: _user$project$MainLobbyTypes$defPlayer,
+			log: '',
+			errors: '',
+			presences: _elm_lang$core$Dict$empty,
+			chatMessageInput: '',
+			chatLog: {ctor: '[]'},
+			chatMessageBoxFocused: false,
+			gamesMeta: _elm_lang$core$Dict$empty,
+			gamesSetup: _elm_lang$core$Dict$empty,
+			currentSelectedGame: _elm_lang$core$Maybe$Nothing
+		},
+		{
+			ctor: '::',
+			_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$MainLobby$main = _elm_lang$html$Html$programWithFlags(
+	{init: _user$project$MainLobby$init, view: _user$project$MainLobbyView$view, update: _user$project$MainLobby$update, subscriptions: _user$project$MainLobby$subscriptions})(
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (authSalt) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (authToken) {
+					return A2(
+						_elm_lang$core$Json_Decode$andThen,
+						function (wsUrl) {
+							return _elm_lang$core$Json_Decode$succeed(
+								{authSalt: authSalt, authToken: authToken, wsUrl: wsUrl});
+						},
+						A2(_elm_lang$core$Json_Decode$field, 'wsUrl', _elm_lang$core$Json_Decode$string));
+				},
+				A2(_elm_lang$core$Json_Decode$field, 'authToken', _elm_lang$core$Json_Decode$string));
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'authSalt', _elm_lang$core$Json_Decode$string)));

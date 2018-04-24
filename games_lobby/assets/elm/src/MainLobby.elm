@@ -1,8 +1,9 @@
-module Main exposing (..)
+module MainLobby exposing (..)
 
 import Color exposing (..)
 import Date exposing (..)
 import Dict exposing (..)
+import Dom.Scroll as Scroll
 import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
@@ -13,68 +14,14 @@ import Html exposing (Html, programWithFlags)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Keyboard exposing (..)
+import MainLobbyComs exposing (..)
+import MainLobbyTypes exposing (..)
+import MainLobbyView exposing (..)
 import Phoenix.Channel
 import Phoenix.Presence as Presence
 import Phoenix.Push
 import Phoenix.Socket
 import Task exposing (..)
-
-
-type alias Flags =
-    { authToken : String
-    , authSalt : String
-    , wsUrl : String
-    }
-
-
-type alias Model =
-    { wsUrl : String
-    , authToken : String
-    , authSalt : String
-    , phxSocket : Phoenix.Socket.Socket Msg
-    , playerInfo : Player
-    , log : String
-    , errors : String
-    , presences : Presence.PresenceState Player
-    , chatMessageInput : String
-    , chatLog : List ChatMessage
-    , chatMessageBoxFocused : Bool
-    }
-
-
-type alias ChatMessage =
-    { timeStamp : Date
-    , author : Player
-    , message : String
-    }
-
-
-type alias Player =
-    { onlineAt : String
-    , username : String
-    }
-
-
-defPlayer =
-    Player "" ""
-
-
-type Msg
-    = Default
-    | PhoenixMsg (Phoenix.Socket.Msg Msg)
-    | JoinChannel
-    | ReceivePlayerInfo Decode.Value
-    | ReceivePresenceState Decode.Value
-    | ReceivePresenceDiff Decode.Value
-    | ServerMsg Decode.Value
-    | ServerError Decode.Value
-    | ChatMessageInput String
-    | SendChatMessage Date
-    | ReceiveChatMessage Decode.Value
-    | FocusChatMessageBox
-    | UnfocusChatMessageBox
-    | KeyDown KeyCode
-    | RequestDate (Date -> Msg)
 
 
 main : Program Flags Model Msg
@@ -89,10 +36,26 @@ main =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
+    let
+        lobbyChat =
+            initPhoenixChannel "lobby:chat"
+
+        lobbyMainlobby =
+            initPhoenixChannel "lobby:mainlobby"
+
+        ( newSocket1, phxCmd1 ) =
+            Phoenix.Socket.join lobbyChat (initialSocket flags)
+
+        ( newSocket2, phxCmd2 ) =
+            Phoenix.Socket.join lobbyMainlobby newSocket1
+
+        phxCmd =
+            Cmd.batch [ phxCmd1, phxCmd2 ]
+    in
     { wsUrl = flags.wsUrl
     , authToken = flags.authToken
     , authSalt = flags.authSalt
-    , phxSocket = initialSocket flags
+    , phxSocket = newSocket2
     , playerInfo = defPlayer
     , log = ""
     , errors = ""
@@ -100,8 +63,11 @@ init flags =
     , chatMessageInput = ""
     , chatLog = []
     , chatMessageBoxFocused = False
+    , gamesMeta = Dict.empty
+    , gamesSetup = Dict.empty
+    , currentSelectedGame = Nothing
     }
-        ! []
+        ! [ Cmd.map PhoenixMsg phxCmd ]
 
 
 initPhoenixChannel : String -> Phoenix.Channel.Channel Msg
@@ -129,143 +95,11 @@ initialSocket flags =
         |> Phoenix.Socket.on "presence_state" "lobby:chat" ReceivePresenceState
         |> Phoenix.Socket.on "presence_diff" "lobby:chat" ReceivePresenceDiff
         |> Phoenix.Socket.on "new_chat_message" "lobby:chat" ReceiveChatMessage
-        |> Phoenix.Socket.withoutHeartbeat
+        |> Phoenix.Socket.on "chat_history" "lobby:chat" UpdateChatLog
+        |> Phoenix.Socket.on "games_meta" "lobby:mainlobby" ReceiveGamesMeta
+        |> Phoenix.Socket.on "games_setup" "lobby:mainlobby" ReceiveGamesSetup
+        --|> Phoenix.Socket.withoutHeartbeat
         |> Phoenix.Socket.withDebug
-
-
-view : Model -> Html Msg
-view model =
-    Element.layout
-        [ padding 15 ]
-    <|
-        column []
-            [ listPlayers model
-            , Input.button
-                [ Background.color Color.lightBlue
-                , padding 10
-                ]
-                { onPress = Just JoinChannel
-                , label = text "Join channel!"
-                }
-            , row [ spacing 10 ]
-                [ Input.text
-                    [ width (px 300)
-                    , Events.onFocus FocusChatMessageBox
-                    , Events.onLoseFocus UnfocusChatMessageBox
-                    ]
-                    { onChange = Just ChatMessageInput
-                    , text = model.chatMessageInput
-                    , placeholder = Nothing
-                    , label = Input.labelAbove [] (text "message: ")
-                    }
-                , Input.button
-                    [ Background.color Color.lightBlue
-                    , padding 10
-                    , alignBottom
-                    ]
-                    { onPress = Just (RequestDate SendChatMessage)
-                    , label = text "Send"
-                    }
-                ]
-            , chatLogView model
-            ]
-
-
-listPlayers model =
-    let
-        playerView n player =
-            el
-                [ padding 5
-                , if n % 2 == 0 then
-                    Background.color Color.grey
-                  else
-                    Background.color Color.white
-                ]
-                (text player)
-
-        players =
-            Dict.keys model.presences
-    in
-    column [ spacing 15 ] (List.indexedMap playerView players)
-
-
-chatLogView model =
-    let
-        messageView { timeStamp, author, message } =
-            row [ spacing 20 ]
-                [ text author.username
-                , text message
-                ]
-    in
-    column [ spacing 10 ] (List.map messageView model.chatLog)
-
-
-debugView model =
-    column []
-        [ paragraph [] [ text <| toString model.playerInfo ]
-        , paragraph [] [ text <| model.wsUrl ]
-        ]
-
-
-encodeChatMessage : ChatMessage -> Encode.Value
-encodeChatMessage { timeStamp, author, message } =
-    Encode.object
-        [ ( "time_stamp", Encode.float (toTime timeStamp) )
-        , ( "author", encodePlayer author )
-        , ( "message", Encode.string message )
-        ]
-
-
-decodeChatMessage : Decode.Value -> Result String ChatMessage
-decodeChatMessage jsonVal =
-    Decode.decodeValue
-        (Decode.map3 ChatMessage
-            (Decode.field "time_stamp" decodeDate)
-            (Decode.field "author" playerDecoder)
-            (Decode.field "message" Decode.string)
-        )
-        jsonVal
-
-
-decodeDate =
-    Decode.map
-        (\v ->
-            Date.fromTime v
-        )
-        Decode.float
-
-
-encodePlayer : Player -> Encode.Value
-encodePlayer { username, onlineAt } =
-    Encode.object
-        [ ( "username", Encode.string username )
-        , ( "joined_at", Encode.string onlineAt )
-        ]
-
-
-decodePlayerInfo jsonVal =
-    Decode.decodeValue
-        (Decode.field "username" Decode.string)
-        jsonVal
-        |> Result.map (\name -> { defPlayer | username = name })
-
-
-playerDecoder =
-    Decode.map2 Player
-        (Decode.field "joined_at" Decode.string)
-        (Decode.field "username" Decode.string)
-
-
-decodePresenceState jsonVal =
-    Decode.decodeValue
-        (Presence.presenceStateDecoder playerDecoder)
-        jsonVal
-
-
-decodePresenceDiff jsonVal =
-    Decode.decodeValue
-        (Presence.presenceDiffDecoder playerDecoder)
-        jsonVal
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -301,7 +135,7 @@ update msg model =
             let
                 presences =
                     decodePresenceState jsonVal
-                        |> Result.map (Presence.syncState model.presences)
+                        |> Result.map (\state -> Presence.syncState state model.presences)
             in
             case presences of
                 Ok ps ->
@@ -323,13 +157,39 @@ update msg model =
                 Err e ->
                     { model | errors = e } ! []
 
-        JoinChannel ->
+        JoinChannels ->
+            let
+                lobbyChat =
+                    initPhoenixChannel "lobby:chat"
+
+                lobbyMainlobby =
+                    initPhoenixChannel "lobby:mainlobby"
+
+                ( newSocket1, phxCmd1 ) =
+                    Phoenix.Socket.join lobbyChat model.phxSocket
+
+                ( newSocket2, phxCmd2 ) =
+                    Phoenix.Socket.join lobbyMainlobby newSocket1
+
+                phxCmd =
+                    Cmd.batch [ phxCmd1, phxCmd2 ]
+            in
+            { model | phxSocket = newSocket2 } ! [ Cmd.map PhoenixMsg phxCmd ]
+
+        JoinChannel topic ->
             let
                 channel =
-                    initPhoenixChannel "lobby:chat"
+                    initPhoenixChannel topic
 
                 ( newSocket, phxCmd ) =
                     Phoenix.Socket.join channel model.phxSocket
+            in
+            { model | phxSocket = newSocket } ! [ Cmd.map PhoenixMsg phxCmd ]
+
+        LeaveChannel topic ->
+            let
+                ( newSocket, phxCmd ) =
+                    Phoenix.Socket.leave topic model.phxSocket
             in
             { model | phxSocket = newSocket } ! [ Cmd.map PhoenixMsg phxCmd ]
 
@@ -372,7 +232,38 @@ update msg model =
         ReceiveChatMessage jsonVal ->
             case decodeChatMessage jsonVal of
                 Ok message ->
-                    { model | chatLog = message :: model.chatLog } ! []
+                    { model | chatLog = message :: model.chatLog }
+                        ! [ attempt DropRes (Scroll.toBottom "chatLogContainer") ]
+
+                Err e ->
+                    { model | errors = e } ! []
+
+        ReceiveGamesMeta jsonVal ->
+            case decodeGamesMeta jsonVal of
+                Ok gamesMeta ->
+                    let
+                        gamesMetaDict =
+                            List.map (\gm -> ( gm.name, gm )) gamesMeta
+                                |> Dict.fromList
+                    in
+                    { model | gamesMeta = gamesMetaDict } ! []
+
+                Err e ->
+                    { model | errors = e } ! []
+
+        ReceiveGamesSetup jsonVal ->
+            case decodeGamesSetup model jsonVal of
+                Ok gamesSetup ->
+                    { model | gamesSetup = gamesSetup } ! []
+
+                Err e ->
+                    { model | errors = e } ! []
+
+        UpdateChatLog jsonVal ->
+            case decodeChatHistory jsonVal of
+                Ok chatHistory ->
+                    { model | chatLog = chatHistory }
+                        ! [ attempt DropRes (Scroll.toBottom "chatLogContainer") ]
 
                 Err e ->
                     { model | errors = e } ! []
@@ -391,6 +282,30 @@ update msg model =
 
         RequestDate callback ->
             model ! [ perform callback Date.now ]
+
+        DropRes _ ->
+            model ! []
+
+        SelectGame gameMeta ->
+            { model | currentSelectedGame = Just gameMeta } ! []
+
+        UnSelectGame ->
+            { model | currentSelectedGame = Nothing } ! []
+
+        HostGame ->
+            model ! []
+
+        DeleteGame ->
+            model ! []
+
+        JoinGame gameId ->
+            model ! []
+
+        LeaveGame ->
+            model ! []
+
+        StartGame ->
+            model ! []
 
         Default ->
             model ! []

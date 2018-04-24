@@ -21,12 +21,12 @@ import "phoenix_html"
 // import socket from "./socket"
 
 // Elm
-import Elm from "./main.js"
+import Elm from "./mainLobby"
 
 const elmContainer = document.querySelector("#elm-container");
 
 if (elmContainer){
- Elm.Main.embed(elmContainer, {
+ Elm.MainLobby.embed(elmContainer, {
     authToken: elmContainer.getAttribute("data-auth-token"),
     authSalt : elmContainer.getAttribute("data-auth-salt"),
     wsUrl: elmContainer.getAttribute("data-ws-url")

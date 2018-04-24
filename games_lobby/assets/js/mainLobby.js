@@ -6856,8 +6856,34 @@ return {
 
 }();
 
+var _elm_lang$dom$Dom$blur = _elm_lang$dom$Native_Dom.blur;
+var _elm_lang$dom$Dom$focus = _elm_lang$dom$Native_Dom.focus;
+var _elm_lang$dom$Dom$NotFound = function (a) {
+	return {ctor: 'NotFound', _0: a};
+};
+
 var _elm_lang$dom$Dom_LowLevel$onWindow = _elm_lang$dom$Native_Dom.onWindow;
 var _elm_lang$dom$Dom_LowLevel$onDocument = _elm_lang$dom$Native_Dom.onDocument;
+
+var _elm_lang$dom$Dom_Size$width = _elm_lang$dom$Native_Dom.width;
+var _elm_lang$dom$Dom_Size$height = _elm_lang$dom$Native_Dom.height;
+var _elm_lang$dom$Dom_Size$VisibleContentWithBordersAndMargins = {ctor: 'VisibleContentWithBordersAndMargins'};
+var _elm_lang$dom$Dom_Size$VisibleContentWithBorders = {ctor: 'VisibleContentWithBorders'};
+var _elm_lang$dom$Dom_Size$VisibleContent = {ctor: 'VisibleContent'};
+var _elm_lang$dom$Dom_Size$Content = {ctor: 'Content'};
+
+var _elm_lang$dom$Dom_Scroll$toX = _elm_lang$dom$Native_Dom.setScrollLeft;
+var _elm_lang$dom$Dom_Scroll$x = _elm_lang$dom$Native_Dom.getScrollLeft;
+var _elm_lang$dom$Dom_Scroll$toRight = _elm_lang$dom$Native_Dom.toRight;
+var _elm_lang$dom$Dom_Scroll$toLeft = function (id) {
+	return A2(_elm_lang$dom$Dom_Scroll$toX, id, 0);
+};
+var _elm_lang$dom$Dom_Scroll$toY = _elm_lang$dom$Native_Dom.setScrollTop;
+var _elm_lang$dom$Dom_Scroll$y = _elm_lang$dom$Native_Dom.getScrollTop;
+var _elm_lang$dom$Dom_Scroll$toBottom = _elm_lang$dom$Native_Dom.toBottom;
+var _elm_lang$dom$Dom_Scroll$toTop = function (id) {
+	return A2(_elm_lang$dom$Dom_Scroll$toY, id, 0);
+};
 
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrap;
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags;
@@ -22927,157 +22953,11 @@ var _mdgriffith$stylish_elephants$Element_Input$radio = _mdgriffith$stylish_elep
 var _mdgriffith$stylish_elephants$Element_Input$Row = {ctor: 'Row'};
 var _mdgriffith$stylish_elephants$Element_Input$radioRow = _mdgriffith$stylish_elephants$Element_Input$radioHelper(_mdgriffith$stylish_elephants$Element_Input$Row);
 
-var _user$project$Main$encodePlayer = function (_p0) {
-	var _p1 = _p0;
-	return _elm_lang$core$Json_Encode$object(
-		{
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: 'username',
-				_1: _elm_lang$core$Json_Encode$string(_p1.username)
-			},
-			_1: {
-				ctor: '::',
-				_0: {
-					ctor: '_Tuple2',
-					_0: 'joined_at',
-					_1: _elm_lang$core$Json_Encode$string(_p1.onlineAt)
-				},
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$Main$decodeDate = A2(
-	_elm_lang$core$Json_Decode$map,
-	function (v) {
-		return _elm_lang$core$Date$fromTime(v);
-	},
-	_elm_lang$core$Json_Decode$float);
-var _user$project$Main$encodeChatMessage = function (_p2) {
-	var _p3 = _p2;
-	return _elm_lang$core$Json_Encode$object(
-		{
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: 'time_stamp',
-				_1: _elm_lang$core$Json_Encode$float(
-					_elm_lang$core$Date$toTime(_p3.timeStamp))
-			},
-			_1: {
-				ctor: '::',
-				_0: {
-					ctor: '_Tuple2',
-					_0: 'author',
-					_1: _user$project$Main$encodePlayer(_p3.author)
-				},
-				_1: {
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: 'message',
-						_1: _elm_lang$core$Json_Encode$string(_p3.message)
-					},
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
-var _user$project$Main$debugView = function (model) {
-	return A2(
-		_mdgriffith$stylish_elephants$Element$column,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_mdgriffith$stylish_elephants$Element$paragraph,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _mdgriffith$stylish_elephants$Element$text(
-						_elm_lang$core$Basics$toString(model.playerInfo)),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_mdgriffith$stylish_elephants$Element$paragraph,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$text(model.wsUrl),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$Main$chatLogView = function (model) {
-	var messageView = function (_p4) {
-		var _p5 = _p4;
-		return A2(
-			_mdgriffith$stylish_elephants$Element$row,
-			{
-				ctor: '::',
-				_0: _mdgriffith$stylish_elephants$Element$spacing(20),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _mdgriffith$stylish_elephants$Element$text(_p5.author.username),
-				_1: {
-					ctor: '::',
-					_0: _mdgriffith$stylish_elephants$Element$text(_p5.message),
-					_1: {ctor: '[]'}
-				}
-			});
-	};
-	return A2(
-		_mdgriffith$stylish_elephants$Element$column,
-		{
-			ctor: '::',
-			_0: _mdgriffith$stylish_elephants$Element$spacing(10),
-			_1: {ctor: '[]'}
-		},
-		A2(_elm_lang$core$List$map, messageView, model.chatLog));
-};
-var _user$project$Main$listPlayers = function (model) {
-	var players = _elm_lang$core$Dict$keys(model.presences);
-	var playerView = F2(
-		function (n, player) {
-			return A2(
-				_mdgriffith$stylish_elephants$Element$el,
-				{
-					ctor: '::',
-					_0: _mdgriffith$stylish_elephants$Element$padding(5),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$core$Native_Utils.eq(
-							A2(_elm_lang$core$Basics_ops['%'], n, 2),
-							0) ? _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$grey) : _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$white),
-						_1: {ctor: '[]'}
-					}
-				},
-				_mdgriffith$stylish_elephants$Element$text(player));
-		});
-	return A2(
-		_mdgriffith$stylish_elephants$Element$column,
-		{
-			ctor: '::',
-			_0: _mdgriffith$stylish_elephants$Element$spacing(15),
-			_1: {ctor: '[]'}
-		},
-		A2(_elm_lang$core$List$indexedMap, playerView, players));
-};
-var _user$project$Main$initPhoenixChannel = function (topic) {
-	return _fbonetti$elm_phoenix_socket$Phoenix_Channel$init(topic);
-};
-var _user$project$Main$Flags = F3(
+var _user$project$MainLobbyTypes$Flags = F3(
 	function (a, b, c) {
 		return {authToken: a, authSalt: b, wsUrl: c};
 	});
-var _user$project$Main$Model = function (a) {
+var _user$project$MainLobbyTypes$Model = function (a) {
 	return function (b) {
 		return function (c) {
 			return function (d) {
@@ -23088,7 +22968,13 @@ var _user$project$Main$Model = function (a) {
 								return function (i) {
 									return function (j) {
 										return function (k) {
-											return {wsUrl: a, authToken: b, authSalt: c, phxSocket: d, playerInfo: e, log: f, errors: g, presences: h, chatMessageInput: i, chatLog: j, chatMessageBoxFocused: k};
+											return function (l) {
+												return function (m) {
+													return function (n) {
+														return {wsUrl: a, authToken: b, authSalt: c, phxSocket: d, playerInfo: e, log: f, errors: g, presences: h, chatMessageInput: i, chatLog: j, chatMessageBoxFocused: k, gamesMeta: l, gamesSetup: m, currentSelectedGame: n};
+													};
+												};
+											};
 										};
 									};
 								};
@@ -23100,21 +22986,215 @@ var _user$project$Main$Model = function (a) {
 		};
 	};
 };
-var _user$project$Main$ChatMessage = F3(
+var _user$project$MainLobbyTypes$GameMeta = F4(
+	function (a, b, c, d) {
+		return {name: a, minPlayers: b, maxPlayer: c, hasIA: d};
+	});
+var _user$project$MainLobbyTypes$GameSetup = F4(
+	function (a, b, c, d) {
+		return {gameMeta: a, joined: b, host: c, gameId: d};
+	});
+var _user$project$MainLobbyTypes$ChatMessage = F3(
 	function (a, b, c) {
 		return {timeStamp: a, author: b, message: c};
 	});
-var _user$project$Main$Player = F2(
+var _user$project$MainLobbyTypes$Player = F2(
 	function (a, b) {
 		return {onlineAt: a, username: b};
 	});
-var _user$project$Main$defPlayer = A2(_user$project$Main$Player, '', '');
-var _user$project$Main$decodePlayerInfo = function (jsonVal) {
+var _user$project$MainLobbyTypes$defPlayer = A2(_user$project$MainLobbyTypes$Player, '', '');
+var _user$project$MainLobbyTypes$StartGame = {ctor: 'StartGame'};
+var _user$project$MainLobbyTypes$LeaveGame = {ctor: 'LeaveGame'};
+var _user$project$MainLobbyTypes$JoinGame = function (a) {
+	return {ctor: 'JoinGame', _0: a};
+};
+var _user$project$MainLobbyTypes$DeleteGame = {ctor: 'DeleteGame'};
+var _user$project$MainLobbyTypes$HostGame = {ctor: 'HostGame'};
+var _user$project$MainLobbyTypes$UnSelectGame = {ctor: 'UnSelectGame'};
+var _user$project$MainLobbyTypes$SelectGame = function (a) {
+	return {ctor: 'SelectGame', _0: a};
+};
+var _user$project$MainLobbyTypes$RequestDate = function (a) {
+	return {ctor: 'RequestDate', _0: a};
+};
+var _user$project$MainLobbyTypes$KeyDown = function (a) {
+	return {ctor: 'KeyDown', _0: a};
+};
+var _user$project$MainLobbyTypes$UnfocusChatMessageBox = {ctor: 'UnfocusChatMessageBox'};
+var _user$project$MainLobbyTypes$FocusChatMessageBox = {ctor: 'FocusChatMessageBox'};
+var _user$project$MainLobbyTypes$ReceiveGamesSetup = function (a) {
+	return {ctor: 'ReceiveGamesSetup', _0: a};
+};
+var _user$project$MainLobbyTypes$ReceiveGamesMeta = function (a) {
+	return {ctor: 'ReceiveGamesMeta', _0: a};
+};
+var _user$project$MainLobbyTypes$ReceiveChatMessage = function (a) {
+	return {ctor: 'ReceiveChatMessage', _0: a};
+};
+var _user$project$MainLobbyTypes$SendChatMessage = function (a) {
+	return {ctor: 'SendChatMessage', _0: a};
+};
+var _user$project$MainLobbyTypes$ChatMessageInput = function (a) {
+	return {ctor: 'ChatMessageInput', _0: a};
+};
+var _user$project$MainLobbyTypes$ServerError = function (a) {
+	return {ctor: 'ServerError', _0: a};
+};
+var _user$project$MainLobbyTypes$ServerMsg = function (a) {
+	return {ctor: 'ServerMsg', _0: a};
+};
+var _user$project$MainLobbyTypes$UpdateChatLog = function (a) {
+	return {ctor: 'UpdateChatLog', _0: a};
+};
+var _user$project$MainLobbyTypes$ReceivePresenceDiff = function (a) {
+	return {ctor: 'ReceivePresenceDiff', _0: a};
+};
+var _user$project$MainLobbyTypes$ReceivePresenceState = function (a) {
+	return {ctor: 'ReceivePresenceState', _0: a};
+};
+var _user$project$MainLobbyTypes$ReceivePlayerInfo = function (a) {
+	return {ctor: 'ReceivePlayerInfo', _0: a};
+};
+var _user$project$MainLobbyTypes$LeaveChannel = function (a) {
+	return {ctor: 'LeaveChannel', _0: a};
+};
+var _user$project$MainLobbyTypes$JoinChannels = {ctor: 'JoinChannels'};
+var _user$project$MainLobbyTypes$JoinChannel = function (a) {
+	return {ctor: 'JoinChannel', _0: a};
+};
+var _user$project$MainLobbyTypes$PhoenixMsg = function (a) {
+	return {ctor: 'PhoenixMsg', _0: a};
+};
+var _user$project$MainLobbyTypes$DropRes = function (a) {
+	return {ctor: 'DropRes', _0: a};
+};
+var _user$project$MainLobbyTypes$Default = {ctor: 'Default'};
+
+var _user$project$MainLobbyComs$idStrToGameId = F2(
+	function (model, str) {
+		var _p0 = A2(_elm_lang$core$String$split, ' ', str);
+		if (((_p0.ctor === '::') && (_p0._1.ctor === '::')) && (_p0._1._1.ctor === '[]')) {
+			return A2(
+				_elm_lang$core$Maybe$andThen,
+				function (gm) {
+					return _elm_lang$core$Result$toMaybe(
+						A2(
+							_elm_lang$core$Result$map,
+							function (id) {
+								return {ctor: '_Tuple2', _0: gm, _1: id};
+							},
+							_elm_lang$core$String$toInt(_p0._1._0)));
+				},
+				A2(_elm_lang$core$Dict$get, _p0._0, model.gamesMeta));
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _user$project$MainLobbyComs$gameIdDecoder = function (model) {
+	return A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (mv) {
+			var _p1 = mv;
+			if (_p1.ctor === 'Nothing') {
+				return _elm_lang$core$Json_Decode$fail('invalid game id');
+			} else {
+				return _elm_lang$core$Json_Decode$succeed(_p1._0);
+			}
+		},
+		A2(
+			_elm_lang$core$Json_Decode$map,
+			_user$project$MainLobbyComs$idStrToGameId(model),
+			_elm_lang$core$Json_Decode$string));
+};
+var _user$project$MainLobbyComs$joinedDecoder = function (model) {
+	return _elm_lang$core$Json_Decode$list(
+		A2(
+			_elm_lang$core$Json_Decode$andThen,
+			function (p) {
+				return A2(_elm_lang$core$Dict$member, p, model.presences) ? _elm_lang$core$Json_Decode$succeed(p) : _elm_lang$core$Json_Decode$fail('invalid player name');
+			},
+			_elm_lang$core$Json_Decode$string));
+};
+var _user$project$MainLobbyComs$hostDecoder = function (model) {
+	return A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (h) {
+			return A2(_elm_lang$core$Dict$member, h, model.presences) ? _elm_lang$core$Json_Decode$succeed(
+				_elm_lang$core$Maybe$Just(h)) : _elm_lang$core$Json_Decode$succeed(_elm_lang$core$Maybe$Nothing);
+		},
+		_elm_lang$core$Json_Decode$string);
+};
+var _user$project$MainLobbyComs$gameMetaDecoder = A5(
+	_elm_lang$core$Json_Decode$map4,
+	_user$project$MainLobbyTypes$GameMeta,
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'min_players', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'max_players', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'has_ia', _elm_lang$core$Json_Decode$bool));
+var _user$project$MainLobbyComs$gameSetupDecoder = function (model) {
+	return A5(
+		_elm_lang$core$Json_Decode$map4,
+		_user$project$MainLobbyTypes$GameSetup,
+		A2(_elm_lang$core$Json_Decode$field, 'game_meta', _user$project$MainLobbyComs$gameMetaDecoder),
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'joined',
+			_user$project$MainLobbyComs$joinedDecoder(model)),
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'host',
+			_user$project$MainLobbyComs$hostDecoder(model)),
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'game_id',
+			_user$project$MainLobbyComs$gameIdDecoder(model)));
+};
+var _user$project$MainLobbyComs$gamesSetupDecoder = function (model) {
+	return _elm_lang$core$Json_Decode$dict(
+		_user$project$MainLobbyComs$gameSetupDecoder(model));
+};
+var _user$project$MainLobbyComs$decodeGamesSetup = F2(
+	function (model, jsonVal) {
+		return A2(
+			_elm_lang$core$Json_Decode$decodeValue,
+			A2(
+				_elm_lang$core$Json_Decode$field,
+				'games_setup',
+				_user$project$MainLobbyComs$gamesSetupDecoder(model)),
+			jsonVal);
+	});
+var _user$project$MainLobbyComs$decodeGamesMeta = function (jsonVal) {
+	return A2(
+		_elm_lang$core$Json_Decode$decodeValue,
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'games_meta',
+			_elm_lang$core$Json_Decode$list(_user$project$MainLobbyComs$gameMetaDecoder)),
+		jsonVal);
+};
+var _user$project$MainLobbyComs$playerDecoder = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$MainLobbyTypes$Player,
+	A2(_elm_lang$core$Json_Decode$field, 'joined_at', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'username', _elm_lang$core$Json_Decode$string));
+var _user$project$MainLobbyComs$decodePresenceState = function (jsonVal) {
+	return A2(
+		_elm_lang$core$Json_Decode$decodeValue,
+		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceStateDecoder(_user$project$MainLobbyComs$playerDecoder),
+		jsonVal);
+};
+var _user$project$MainLobbyComs$decodePresenceDiff = function (jsonVal) {
+	return A2(
+		_elm_lang$core$Json_Decode$decodeValue,
+		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceDiffDecoder(_user$project$MainLobbyComs$playerDecoder),
+		jsonVal);
+};
+var _user$project$MainLobbyComs$decodePlayerInfo = function (jsonVal) {
 	return A2(
 		_elm_lang$core$Result$map,
 		function (name) {
 			return _elm_lang$core$Native_Utils.update(
-				_user$project$Main$defPlayer,
+				_user$project$MainLobbyTypes$defPlayer,
 				{username: name});
 		},
 		A2(
@@ -23122,67 +23202,585 @@ var _user$project$Main$decodePlayerInfo = function (jsonVal) {
 			A2(_elm_lang$core$Json_Decode$field, 'username', _elm_lang$core$Json_Decode$string),
 			jsonVal));
 };
-var _user$project$Main$playerDecoder = A3(
-	_elm_lang$core$Json_Decode$map2,
-	_user$project$Main$Player,
-	A2(_elm_lang$core$Json_Decode$field, 'joined_at', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode$field, 'username', _elm_lang$core$Json_Decode$string));
-var _user$project$Main$decodeChatMessage = function (jsonVal) {
+var _user$project$MainLobbyComs$encodePlayer = function (_p2) {
+	var _p3 = _p2;
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'username',
+				_1: _elm_lang$core$Json_Encode$string(_p3.username)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'joined_at',
+					_1: _elm_lang$core$Json_Encode$string(_p3.onlineAt)
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$MainLobbyComs$decodeDate = A2(
+	_elm_lang$core$Json_Decode$map,
+	function (v) {
+		return _elm_lang$core$Date$fromTime(v);
+	},
+	_elm_lang$core$Json_Decode$float);
+var _user$project$MainLobbyComs$chatMessageDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_user$project$MainLobbyTypes$ChatMessage,
+	A2(_elm_lang$core$Json_Decode$field, 'time_stamp', _user$project$MainLobbyComs$decodeDate),
+	A2(_elm_lang$core$Json_Decode$field, 'author', _user$project$MainLobbyComs$playerDecoder),
+	A2(_elm_lang$core$Json_Decode$field, 'message', _elm_lang$core$Json_Decode$string));
+var _user$project$MainLobbyComs$decodeChatHistory = function (jsonVal) {
+	var chatHistoryDecoder = _elm_lang$core$Json_Decode$list(_user$project$MainLobbyComs$chatMessageDecoder);
 	return A2(
 		_elm_lang$core$Json_Decode$decodeValue,
-		A4(
-			_elm_lang$core$Json_Decode$map3,
-			_user$project$Main$ChatMessage,
-			A2(_elm_lang$core$Json_Decode$field, 'time_stamp', _user$project$Main$decodeDate),
-			A2(_elm_lang$core$Json_Decode$field, 'author', _user$project$Main$playerDecoder),
-			A2(_elm_lang$core$Json_Decode$field, 'message', _elm_lang$core$Json_Decode$string)),
+		A2(_elm_lang$core$Json_Decode$field, 'chat_history', chatHistoryDecoder),
 		jsonVal);
 };
-var _user$project$Main$decodePresenceState = function (jsonVal) {
+var _user$project$MainLobbyComs$decodeChatMessage = function (jsonVal) {
+	return A2(_elm_lang$core$Json_Decode$decodeValue, _user$project$MainLobbyComs$chatMessageDecoder, jsonVal);
+};
+var _user$project$MainLobbyComs$encodeChatMessage = function (_p4) {
+	var _p5 = _p4;
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'time_stamp',
+				_1: _elm_lang$core$Json_Encode$float(
+					_elm_lang$core$Date$toTime(_p5.timeStamp))
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'author',
+					_1: _user$project$MainLobbyComs$encodePlayer(_p5.author)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'message',
+						_1: _elm_lang$core$Json_Encode$string(_p5.message)
+					},
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+
+var _user$project$MainLobbyView$channelStatusView = F2(
+	function (model, topic) {
+		var _p0 = A2(_elm_lang$core$Dict$get, topic, model.phxSocket.channels);
+		if (_p0.ctor === 'Nothing') {
+			return A2(
+				_mdgriffith$stylish_elephants$Element$el,
+				{ctor: '[]'},
+				_mdgriffith$stylish_elephants$Element$text('no channel corresponding to that topic'));
+		} else {
+			var _p2 = _p0._0;
+			var controlButton = function () {
+				var _p1 = _p2.state;
+				if (_p1.ctor === 'Joined') {
+					return A2(
+						_mdgriffith$stylish_elephants$Element_Input$button,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightRed),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$padding(10),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{
+							onPress: _elm_lang$core$Maybe$Just(
+								_user$project$MainLobbyTypes$LeaveChannel(topic)),
+							label: _mdgriffith$stylish_elephants$Element$text('Leave channel!')
+						});
+				} else {
+					return A2(
+						_mdgriffith$stylish_elephants$Element_Input$button,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$padding(10),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{
+							onPress: _elm_lang$core$Maybe$Just(
+								_user$project$MainLobbyTypes$JoinChannel(topic)),
+							label: _mdgriffith$stylish_elephants$Element$text('Join channel!')
+						});
+				}
+			}();
+			return A2(
+				_mdgriffith$stylish_elephants$Element$column,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$spacing(15),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Channel status: ',
+							_elm_lang$core$Basics$toString(_p2.state))),
+					_1: {
+						ctor: '::',
+						_0: controlButton,
+						_1: {ctor: '[]'}
+					}
+				});
+		}
+	});
+var _user$project$MainLobbyView$debugView = function (model) {
 	return A2(
-		_elm_lang$core$Json_Decode$decodeValue,
-		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceStateDecoder(_user$project$Main$playerDecoder),
-		jsonVal);
+		_mdgriffith$stylish_elephants$Element$column,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_mdgriffith$stylish_elephants$Element$paragraph,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$text(
+						A2(_elm_lang$core$Basics_ops['++'], 'log: ', model.log)),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$paragraph,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$text(
+							A2(_elm_lang$core$Basics_ops['++'], 'errors: ', model.errors)),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$paragraph,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$text(
+								_elm_lang$core$Basics$toString(model.gamesMeta)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$paragraph,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$text(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'presences: ',
+										_elm_lang$core$Basics$toString(model.presences))),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$stylish_elephants$Element$paragraph,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$text(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'gamesSetup: ',
+											_elm_lang$core$Basics$toString(model.gamesSetup))),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
 };
-var _user$project$Main$decodePresenceDiff = function (jsonVal) {
+var _user$project$MainLobbyView$prettyDate = function (timeStamp) {
+	var minute = _elm_lang$core$Date$minute(timeStamp);
+	var hour = _elm_lang$core$Date$hour(timeStamp);
+	var year = _elm_lang$core$Date$year(timeStamp);
+	var month = _elm_lang$core$Date$month(timeStamp);
+	var day = _elm_lang$core$Date$day(timeStamp);
 	return A2(
-		_elm_lang$core$Json_Decode$decodeValue,
-		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceDiffDecoder(_user$project$Main$playerDecoder),
-		jsonVal);
+		_elm_lang$core$Basics_ops['++'],
+		A3(
+			_elm_lang$core$String$padLeft,
+			2,
+			_elm_lang$core$Native_Utils.chr('0'),
+			_elm_lang$core$Basics$toString(hour)),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			':',
+			A3(
+				_elm_lang$core$String$padLeft,
+				2,
+				_elm_lang$core$Native_Utils.chr('0'),
+				_elm_lang$core$Basics$toString(minute))));
 };
-var _user$project$Main$RequestDate = function (a) {
-	return {ctor: 'RequestDate', _0: a};
+var _user$project$MainLobbyView$chatLogView = function (model) {
+	var messageView = function (_p3) {
+		var _p4 = _p3;
+		return A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$spacing(3),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$row,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$bold,
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$centerY,
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							_mdgriffith$stylish_elephants$Element$text(_p4.author.username)),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$stylish_elephants$Element$el,
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$alignRight,
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$grey),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$centerY,
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								},
+								_mdgriffith$stylish_elephants$Element$text(
+									_user$project$MainLobbyView$prettyDate(_p4.timeStamp))),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$paragraph,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$family(
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$typeface('monospace'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$text(_p4.message),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	};
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$padding(10),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element_Border$solid,
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Border$width(2),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Border$color(_elm_lang$core$Color$lightGrey),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$width(
+										_mdgriffith$stylish_elephants$Element$px(400)),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$height(
+											_mdgriffith$stylish_elephants$Element$px(300)),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$scrollbarY,
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$htmlAttribute(
+													_elm_lang$html$Html_Attributes$id('chatLogContainer')),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		_elm_lang$core$List$reverse(
+			A2(_elm_lang$core$List$map, messageView, model.chatLog)));
 };
-var _user$project$Main$KeyDown = function (a) {
-	return {ctor: 'KeyDown', _0: a};
+var _user$project$MainLobbyView$presencesView = function (model) {
+	var players = _elm_lang$core$Dict$keys(model.presences);
+	var playerView = function (player) {
+		return A2(
+			_mdgriffith$stylish_elephants$Element$el,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$padding(5),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$grey),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Element$text(player));
+	};
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(15),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$text('players online:'),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$paragraph,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+						_1: {ctor: '[]'}
+					},
+					A2(_elm_lang$core$List$map, playerView, players)),
+				_1: {ctor: '[]'}
+			}
+		});
 };
-var _user$project$Main$UnfocusChatMessageBox = {ctor: 'UnfocusChatMessageBox'};
-var _user$project$Main$FocusChatMessageBox = {ctor: 'FocusChatMessageBox'};
-var _user$project$Main$ReceiveChatMessage = function (a) {
-	return {ctor: 'ReceiveChatMessage', _0: a};
+var _user$project$MainLobbyView$view = function (model) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element$layout,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$padding(15),
+			_1: {ctor: '[]'}
+		},
+		A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$spacing(15),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$row,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(20),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$column,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _user$project$MainLobbyView$chatLogView(model),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_mdgriffith$stylish_elephants$Element$row,
+										{
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: A2(
+												_mdgriffith$stylish_elephants$Element_Input$text,
+												{
+													ctor: '::',
+													_0: _mdgriffith$stylish_elephants$Element$width(
+														_mdgriffith$stylish_elephants$Element$px(300)),
+													_1: {
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element_Events$onFocus(_user$project$MainLobbyTypes$FocusChatMessageBox),
+														_1: {
+															ctor: '::',
+															_0: _mdgriffith$stylish_elephants$Element_Events$onLoseFocus(_user$project$MainLobbyTypes$UnfocusChatMessageBox),
+															_1: {ctor: '[]'}
+														}
+													}
+												},
+												{
+													onChange: _elm_lang$core$Maybe$Just(_user$project$MainLobbyTypes$ChatMessageInput),
+													text: model.chatMessageInput,
+													placeholder: _elm_lang$core$Maybe$Nothing,
+													label: A2(
+														_mdgriffith$stylish_elephants$Element_Input$labelAbove,
+														{ctor: '[]'},
+														_mdgriffith$stylish_elephants$Element$text('message: '))
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_mdgriffith$stylish_elephants$Element_Input$button,
+													{
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+														_1: {
+															ctor: '::',
+															_0: _mdgriffith$stylish_elephants$Element$padding(10),
+															_1: {
+																ctor: '::',
+																_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+																_1: {
+																	ctor: '::',
+																	_0: _mdgriffith$stylish_elephants$Element$alignBottom,
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													},
+													{
+														onPress: _elm_lang$core$Maybe$Just(
+															_user$project$MainLobbyTypes$RequestDate(_user$project$MainLobbyTypes$SendChatMessage)),
+														label: _mdgriffith$stylish_elephants$Element$text('Send')
+													}),
+												_1: {ctor: '[]'}
+											}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$stylish_elephants$Element$column,
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _user$project$MainLobbyView$presencesView(model),
+									_1: {
+										ctor: '::',
+										_0: A2(_user$project$MainLobbyView$channelStatusView, model, 'lobby:chat'),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _user$project$MainLobbyView$debugView(model),
+					_1: {ctor: '[]'}
+				}
+			}));
 };
-var _user$project$Main$SendChatMessage = function (a) {
-	return {ctor: 'SendChatMessage', _0: a};
+
+var _user$project$MainLobby$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, model.phxSocket, _user$project$MainLobbyTypes$PhoenixMsg),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$keyboard$Keyboard$downs(_user$project$MainLobbyTypes$KeyDown),
+				_1: {ctor: '[]'}
+			}
+		});
 };
-var _user$project$Main$ChatMessageInput = function (a) {
-	return {ctor: 'ChatMessageInput', _0: a};
-};
-var _user$project$Main$ServerError = function (a) {
-	return {ctor: 'ServerError', _0: a};
-};
-var _user$project$Main$ServerMsg = function (a) {
-	return {ctor: 'ServerMsg', _0: a};
-};
-var _user$project$Main$ReceivePresenceDiff = function (a) {
-	return {ctor: 'ReceivePresenceDiff', _0: a};
-};
-var _user$project$Main$ReceivePresenceState = function (a) {
-	return {ctor: 'ReceivePresenceState', _0: a};
-};
-var _user$project$Main$ReceivePlayerInfo = function (a) {
-	return {ctor: 'ReceivePlayerInfo', _0: a};
-};
-var _user$project$Main$initialSocket = function (flags) {
+var _user$project$MainLobby$initialSocket = function (flags) {
 	var wsUrlWithAuth = A2(
 		_elm_lang$core$Basics_ops['++'],
 		flags.wsUrl,
@@ -23194,176 +23792,70 @@ var _user$project$Main$initialSocket = function (flags) {
 				flags.authToken,
 				A2(_elm_lang$core$Basics_ops['++'], '&salt=', flags.authSalt))));
 	return _fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
-		_fbonetti$elm_phoenix_socket$Phoenix_Socket$withoutHeartbeat(
+		A4(
+			_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+			'games_setup',
+			'lobby:mainlobby',
+			_user$project$MainLobbyTypes$ReceiveGamesSetup,
 			A4(
 				_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-				'new_chat_message',
-				'lobby:chat',
-				_user$project$Main$ReceiveChatMessage,
+				'games_meta',
+				'lobby:mainlobby',
+				_user$project$MainLobbyTypes$ReceiveGamesMeta,
 				A4(
 					_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-					'presence_diff',
+					'chat_history',
 					'lobby:chat',
-					_user$project$Main$ReceivePresenceDiff,
+					_user$project$MainLobbyTypes$UpdateChatLog,
 					A4(
 						_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-						'presence_state',
+						'new_chat_message',
 						'lobby:chat',
-						_user$project$Main$ReceivePresenceState,
+						_user$project$MainLobbyTypes$ReceiveChatMessage,
 						A4(
 							_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-							'greetings',
+							'presence_diff',
 							'lobby:chat',
-							_user$project$Main$ReceivePlayerInfo,
-							_fbonetti$elm_phoenix_socket$Phoenix_Socket$init(wsUrlWithAuth)))))));
+							_user$project$MainLobbyTypes$ReceivePresenceDiff,
+							A4(
+								_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+								'presence_state',
+								'lobby:chat',
+								_user$project$MainLobbyTypes$ReceivePresenceState,
+								A4(
+									_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+									'greetings',
+									'lobby:chat',
+									_user$project$MainLobbyTypes$ReceivePlayerInfo,
+									_fbonetti$elm_phoenix_socket$Phoenix_Socket$init(wsUrlWithAuth)))))))));
 };
-var _user$project$Main$init = function (flags) {
-	return A2(
-		_elm_lang$core$Platform_Cmd_ops['!'],
-		{
-			wsUrl: flags.wsUrl,
-			authToken: flags.authToken,
-			authSalt: flags.authSalt,
-			phxSocket: _user$project$Main$initialSocket(flags),
-			playerInfo: _user$project$Main$defPlayer,
-			log: '',
-			errors: '',
-			presences: _elm_lang$core$Dict$empty,
-			chatMessageInput: '',
-			chatLog: {ctor: '[]'},
-			chatMessageBoxFocused: false
-		},
-		{ctor: '[]'});
+var _user$project$MainLobby$initPhoenixChannel = function (topic) {
+	return _fbonetti$elm_phoenix_socket$Phoenix_Channel$init(topic);
 };
-var _user$project$Main$JoinChannel = {ctor: 'JoinChannel'};
-var _user$project$Main$view = function (model) {
-	return A2(
-		_mdgriffith$stylish_elephants$Element$layout,
-		{
-			ctor: '::',
-			_0: _mdgriffith$stylish_elephants$Element$padding(15),
-			_1: {ctor: '[]'}
-		},
-		A2(
-			_mdgriffith$stylish_elephants$Element$column,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: _user$project$Main$listPlayers(model),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_mdgriffith$stylish_elephants$Element_Input$button,
-						{
-							ctor: '::',
-							_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
-							_1: {
-								ctor: '::',
-								_0: _mdgriffith$stylish_elephants$Element$padding(10),
-								_1: {ctor: '[]'}
-							}
-						},
-						{
-							onPress: _elm_lang$core$Maybe$Just(_user$project$Main$JoinChannel),
-							label: _mdgriffith$stylish_elephants$Element$text('Join channel!')
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_mdgriffith$stylish_elephants$Element$row,
-							{
-								ctor: '::',
-								_0: _mdgriffith$stylish_elephants$Element$spacing(10),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_mdgriffith$stylish_elephants$Element_Input$text,
-									{
-										ctor: '::',
-										_0: _mdgriffith$stylish_elephants$Element$width(
-											_mdgriffith$stylish_elephants$Element$px(300)),
-										_1: {
-											ctor: '::',
-											_0: _mdgriffith$stylish_elephants$Element_Events$onFocus(_user$project$Main$FocusChatMessageBox),
-											_1: {
-												ctor: '::',
-												_0: _mdgriffith$stylish_elephants$Element_Events$onLoseFocus(_user$project$Main$UnfocusChatMessageBox),
-												_1: {ctor: '[]'}
-											}
-										}
-									},
-									{
-										onChange: _elm_lang$core$Maybe$Just(_user$project$Main$ChatMessageInput),
-										text: model.chatMessageInput,
-										placeholder: _elm_lang$core$Maybe$Nothing,
-										label: A2(
-											_mdgriffith$stylish_elephants$Element_Input$labelAbove,
-											{ctor: '[]'},
-											_mdgriffith$stylish_elephants$Element$text('message: '))
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_mdgriffith$stylish_elephants$Element_Input$button,
-										{
-											ctor: '::',
-											_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
-											_1: {
-												ctor: '::',
-												_0: _mdgriffith$stylish_elephants$Element$padding(10),
-												_1: {
-													ctor: '::',
-													_0: _mdgriffith$stylish_elephants$Element$alignBottom,
-													_1: {ctor: '[]'}
-												}
-											}
-										},
-										{
-											onPress: _elm_lang$core$Maybe$Just(
-												_user$project$Main$RequestDate(_user$project$Main$SendChatMessage)),
-											label: _mdgriffith$stylish_elephants$Element$text('Send')
-										}),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: _user$project$Main$chatLogView(model),
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			}));
-};
-var _user$project$Main$PhoenixMsg = function (a) {
-	return {ctor: 'PhoenixMsg', _0: a};
-};
-var _user$project$Main$update = F2(
+var _user$project$MainLobby$update = F2(
 	function (msg, model) {
 		update:
 		while (true) {
-			var _p6 = msg;
-			switch (_p6.ctor) {
+			var _p0 = msg;
+			switch (_p0.ctor) {
 				case 'ServerMsg':
-					var _p7 = A2(
+					var _p1 = A2(
 						_elm_lang$core$Json_Decode$decodeValue,
 						A2(_elm_lang$core$Json_Decode$field, 'content', _elm_lang$core$Json_Decode$string),
-						_p6._0);
-					if (_p7.ctor === 'Ok') {
+						_p0._0);
+					if (_p1.ctor === 'Ok') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
-								{log: _p7._0}),
+								{log: _p1._0}),
 							{ctor: '[]'});
 					} else {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
-								{errors: _p7._0}),
+								{errors: _p1._0}),
 							{ctor: '[]'});
 					}
 				case 'ServerError':
@@ -23372,12 +23864,12 @@ var _user$project$Main$update = F2(
 						model,
 						{ctor: '[]'});
 				case 'ReceivePlayerInfo':
-					var _p8 = _user$project$Main$decodePlayerInfo(_p6._0);
-					if (_p8.ctor === 'Ok') {
+					var _p2 = _user$project$MainLobbyComs$decodePlayerInfo(_p0._0);
+					if (_p2.ctor === 'Ok') {
 						var currPlInf = model.playerInfo;
 						var newPlInf = _elm_lang$core$Native_Utils.update(
 							currPlInf,
-							{username: _p8._0.username});
+							{username: _p2._0.username});
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
@@ -23389,28 +23881,30 @@ var _user$project$Main$update = F2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
-								{errors: _p8._0}),
+								{errors: _p2._0}),
 							{ctor: '[]'});
 					}
 				case 'ReceivePresenceState':
 					var presences = A2(
 						_elm_lang$core$Result$map,
-						_fbonetti$elm_phoenix_socket$Phoenix_Presence$syncState(model.presences),
-						_user$project$Main$decodePresenceState(_p6._0));
-					var _p9 = presences;
-					if (_p9.ctor === 'Ok') {
+						function (state) {
+							return A2(_fbonetti$elm_phoenix_socket$Phoenix_Presence$syncState, state, model.presences);
+						},
+						_user$project$MainLobbyComs$decodePresenceState(_p0._0));
+					var _p3 = presences;
+					if (_p3.ctor === 'Ok') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
-								{presences: _p9._0}),
+								{presences: _p3._0}),
 							{ctor: '[]'});
 					} else {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
-								{errors: _p9._0}),
+								{errors: _p3._0}),
 							{ctor: '[]'});
 					}
 				case 'ReceivePresenceDiff':
@@ -23419,28 +23913,57 @@ var _user$project$Main$update = F2(
 						function (diff) {
 							return A2(_fbonetti$elm_phoenix_socket$Phoenix_Presence$syncDiff, diff, model.presences);
 						},
-						_user$project$Main$decodePresenceDiff(_p6._0));
-					var _p10 = presences;
-					if (_p10.ctor === 'Ok') {
+						_user$project$MainLobbyComs$decodePresenceDiff(_p0._0));
+					var _p4 = presences;
+					if (_p4.ctor === 'Ok') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
-								{presences: _p10._0}),
+								{presences: _p4._0}),
 							{ctor: '[]'});
 					} else {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
-								{errors: _p10._0}),
+								{errors: _p4._0}),
 							{ctor: '[]'});
 					}
+				case 'JoinChannels':
+					var lobbyMainlobby = _user$project$MainLobby$initPhoenixChannel('lobby:mainlobby');
+					var lobbyChat = _user$project$MainLobby$initPhoenixChannel('lobby:chat');
+					var _p5 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyChat, model.phxSocket);
+					var newSocket1 = _p5._0;
+					var phxCmd1 = _p5._1;
+					var _p6 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
+					var newSocket2 = _p6._0;
+					var phxCmd2 = _p6._1;
+					var phxCmd = _elm_lang$core$Platform_Cmd$batch(
+						{
+							ctor: '::',
+							_0: phxCmd1,
+							_1: {
+								ctor: '::',
+								_0: phxCmd2,
+								_1: {ctor: '[]'}
+							}
+						});
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{phxSocket: newSocket2}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
 				case 'JoinChannel':
-					var channel = _user$project$Main$initPhoenixChannel('lobby:chat');
-					var _p11 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, channel, model.phxSocket);
-					var newSocket = _p11._0;
-					var phxCmd = _p11._1;
+					var channel = _user$project$MainLobby$initPhoenixChannel(_p0._0);
+					var _p7 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, channel, model.phxSocket);
+					var newSocket = _p7._0;
+					var phxCmd = _p7._1;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
@@ -23448,40 +23971,54 @@ var _user$project$Main$update = F2(
 							{phxSocket: newSocket}),
 						{
 							ctor: '::',
-							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd),
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
+				case 'LeaveChannel':
+					var _p8 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$leave, _p0._0, model.phxSocket);
+					var newSocket = _p8._0;
+					var phxCmd = _p8._1;
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{phxSocket: newSocket}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
 							_1: {ctor: '[]'}
 						});
 				case 'PhoenixMsg':
-					var _p12 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p6._0, model.phxSocket);
-					var newSocket = _p12._0;
-					var phxCmd = _p12._1;
+					var _p9 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$update, _p0._0, model.phxSocket);
+					var newSocket = _p9._0;
+					var phxCmd = _p9._1;
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{phxSocket: newSocket}),
-						_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd)
+						_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd)
 					};
 				case 'ChatMessageInput':
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							model,
-							{chatMessageInput: _p6._0}),
+							{chatMessageInput: _p0._0}),
 						{ctor: '[]'});
 				case 'SendChatMessage':
-					var payload = _user$project$Main$encodeChatMessage(
-						{message: model.chatMessageInput, author: model.playerInfo, timeStamp: _p6._0});
+					var payload = _user$project$MainLobbyComs$encodeChatMessage(
+						{message: model.chatMessageInput, author: model.playerInfo, timeStamp: _p0._0});
 					var pushMsg = A2(
 						_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
-						_user$project$Main$ServerError,
+						_user$project$MainLobbyTypes$ServerError,
 						A2(
 							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
 							payload,
 							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'new_chat_message', 'lobby:chat')));
-					var _p13 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
-					var newSocket = _p13._0;
-					var phxCmd = _p13._1;
+					var _p10 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+					var newSocket = _p10._0;
+					var phxCmd = _p10._1;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
@@ -23489,20 +24026,92 @@ var _user$project$Main$update = F2(
 							{log: 'message sent', phxSocket: newSocket, chatMessageInput: ''}),
 						{
 							ctor: '::',
-							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$PhoenixMsg, phxCmd),
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
 							_1: {ctor: '[]'}
 						});
 				case 'ReceiveChatMessage':
-					var _p14 = _user$project$Main$decodeChatMessage(_p6._0);
-					if (_p14.ctor === 'Ok') {
+					var _p11 = _user$project$MainLobbyComs$decodeChatMessage(_p0._0);
+					if (_p11.ctor === 'Ok') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
 								{
-									chatLog: {ctor: '::', _0: _p14._0, _1: model.chatLog}
+									chatLog: {ctor: '::', _0: _p11._0, _1: model.chatLog}
 								}),
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$Task$attempt,
+									_user$project$MainLobbyTypes$DropRes,
+									_elm_lang$dom$Dom_Scroll$toBottom('chatLogContainer')),
+								_1: {ctor: '[]'}
+							});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p11._0}),
 							{ctor: '[]'});
+					}
+				case 'ReceiveGamesMeta':
+					var _p12 = _user$project$MainLobbyComs$decodeGamesMeta(_p0._0);
+					if (_p12.ctor === 'Ok') {
+						var gamesMetaDict = _elm_lang$core$Dict$fromList(
+							A2(
+								_elm_lang$core$List$map,
+								function (gm) {
+									return {ctor: '_Tuple2', _0: gm.name, _1: gm};
+								},
+								_p12._0));
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{gamesMeta: gamesMetaDict}),
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p12._0}),
+							{ctor: '[]'});
+					}
+				case 'ReceiveGamesSetup':
+					var _p13 = A2(_user$project$MainLobbyComs$decodeGamesSetup, model, _p0._0);
+					if (_p13.ctor === 'Ok') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{gamesSetup: _p13._0}),
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p13._0}),
+							{ctor: '[]'});
+					}
+				case 'UpdateChatLog':
+					var _p14 = _user$project$MainLobbyComs$decodeChatHistory(_p0._0);
+					if (_p14.ctor === 'Ok') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{chatLog: _p14._0}),
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$Task$attempt,
+									_user$project$MainLobbyTypes$DropRes,
+									_elm_lang$dom$Dom_Scroll$toBottom('chatLogContainer')),
+								_1: {ctor: '[]'}
+							});
 					} else {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
@@ -23526,8 +24135,8 @@ var _user$project$Main$update = F2(
 							{chatMessageBoxFocused: false}),
 						{ctor: '[]'});
 				case 'KeyDown':
-					if (_elm_lang$core$Native_Utils.eq(_p6._0, 13) && model.chatMessageBoxFocused) {
-						var _v9 = _user$project$Main$RequestDate(_user$project$Main$SendChatMessage),
+					if (_elm_lang$core$Native_Utils.eq(_p0._0, 13) && model.chatMessageBoxFocused) {
+						var _v9 = _user$project$MainLobbyTypes$RequestDate(_user$project$MainLobbyTypes$SendChatMessage),
 							_v10 = model;
 						msg = _v9;
 						model = _v10;
@@ -23544,9 +24153,55 @@ var _user$project$Main$update = F2(
 						model,
 						{
 							ctor: '::',
-							_0: A2(_elm_lang$core$Task$perform, _p6._0, _elm_lang$core$Date$now),
+							_0: A2(_elm_lang$core$Task$perform, _p0._0, _elm_lang$core$Date$now),
 							_1: {ctor: '[]'}
 						});
+				case 'DropRes':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'SelectGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{
+								currentSelectedGame: _elm_lang$core$Maybe$Just(_p0._0)
+							}),
+						{ctor: '[]'});
+				case 'UnSelectGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{currentSelectedGame: _elm_lang$core$Maybe$Nothing}),
+						{ctor: '[]'});
+				case 'HostGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'DeleteGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'JoinGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'LeaveGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				case 'StartGame':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
 				default:
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
@@ -23555,20 +24210,54 @@ var _user$project$Main$update = F2(
 			}
 		}
 	});
-var _user$project$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$batch(
+var _user$project$MainLobby$init = function (flags) {
+	var lobbyMainlobby = _user$project$MainLobby$initPhoenixChannel('lobby:mainlobby');
+	var lobbyChat = _user$project$MainLobby$initPhoenixChannel('lobby:chat');
+	var _p15 = A2(
+		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
+		lobbyChat,
+		_user$project$MainLobby$initialSocket(flags));
+	var newSocket1 = _p15._0;
+	var phxCmd1 = _p15._1;
+	var _p16 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
+	var newSocket2 = _p16._0;
+	var phxCmd2 = _p16._1;
+	var phxCmd = _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',
-			_0: A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$listen, model.phxSocket, _user$project$Main$PhoenixMsg),
+			_0: phxCmd1,
 			_1: {
 				ctor: '::',
-				_0: _elm_lang$keyboard$Keyboard$downs(_user$project$Main$KeyDown),
+				_0: phxCmd2,
 				_1: {ctor: '[]'}
 			}
 		});
+	return A2(
+		_elm_lang$core$Platform_Cmd_ops['!'],
+		{
+			wsUrl: flags.wsUrl,
+			authToken: flags.authToken,
+			authSalt: flags.authSalt,
+			phxSocket: newSocket2,
+			playerInfo: _user$project$MainLobbyTypes$defPlayer,
+			log: '',
+			errors: '',
+			presences: _elm_lang$core$Dict$empty,
+			chatMessageInput: '',
+			chatLog: {ctor: '[]'},
+			chatMessageBoxFocused: false,
+			gamesMeta: _elm_lang$core$Dict$empty,
+			gamesSetup: _elm_lang$core$Dict$empty,
+			currentSelectedGame: _elm_lang$core$Maybe$Nothing
+		},
+		{
+			ctor: '::',
+			_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+			_1: {ctor: '[]'}
+		});
 };
-var _user$project$Main$main = _elm_lang$html$Html$programWithFlags(
-	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})(
+var _user$project$MainLobby$main = _elm_lang$html$Html$programWithFlags(
+	{init: _user$project$MainLobby$init, view: _user$project$MainLobbyView$view, update: _user$project$MainLobby$update, subscriptions: _user$project$MainLobby$subscriptions})(
 	A2(
 		_elm_lang$core$Json_Decode$andThen,
 		function (authSalt) {
@@ -23586,12 +24275,11 @@ var _user$project$Main$main = _elm_lang$html$Html$programWithFlags(
 				A2(_elm_lang$core$Json_Decode$field, 'authToken', _elm_lang$core$Json_Decode$string));
 		},
 		A2(_elm_lang$core$Json_Decode$field, 'authSalt', _elm_lang$core$Json_Decode$string)));
-var _user$project$Main$Default = {ctor: 'Default'};
 
 var Elm = {};
-Elm['Main'] = Elm['Main'] || {};
-if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', undefined);
+Elm['MainLobby'] = Elm['MainLobby'] || {};
+if (typeof _user$project$MainLobby$main !== 'undefined') {
+    _user$project$MainLobby$main(Elm['MainLobby'], 'MainLobby', undefined);
 }
 
 if (typeof define === "function" && define['amd'])
