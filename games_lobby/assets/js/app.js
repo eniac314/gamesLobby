@@ -21,7 +21,7 @@ import "phoenix_html"
 // import socket from "./socket"
 
 // Elm
-import Elm from "./mainLobby"
+import Elm from "./mainlobby"
 
 const elmContainer = document.querySelector("#elm-container");
 

@@ -18,41 +18,23 @@ import Phoenix.Channel exposing (State(..))
 view : Model -> Html Msg
 view model =
     Element.layout
-        [ padding 15 ]
+        [ padding 15
+        , Font.size 18
+        ]
     <|
-        column [ spacing 15 ]
-            [ row
-                [ spacing 20 ]
-                [ column [ spacing 10 ]
-                    [ chatLogView model
-                    , row [ spacing 10 ]
-                        [ Input.text
-                            [ width (px 300)
-                            , Events.onFocus FocusChatMessageBox
-                            , Events.onLoseFocus UnfocusChatMessageBox
-                            ]
-                            { onChange = Just ChatMessageInput
-                            , text = model.chatMessageInput
-                            , placeholder = Nothing
-                            , label = Input.labelAbove [] (text "message: ")
-                            }
-                        , Input.button
-                            [ Background.color Color.lightBlue
-                            , padding 10
-                            , Border.rounded 5
-                            , alignBottom
-                            ]
-                            { onPress = Just (RequestDate SendChatMessage)
-                            , label = text "Send"
-                            }
-                        ]
-                    ]
-                , column [ spacing 10 ]
-                    [ presencesView model
-                    , channelStatusView model "lobby:chat"
-                    ]
+        column
+            [ spacing 20 ]
+            [ el
+                [ Font.size 32
+                , Font.bold
                 ]
-            , debugView model
+                (text "Game Lobby")
+            , row [ spacing 15 ]
+                [ chatView model
+                , gamesSetupView model
+
+                --, debugView model
+                ]
             ]
 
 
@@ -69,7 +51,10 @@ presencesView model =
         players =
             Dict.keys model.presences
     in
-    column [ spacing 15 ]
+    column
+        [ spacing 15
+        , width shrink
+        ]
         [ text "players online:"
         , paragraph [ spacing 5 ] (List.map playerView players)
         ]
@@ -95,6 +80,43 @@ prettyDate timeStamp =
     String.padLeft 2 '0' (toString hour)
         ++ ":"
         ++ String.padLeft 2 '0' (toString minute)
+
+
+chatView model =
+    row
+        [ spacing 20 ]
+        [ column
+            [ spacing 10
+
+            --, Background.color Color.blue
+            , width shrink
+            ]
+            [ chatLogView model
+            , row [ spacing 10 ]
+                [ Input.text
+                    [ width (px 300)
+                    , Events.onFocus FocusChatMessageBox
+                    , Events.onLoseFocus UnfocusChatMessageBox
+                    ]
+                    { onChange = Just ChatMessageInput
+                    , text = model.chatMessageInput
+                    , placeholder = Nothing
+                    , label = Input.labelAbove [] (text "message: ")
+                    }
+                , Input.button
+                    [ Background.color Color.lightBlue
+                    , padding 10
+                    , Border.rounded 5
+                    , alignBottom
+                    , mouseOver [ Font.glow Color.lightBlue 7 ]
+                    ]
+                    { onPress = Just (RequestDate SendChatMessage)
+                    , label = text "Send"
+                    }
+                ]
+            ]
+        , presencesView model
+        ]
 
 
 chatLogView model =
@@ -166,6 +188,7 @@ channelStatusView model topic =
                                 [ Background.color Color.lightRed
                                 , padding 10
                                 , Border.rounded 5
+                                , mouseOver [ Font.glow Color.lightRed 7 ]
                                 ]
                                 { onPress = Just <| LeaveChannel topic
                                 , label = text "Leave channel!"
@@ -176,6 +199,7 @@ channelStatusView model topic =
                                 [ Background.color Color.lightBlue
                                 , padding 10
                                 , Border.rounded 5
+                                , mouseOver [ Font.glow Color.lightBlue 7 ]
                                 ]
                                 { onPress = Just <| JoinChannel topic
                                 , label = text "Join channel!"
@@ -186,3 +210,186 @@ channelStatusView model topic =
                 [ text <| "Channel status: " ++ toString channel.state
                 , controlButton
                 ]
+
+
+gameMetaView : GameMeta -> Element Msg
+gameMetaView ({ name, minPlayers, maxPlayers, hasIA } as gamesMeta) =
+    column
+        [ spacing 10
+        , padding 10
+        , Border.rounded 5
+        , Events.onClick (SelectGame gamesMeta)
+        , pointer
+        , Background.color Color.lightGrey
+        , mouseOver [ Background.color Color.grey ]
+        , width shrink
+        , Font.size 17
+        ]
+        [ el [ Font.bold ] (text name)
+        , el [] (text <| "Min players: " ++ toString minPlayers)
+        , el [] (text <| "Max players: " ++ toString maxPlayers)
+        , el [] (text <| "Has AI: " ++ toString hasIA)
+        ]
+
+
+gameSetupView : Model -> GameSetup -> Element Msg
+gameSetupView model { gameMeta, joined, host, gameId } =
+    case host of
+        Nothing ->
+            Element.empty
+
+        Just host ->
+            let
+                gameTitle =
+                    (Tuple.first gameId).name
+                        ++ " "
+                        ++ (toString <| Tuple.second gameId)
+
+                isGameSetupHost =
+                    model.playerInfo.username == host
+
+                hasJoinedGameSetup =
+                    List.member model.playerInfo.username joined
+
+                canStart =
+                    List.length joined + 1 >= gameMeta.minPlayers
+            in
+            column
+                [ spacing 10
+                , Font.size 16
+                , Background.color Color.lightOrange
+                , height (px 200)
+                , width shrink
+                , padding 10
+                , alignTop
+                , Border.rounded 5
+                ]
+                [ el [ Font.bold ] (text gameTitle)
+                , el [] (text <| "Game hosted by: " ++ host)
+                , column
+                    [ spacing 10
+                    , scrollbarY
+                    ]
+                    (List.map (\usr -> el [] (text usr)) joined)
+                , if isGameSetupHost then
+                    Input.button
+                        [ Background.color Color.lightRed
+                        , padding 10
+                        , Border.rounded 5
+                        , mouseOver [ Font.glow Color.lightRed 7 ]
+                        ]
+                        { onPress = Just <| DeleteGame gameId
+                        , label = text "Delete Game"
+                        }
+                  else if not (hasJoined model) && not (isHost model) then
+                    Input.button
+                        [ Background.color Color.lightBlue
+                        , padding 10
+                        , Border.rounded 5
+                        , mouseOver [ Font.glow Color.lightBlue 7 ]
+                        ]
+                        { onPress = Just <| JoinGame gameId
+                        , label = text "Join game!"
+                        }
+                  else if hasJoinedGameSetup then
+                    Input.button
+                        [ Background.color Color.lightBlue
+                        , padding 10
+                        , Border.rounded 5
+                        , mouseOver [ Font.glow Color.lightBlue 7 ]
+                        ]
+                        { onPress = Just <| LeaveGame gameId
+                        , label = text "Leave game"
+                        }
+                  else
+                    Element.empty
+                , if canStart then
+                    Input.button
+                        [ Background.color Color.lightGreen
+                        , padding 10
+                        , Border.rounded 5
+                        , mouseOver [ Font.glow Color.lightGreen 7 ]
+                        ]
+                        { onPress = Just <| StartGame gameId
+                        , label = text "Start game"
+                        }
+                  else
+                    Element.empty
+                ]
+
+
+gamesSetupView model =
+    case model.currentSelectedGame of
+        Nothing ->
+            column
+                [ spacing 10 ]
+                [ text "choose a game:"
+                , paragraph
+                    [ --Background.color Color.lightGreen
+                      spacing 10
+                    ]
+                    (List.map gameMetaView (Dict.values model.gamesMeta))
+                ]
+
+        Just gameMeta ->
+            column
+                [ spacing 10 ]
+                [ el [ Font.bold ] (text gameMeta.name)
+                , row
+                    [ spacing 10
+                    , height fill
+                    ]
+                    (List.map (gameSetupView model)
+                        (Dict.filter (\k v -> v.gameMeta.name == gameMeta.name) model.gamesSetup
+                            |> Dict.values
+                        )
+                    )
+                , row
+                    [ spacing 10
+                    , alignBottom
+                    ]
+                    [ if not (hasJoined model) && not (isHost model) then
+                        Input.button
+                            [ Background.color Color.lightBlue
+                            , padding 10
+                            , Border.rounded 5
+                            , mouseOver [ Font.glow Color.lightBlue 7 ]
+                            ]
+                            { onPress = Just <| NewGame
+                            , label = text "New Game!"
+                            }
+                      else
+                        Element.empty
+                    , Input.button
+                        [ Background.color Color.lightBlue
+                        , padding 10
+                        , Border.rounded 5
+                        , mouseOver [ Font.glow Color.lightBlue 7 ]
+                        ]
+                        { onPress = Just <| UnSelectGame
+                        , label = text "Back to game list"
+                        }
+                    ]
+                ]
+
+
+isHost model =
+    let
+        username =
+            model.playerInfo.username
+    in
+    model.gamesSetup
+        |> Dict.filter (\k v -> v.host == Just username)
+        |> Dict.size
+        |> (\s -> s > 0)
+
+
+hasJoined model =
+    let
+        username =
+            model.playerInfo.username
+    in
+    model.gamesSetup
+        |> Dict.filter (\k v -> List.member username v.joined)
+        |> Dict.size
+        |> (\s -> s > 0)

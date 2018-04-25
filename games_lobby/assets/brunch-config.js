@@ -46,13 +46,12 @@ exports.config = {
   plugins: {
     babel: {
       // Do not use ES6 compiler in vendor code
-      ignore: [/vendor/, "js/mainLobby.js"]},
+      ignore: [/vendor/, "js/mainlobby.js", "js/hexaboard.js"]},
     elmBrunch: {
       elmFolder: "elm",
-      mainModules: ["src/MainLobby.elm"],
+      mainModules: ["src/MainLobby.elm", "src/hexaboard/Hexaboard.elm"],
       makeParameters: [],
-      outputFolder: "../js",
-      outputFile : 'mainLobby.js'
+      outputFolder: "../js"
     }
 
   },
@@ -65,5 +64,8 @@ exports.config = {
 
   npm: {
     enabled: true
+  }
+  , conventions: {
+    ignored: [/elm-stuff/, /MainLobbyTypes.elm/]
   }
 };

@@ -34,13 +34,16 @@ type alias Model =
     , gamesMeta : Dict String GameMeta
     , gamesSetup : Dict String GameSetup
     , currentSelectedGame : Maybe GameMeta
+
+    --, currentlyHosting : Bool
+    --, currentlyJoining : Bool
     }
 
 
 type alias GameMeta =
     { name : String
     , minPlayers : Int
-    , maxPlayer : Int
+    , maxPlayers : Int
     , hasIA : Bool
     }
 
@@ -102,8 +105,8 @@ type Msg
     | RequestDate (Date -> Msg)
     | SelectGame GameMeta
     | UnSelectGame
-    | HostGame
-    | DeleteGame
+    | NewGame
+    | DeleteGame GameId
     | JoinGame GameId
-    | LeaveGame
-    | StartGame
+    | LeaveGame GameId
+    | StartGame GameId

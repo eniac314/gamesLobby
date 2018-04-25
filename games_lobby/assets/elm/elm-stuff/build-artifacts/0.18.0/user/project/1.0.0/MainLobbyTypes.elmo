@@ -33,7 +33,7 @@ var _user$project$MainLobbyTypes$Model = function (a) {
 };
 var _user$project$MainLobbyTypes$GameMeta = F4(
 	function (a, b, c, d) {
-		return {name: a, minPlayers: b, maxPlayer: c, hasIA: d};
+		return {name: a, minPlayers: b, maxPlayers: c, hasIA: d};
 	});
 var _user$project$MainLobbyTypes$GameSetup = F4(
 	function (a, b, c, d) {
@@ -48,13 +48,19 @@ var _user$project$MainLobbyTypes$Player = F2(
 		return {onlineAt: a, username: b};
 	});
 var _user$project$MainLobbyTypes$defPlayer = A2(_user$project$MainLobbyTypes$Player, '', '');
-var _user$project$MainLobbyTypes$StartGame = {ctor: 'StartGame'};
-var _user$project$MainLobbyTypes$LeaveGame = {ctor: 'LeaveGame'};
+var _user$project$MainLobbyTypes$StartGame = function (a) {
+	return {ctor: 'StartGame', _0: a};
+};
+var _user$project$MainLobbyTypes$LeaveGame = function (a) {
+	return {ctor: 'LeaveGame', _0: a};
+};
 var _user$project$MainLobbyTypes$JoinGame = function (a) {
 	return {ctor: 'JoinGame', _0: a};
 };
-var _user$project$MainLobbyTypes$DeleteGame = {ctor: 'DeleteGame'};
-var _user$project$MainLobbyTypes$HostGame = {ctor: 'HostGame'};
+var _user$project$MainLobbyTypes$DeleteGame = function (a) {
+	return {ctor: 'DeleteGame', _0: a};
+};
+var _user$project$MainLobbyTypes$NewGame = {ctor: 'NewGame'};
 var _user$project$MainLobbyTypes$UnSelectGame = {ctor: 'UnSelectGame'};
 var _user$project$MainLobbyTypes$SelectGame = function (a) {
 	return {ctor: 'SelectGame', _0: a};

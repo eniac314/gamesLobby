@@ -16,22 +16,18 @@ defmodule Mainlobby.GameSetupServer do
     GenServer.call @name, :get_games_setup
   end 
   
-  def new_game(game_name) do 
-    GenServer.call @name, {:new_game, game_name}
+  def new_game(game_name, player) do 
+    GenServer.call @name, {:new_game, game_name, player}
   end
 
   def delete_game(game_id) do
     GenServer.call @name, {:delete_game, game_id}
   end 
   
-  def leave_game(game_id, player) do 
+  def leave_game(player, game_id) do 
     GenServer.call @name, {:leave_game, game_id, player}
   end 
 
-  def set_host(player, game_id) do 
-    GenServer.call @name, {:set_host, game_id, player}
-  end 
-  
   def join_game(player, game_id) do 
     GenServer.call @name, {:join_game, game_id, player}
   end  
@@ -48,8 +44,8 @@ defmodule Mainlobby.GameSetupServer do
     {:reply, games_setup, state}
   end
 
-  def handle_call({:new_game, game_name}, _from, state) do
-    new_state = GameSetup.new_game(state, game_name)
+  def handle_call({:new_game, game_name, player}, _from, state) do
+    new_state = GameSetup.new_game(state, game_name, player)
     {:reply, new_state, new_state}
   end 
   
@@ -60,11 +56,6 @@ defmodule Mainlobby.GameSetupServer do
 
   def handle_call({:leave_game, game_id, player}, _from, state) do 
     new_state = GameSetup.leave_game(state, game_id, player)
-    {:reply, new_state, new_state}
-  end
-
-  def handle_call({:set_host, game_id, player}, _from, state) do 
-    new_state = GameSetup.set_host(state, game_id, player)
     {:reply, new_state, new_state}
   end
 

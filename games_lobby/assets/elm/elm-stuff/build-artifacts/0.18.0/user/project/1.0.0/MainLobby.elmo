@@ -407,31 +407,123 @@ var _user$project$MainLobby$update = F2(
 							model,
 							{currentSelectedGame: _elm_lang$core$Maybe$Nothing}),
 						{ctor: '[]'});
-				case 'HostGame':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
-						{ctor: '[]'});
+				case 'NewGame':
+					var _p15 = model.currentSelectedGame;
+					if (_p15.ctor === 'Nothing') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							model,
+							{ctor: '[]'});
+					} else {
+						var payload = _user$project$MainLobbyComs$encodeNewGameMessage(
+							{name: _p15._0.name, host: model.playerInfo.username});
+						var pushMsg = A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+							_user$project$MainLobbyTypes$ServerError,
+							A2(
+								_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+								payload,
+								A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'new_game_message', 'lobby:mainlobby')));
+						var _p16 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+						var newSocket = _p16._0;
+						var phxCmd = _p16._1;
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{log: 'message sent', phxSocket: newSocket}),
+							{
+								ctor: '::',
+								_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+								_1: {ctor: '[]'}
+							});
+					}
 				case 'DeleteGame':
+					var payload = _user$project$MainLobbyComs$encodeDeleteGameMessage(_p0._0);
+					var pushMsg = A2(
+						_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+						_user$project$MainLobbyTypes$ServerError,
+						A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+							payload,
+							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'delete_game_message', 'lobby:mainlobby')));
+					var _p17 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+					var newSocket = _p17._0;
+					var phxCmd = _p17._1;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
-						{ctor: '[]'});
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{log: 'message sent', phxSocket: newSocket}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
 				case 'JoinGame':
+					var payload = A2(_user$project$MainLobbyComs$encodeJoinGameMessage, model.playerInfo.username, _p0._0);
+					var pushMsg = A2(
+						_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+						_user$project$MainLobbyTypes$ServerError,
+						A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+							payload,
+							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'join_game_message', 'lobby:mainlobby')));
+					var _p18 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+					var newSocket = _p18._0;
+					var phxCmd = _p18._1;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
-						{ctor: '[]'});
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{log: 'message sent', phxSocket: newSocket}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
 				case 'LeaveGame':
+					var payload = A2(_user$project$MainLobbyComs$encodeLeaveGameMessage, model.playerInfo.username, _p0._0);
+					var pushMsg = A2(
+						_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+						_user$project$MainLobbyTypes$ServerError,
+						A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+							payload,
+							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'leave_game_message', 'lobby:mainlobby')));
+					var _p19 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+					var newSocket = _p19._0;
+					var phxCmd = _p19._1;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
-						{ctor: '[]'});
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{log: 'message sent', phxSocket: newSocket}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
 				case 'StartGame':
+					var gameUrl = function () {
+						var _p20 = _p0._0._0.name;
+						switch (_p20) {
+							case 'hexaboard':
+								return '/hexaboard';
+							case 'war':
+								return '/war';
+							default:
+								return '';
+						}
+					}();
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						model,
-						{ctor: '[]'});
+						{
+							ctor: '::',
+							_0: _elm_lang$navigation$Navigation$load(gameUrl),
+							_1: {ctor: '[]'}
+						});
 				default:
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
@@ -443,15 +535,15 @@ var _user$project$MainLobby$update = F2(
 var _user$project$MainLobby$init = function (flags) {
 	var lobbyMainlobby = _user$project$MainLobby$initPhoenixChannel('lobby:mainlobby');
 	var lobbyChat = _user$project$MainLobby$initPhoenixChannel('lobby:chat');
-	var _p15 = A2(
+	var _p21 = A2(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
 		lobbyChat,
 		_user$project$MainLobby$initialSocket(flags));
-	var newSocket1 = _p15._0;
-	var phxCmd1 = _p15._1;
-	var _p16 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
-	var newSocket2 = _p16._0;
-	var phxCmd2 = _p16._1;
+	var newSocket1 = _p21._0;
+	var phxCmd1 = _p21._1;
+	var _p22 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
+	var newSocket2 = _p22._0;
+	var phxCmd2 = _p22._1;
 	var phxCmd = _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',

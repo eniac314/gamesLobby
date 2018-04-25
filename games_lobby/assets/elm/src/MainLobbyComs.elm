@@ -20,6 +20,44 @@ encodeChatMessage { timeStamp, author, message } =
         ]
 
 
+encodeNewGameMessage { name, host } =
+    Encode.object
+        [ ( "name", Encode.string name )
+        , ( "host", Encode.string host )
+        ]
+
+
+encodeDeleteGameMessage ( gameMeta, id ) =
+    Encode.object
+        [ ( "name", Encode.string gameMeta.name )
+        , ( "id", Encode.int id )
+        ]
+
+
+encodeJoinGameMessage player ( gameMeta, id ) =
+    Encode.object
+        [ ( "player", Encode.string player )
+        , ( "game_id"
+          , Encode.object
+                [ ( "name", Encode.string gameMeta.name )
+                , ( "id", Encode.int id )
+                ]
+          )
+        ]
+
+
+encodeLeaveGameMessage player ( gameMeta, id ) =
+    Encode.object
+        [ ( "player", Encode.string player )
+        , ( "game_id"
+          , Encode.object
+                [ ( "name", Encode.string gameMeta.name )
+                , ( "id", Encode.int id )
+                ]
+          )
+        ]
+
+
 decodeChatMessage : Decode.Value -> Result String ChatMessage
 decodeChatMessage jsonVal =
     Decode.decodeValue
@@ -121,12 +159,15 @@ gameSetupDecoder model =
 hostDecoder model =
     Decode.string
         |> Decode.andThen
-            (\h ->
-                if Dict.member h model.presences then
-                    Decode.succeed (Just h)
-                else
-                    Decode.succeed Nothing
-            )
+            (\h -> Decode.succeed <| Just h)
+
+
+
+--    if Dict.member h model.presences then
+--        Decode.succeed (Just h)
+--    else
+--        Decode.succeed Nothing
+--)
 
 
 joinedDecoder model =

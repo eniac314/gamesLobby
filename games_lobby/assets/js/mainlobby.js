@@ -9557,6 +9557,408 @@ var _elm_lang$keyboard$Keyboard$subMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Keyboard'] = {pkg: 'elm-lang/keyboard', init: _elm_lang$keyboard$Keyboard$init, onEffects: _elm_lang$keyboard$Keyboard$onEffects, onSelfMsg: _elm_lang$keyboard$Keyboard$onSelfMsg, tag: 'sub', subMap: _elm_lang$keyboard$Keyboard$subMap};
 
+var _elm_lang$navigation$Native_Navigation = function() {
+
+
+// FAKE NAVIGATION
+
+function go(n)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		if (n !== 0)
+		{
+			history.go(n);
+		}
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+function pushState(url)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		history.pushState({}, '', url);
+		callback(_elm_lang$core$Native_Scheduler.succeed(getLocation()));
+	});
+}
+
+function replaceState(url)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		history.replaceState({}, '', url);
+		callback(_elm_lang$core$Native_Scheduler.succeed(getLocation()));
+	});
+}
+
+
+// REAL NAVIGATION
+
+function reloadPage(skipCache)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		document.location.reload(skipCache);
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+function setLocation(url)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		try
+		{
+			window.location = url;
+		}
+		catch(err)
+		{
+			// Only Firefox can throw a NS_ERROR_MALFORMED_URI exception here.
+			// Other browsers reload the page, so let's be consistent about that.
+			document.location.reload(false);
+		}
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+
+// GET LOCATION
+
+function getLocation()
+{
+	var location = document.location;
+
+	return {
+		href: location.href,
+		host: location.host,
+		hostname: location.hostname,
+		protocol: location.protocol,
+		origin: location.origin,
+		port_: location.port,
+		pathname: location.pathname,
+		search: location.search,
+		hash: location.hash,
+		username: location.username,
+		password: location.password
+	};
+}
+
+
+// DETECT IE11 PROBLEMS
+
+function isInternetExplorer11()
+{
+	return window.navigator.userAgent.indexOf('Trident') !== -1;
+}
+
+
+return {
+	go: go,
+	setLocation: setLocation,
+	reloadPage: reloadPage,
+	pushState: pushState,
+	replaceState: replaceState,
+	getLocation: getLocation,
+	isInternetExplorer11: isInternetExplorer11
+};
+
+}();
+
+var _elm_lang$navigation$Navigation$replaceState = _elm_lang$navigation$Native_Navigation.replaceState;
+var _elm_lang$navigation$Navigation$pushState = _elm_lang$navigation$Native_Navigation.pushState;
+var _elm_lang$navigation$Navigation$go = _elm_lang$navigation$Native_Navigation.go;
+var _elm_lang$navigation$Navigation$reloadPage = _elm_lang$navigation$Native_Navigation.reloadPage;
+var _elm_lang$navigation$Navigation$setLocation = _elm_lang$navigation$Native_Navigation.setLocation;
+var _elm_lang$navigation$Navigation_ops = _elm_lang$navigation$Navigation_ops || {};
+_elm_lang$navigation$Navigation_ops['&>'] = F2(
+	function (task1, task2) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (_p0) {
+				return task2;
+			},
+			task1);
+	});
+var _elm_lang$navigation$Navigation$notify = F3(
+	function (router, subs, location) {
+		var send = function (_p1) {
+			var _p2 = _p1;
+			return A2(
+				_elm_lang$core$Platform$sendToApp,
+				router,
+				_p2._0(location));
+		};
+		return A2(
+			_elm_lang$navigation$Navigation_ops['&>'],
+			_elm_lang$core$Task$sequence(
+				A2(_elm_lang$core$List$map, send, subs)),
+			_elm_lang$core$Task$succeed(
+				{ctor: '_Tuple0'}));
+	});
+var _elm_lang$navigation$Navigation$cmdHelp = F3(
+	function (router, subs, cmd) {
+		var _p3 = cmd;
+		switch (_p3.ctor) {
+			case 'Jump':
+				return _elm_lang$navigation$Navigation$go(_p3._0);
+			case 'New':
+				return A2(
+					_elm_lang$core$Task$andThen,
+					A2(_elm_lang$navigation$Navigation$notify, router, subs),
+					_elm_lang$navigation$Navigation$pushState(_p3._0));
+			case 'Modify':
+				return A2(
+					_elm_lang$core$Task$andThen,
+					A2(_elm_lang$navigation$Navigation$notify, router, subs),
+					_elm_lang$navigation$Navigation$replaceState(_p3._0));
+			case 'Visit':
+				return _elm_lang$navigation$Navigation$setLocation(_p3._0);
+			default:
+				return _elm_lang$navigation$Navigation$reloadPage(_p3._0);
+		}
+	});
+var _elm_lang$navigation$Navigation$killPopWatcher = function (popWatcher) {
+	var _p4 = popWatcher;
+	if (_p4.ctor === 'Normal') {
+		return _elm_lang$core$Process$kill(_p4._0);
+	} else {
+		return A2(
+			_elm_lang$navigation$Navigation_ops['&>'],
+			_elm_lang$core$Process$kill(_p4._0),
+			_elm_lang$core$Process$kill(_p4._1));
+	}
+};
+var _elm_lang$navigation$Navigation$onSelfMsg = F3(
+	function (router, location, state) {
+		return A2(
+			_elm_lang$navigation$Navigation_ops['&>'],
+			A3(_elm_lang$navigation$Navigation$notify, router, state.subs, location),
+			_elm_lang$core$Task$succeed(state));
+	});
+var _elm_lang$navigation$Navigation$subscription = _elm_lang$core$Native_Platform.leaf('Navigation');
+var _elm_lang$navigation$Navigation$command = _elm_lang$core$Native_Platform.leaf('Navigation');
+var _elm_lang$navigation$Navigation$Location = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return {href: a, host: b, hostname: c, protocol: d, origin: e, port_: f, pathname: g, search: h, hash: i, username: j, password: k};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _elm_lang$navigation$Navigation$State = F2(
+	function (a, b) {
+		return {subs: a, popWatcher: b};
+	});
+var _elm_lang$navigation$Navigation$init = _elm_lang$core$Task$succeed(
+	A2(
+		_elm_lang$navigation$Navigation$State,
+		{ctor: '[]'},
+		_elm_lang$core$Maybe$Nothing));
+var _elm_lang$navigation$Navigation$Reload = function (a) {
+	return {ctor: 'Reload', _0: a};
+};
+var _elm_lang$navigation$Navigation$reload = _elm_lang$navigation$Navigation$command(
+	_elm_lang$navigation$Navigation$Reload(false));
+var _elm_lang$navigation$Navigation$reloadAndSkipCache = _elm_lang$navigation$Navigation$command(
+	_elm_lang$navigation$Navigation$Reload(true));
+var _elm_lang$navigation$Navigation$Visit = function (a) {
+	return {ctor: 'Visit', _0: a};
+};
+var _elm_lang$navigation$Navigation$load = function (url) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Visit(url));
+};
+var _elm_lang$navigation$Navigation$Modify = function (a) {
+	return {ctor: 'Modify', _0: a};
+};
+var _elm_lang$navigation$Navigation$modifyUrl = function (url) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Modify(url));
+};
+var _elm_lang$navigation$Navigation$New = function (a) {
+	return {ctor: 'New', _0: a};
+};
+var _elm_lang$navigation$Navigation$newUrl = function (url) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$New(url));
+};
+var _elm_lang$navigation$Navigation$Jump = function (a) {
+	return {ctor: 'Jump', _0: a};
+};
+var _elm_lang$navigation$Navigation$back = function (n) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Jump(0 - n));
+};
+var _elm_lang$navigation$Navigation$forward = function (n) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Jump(n));
+};
+var _elm_lang$navigation$Navigation$cmdMap = F2(
+	function (_p5, myCmd) {
+		var _p6 = myCmd;
+		switch (_p6.ctor) {
+			case 'Jump':
+				return _elm_lang$navigation$Navigation$Jump(_p6._0);
+			case 'New':
+				return _elm_lang$navigation$Navigation$New(_p6._0);
+			case 'Modify':
+				return _elm_lang$navigation$Navigation$Modify(_p6._0);
+			case 'Visit':
+				return _elm_lang$navigation$Navigation$Visit(_p6._0);
+			default:
+				return _elm_lang$navigation$Navigation$Reload(_p6._0);
+		}
+	});
+var _elm_lang$navigation$Navigation$Monitor = function (a) {
+	return {ctor: 'Monitor', _0: a};
+};
+var _elm_lang$navigation$Navigation$program = F2(
+	function (locationToMessage, stuff) {
+		var init = stuff.init(
+			_elm_lang$navigation$Native_Navigation.getLocation(
+				{ctor: '_Tuple0'}));
+		var subs = function (model) {
+			return _elm_lang$core$Platform_Sub$batch(
+				{
+					ctor: '::',
+					_0: _elm_lang$navigation$Navigation$subscription(
+						_elm_lang$navigation$Navigation$Monitor(locationToMessage)),
+					_1: {
+						ctor: '::',
+						_0: stuff.subscriptions(model),
+						_1: {ctor: '[]'}
+					}
+				});
+		};
+		return _elm_lang$html$Html$program(
+			{init: init, view: stuff.view, update: stuff.update, subscriptions: subs});
+	});
+var _elm_lang$navigation$Navigation$programWithFlags = F2(
+	function (locationToMessage, stuff) {
+		var init = function (flags) {
+			return A2(
+				stuff.init,
+				flags,
+				_elm_lang$navigation$Native_Navigation.getLocation(
+					{ctor: '_Tuple0'}));
+		};
+		var subs = function (model) {
+			return _elm_lang$core$Platform_Sub$batch(
+				{
+					ctor: '::',
+					_0: _elm_lang$navigation$Navigation$subscription(
+						_elm_lang$navigation$Navigation$Monitor(locationToMessage)),
+					_1: {
+						ctor: '::',
+						_0: stuff.subscriptions(model),
+						_1: {ctor: '[]'}
+					}
+				});
+		};
+		return _elm_lang$html$Html$programWithFlags(
+			{init: init, view: stuff.view, update: stuff.update, subscriptions: subs});
+	});
+var _elm_lang$navigation$Navigation$subMap = F2(
+	function (func, _p7) {
+		var _p8 = _p7;
+		return _elm_lang$navigation$Navigation$Monitor(
+			function (_p9) {
+				return func(
+					_p8._0(_p9));
+			});
+	});
+var _elm_lang$navigation$Navigation$InternetExplorer = F2(
+	function (a, b) {
+		return {ctor: 'InternetExplorer', _0: a, _1: b};
+	});
+var _elm_lang$navigation$Navigation$Normal = function (a) {
+	return {ctor: 'Normal', _0: a};
+};
+var _elm_lang$navigation$Navigation$spawnPopWatcher = function (router) {
+	var reportLocation = function (_p10) {
+		return A2(
+			_elm_lang$core$Platform$sendToSelf,
+			router,
+			_elm_lang$navigation$Native_Navigation.getLocation(
+				{ctor: '_Tuple0'}));
+	};
+	return _elm_lang$navigation$Native_Navigation.isInternetExplorer11(
+		{ctor: '_Tuple0'}) ? A3(
+		_elm_lang$core$Task$map2,
+		_elm_lang$navigation$Navigation$InternetExplorer,
+		_elm_lang$core$Process$spawn(
+			A3(_elm_lang$dom$Dom_LowLevel$onWindow, 'popstate', _elm_lang$core$Json_Decode$value, reportLocation)),
+		_elm_lang$core$Process$spawn(
+			A3(_elm_lang$dom$Dom_LowLevel$onWindow, 'hashchange', _elm_lang$core$Json_Decode$value, reportLocation))) : A2(
+		_elm_lang$core$Task$map,
+		_elm_lang$navigation$Navigation$Normal,
+		_elm_lang$core$Process$spawn(
+			A3(_elm_lang$dom$Dom_LowLevel$onWindow, 'popstate', _elm_lang$core$Json_Decode$value, reportLocation)));
+};
+var _elm_lang$navigation$Navigation$onEffects = F4(
+	function (router, cmds, subs, _p11) {
+		var _p12 = _p11;
+		var _p15 = _p12.popWatcher;
+		var stepState = function () {
+			var _p13 = {ctor: '_Tuple2', _0: subs, _1: _p15};
+			_v6_2:
+			do {
+				if (_p13._0.ctor === '[]') {
+					if (_p13._1.ctor === 'Just') {
+						return A2(
+							_elm_lang$navigation$Navigation_ops['&>'],
+							_elm_lang$navigation$Navigation$killPopWatcher(_p13._1._0),
+							_elm_lang$core$Task$succeed(
+								A2(_elm_lang$navigation$Navigation$State, subs, _elm_lang$core$Maybe$Nothing)));
+					} else {
+						break _v6_2;
+					}
+				} else {
+					if (_p13._1.ctor === 'Nothing') {
+						return A2(
+							_elm_lang$core$Task$map,
+							function (_p14) {
+								return A2(
+									_elm_lang$navigation$Navigation$State,
+									subs,
+									_elm_lang$core$Maybe$Just(_p14));
+							},
+							_elm_lang$navigation$Navigation$spawnPopWatcher(router));
+					} else {
+						break _v6_2;
+					}
+				}
+			} while(false);
+			return _elm_lang$core$Task$succeed(
+				A2(_elm_lang$navigation$Navigation$State, subs, _p15));
+		}();
+		return A2(
+			_elm_lang$navigation$Navigation_ops['&>'],
+			_elm_lang$core$Task$sequence(
+				A2(
+					_elm_lang$core$List$map,
+					A2(_elm_lang$navigation$Navigation$cmdHelp, router, subs),
+					cmds)),
+			stepState);
+	});
+_elm_lang$core$Native_Platform.effectManagers['Navigation'] = {pkg: 'elm-lang/navigation', init: _elm_lang$navigation$Navigation$init, onEffects: _elm_lang$navigation$Navigation$onEffects, onSelfMsg: _elm_lang$navigation$Navigation$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$navigation$Navigation$cmdMap, subMap: _elm_lang$navigation$Navigation$subMap};
+
 var _elm_lang$websocket$Native_WebSocket = function() {
 
 function open(url, settings)
@@ -22988,7 +23390,7 @@ var _user$project$MainLobbyTypes$Model = function (a) {
 };
 var _user$project$MainLobbyTypes$GameMeta = F4(
 	function (a, b, c, d) {
-		return {name: a, minPlayers: b, maxPlayer: c, hasIA: d};
+		return {name: a, minPlayers: b, maxPlayers: c, hasIA: d};
 	});
 var _user$project$MainLobbyTypes$GameSetup = F4(
 	function (a, b, c, d) {
@@ -23003,13 +23405,19 @@ var _user$project$MainLobbyTypes$Player = F2(
 		return {onlineAt: a, username: b};
 	});
 var _user$project$MainLobbyTypes$defPlayer = A2(_user$project$MainLobbyTypes$Player, '', '');
-var _user$project$MainLobbyTypes$StartGame = {ctor: 'StartGame'};
-var _user$project$MainLobbyTypes$LeaveGame = {ctor: 'LeaveGame'};
+var _user$project$MainLobbyTypes$StartGame = function (a) {
+	return {ctor: 'StartGame', _0: a};
+};
+var _user$project$MainLobbyTypes$LeaveGame = function (a) {
+	return {ctor: 'LeaveGame', _0: a};
+};
 var _user$project$MainLobbyTypes$JoinGame = function (a) {
 	return {ctor: 'JoinGame', _0: a};
 };
-var _user$project$MainLobbyTypes$DeleteGame = {ctor: 'DeleteGame'};
-var _user$project$MainLobbyTypes$HostGame = {ctor: 'HostGame'};
+var _user$project$MainLobbyTypes$DeleteGame = function (a) {
+	return {ctor: 'DeleteGame', _0: a};
+};
+var _user$project$MainLobbyTypes$NewGame = {ctor: 'NewGame'};
 var _user$project$MainLobbyTypes$UnSelectGame = {ctor: 'UnSelectGame'};
 var _user$project$MainLobbyTypes$SelectGame = function (a) {
 	return {ctor: 'SelectGame', _0: a};
@@ -23119,8 +23527,8 @@ var _user$project$MainLobbyComs$hostDecoder = function (model) {
 	return A2(
 		_elm_lang$core$Json_Decode$andThen,
 		function (h) {
-			return A2(_elm_lang$core$Dict$member, h, model.presences) ? _elm_lang$core$Json_Decode$succeed(
-				_elm_lang$core$Maybe$Just(h)) : _elm_lang$core$Json_Decode$succeed(_elm_lang$core$Maybe$Nothing);
+			return _elm_lang$core$Json_Decode$succeed(
+				_elm_lang$core$Maybe$Just(h));
 		},
 		_elm_lang$core$Json_Decode$string);
 };
@@ -23245,8 +23653,128 @@ var _user$project$MainLobbyComs$decodeChatHistory = function (jsonVal) {
 var _user$project$MainLobbyComs$decodeChatMessage = function (jsonVal) {
 	return A2(_elm_lang$core$Json_Decode$decodeValue, _user$project$MainLobbyComs$chatMessageDecoder, jsonVal);
 };
-var _user$project$MainLobbyComs$encodeChatMessage = function (_p4) {
-	var _p5 = _p4;
+var _user$project$MainLobbyComs$encodeLeaveGameMessage = F2(
+	function (player, _p4) {
+		var _p5 = _p4;
+		return _elm_lang$core$Json_Encode$object(
+			{
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'player',
+					_1: _elm_lang$core$Json_Encode$string(player)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'game_id',
+						_1: _elm_lang$core$Json_Encode$object(
+							{
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'name',
+									_1: _elm_lang$core$Json_Encode$string(_p5._0.name)
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'id',
+										_1: _elm_lang$core$Json_Encode$int(_p5._1)
+									},
+									_1: {ctor: '[]'}
+								}
+							})
+					},
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$MainLobbyComs$encodeJoinGameMessage = F2(
+	function (player, _p6) {
+		var _p7 = _p6;
+		return _elm_lang$core$Json_Encode$object(
+			{
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'player',
+					_1: _elm_lang$core$Json_Encode$string(player)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'game_id',
+						_1: _elm_lang$core$Json_Encode$object(
+							{
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'name',
+									_1: _elm_lang$core$Json_Encode$string(_p7._0.name)
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'id',
+										_1: _elm_lang$core$Json_Encode$int(_p7._1)
+									},
+									_1: {ctor: '[]'}
+								}
+							})
+					},
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$MainLobbyComs$encodeDeleteGameMessage = function (_p8) {
+	var _p9 = _p8;
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'name',
+				_1: _elm_lang$core$Json_Encode$string(_p9._0.name)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'id',
+					_1: _elm_lang$core$Json_Encode$int(_p9._1)
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$MainLobbyComs$encodeNewGameMessage = function (_p10) {
+	var _p11 = _p10;
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'name',
+				_1: _elm_lang$core$Json_Encode$string(_p11.name)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'host',
+					_1: _elm_lang$core$Json_Encode$string(_p11.host)
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$MainLobbyComs$encodeChatMessage = function (_p12) {
+	var _p13 = _p12;
 	return _elm_lang$core$Json_Encode$object(
 		{
 			ctor: '::',
@@ -23254,21 +23782,21 @@ var _user$project$MainLobbyComs$encodeChatMessage = function (_p4) {
 				ctor: '_Tuple2',
 				_0: 'time_stamp',
 				_1: _elm_lang$core$Json_Encode$float(
-					_elm_lang$core$Date$toTime(_p5.timeStamp))
+					_elm_lang$core$Date$toTime(_p13.timeStamp))
 			},
 			_1: {
 				ctor: '::',
 				_0: {
 					ctor: '_Tuple2',
 					_0: 'author',
-					_1: _user$project$MainLobbyComs$encodePlayer(_p5.author)
+					_1: _user$project$MainLobbyComs$encodePlayer(_p13.author)
 				},
 				_1: {
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'message',
-						_1: _elm_lang$core$Json_Encode$string(_p5.message)
+						_1: _elm_lang$core$Json_Encode$string(_p13.message)
 					},
 					_1: {ctor: '[]'}
 				}
@@ -23276,19 +23804,520 @@ var _user$project$MainLobbyComs$encodeChatMessage = function (_p4) {
 		});
 };
 
+var _user$project$MainLobbyView$hasJoined = function (model) {
+	var username = model.playerInfo.username;
+	return function (s) {
+		return _elm_lang$core$Native_Utils.cmp(s, 0) > 0;
+	}(
+		_elm_lang$core$Dict$size(
+			A2(
+				_elm_lang$core$Dict$filter,
+				F2(
+					function (k, v) {
+						return A2(_elm_lang$core$List$member, username, v.joined);
+					}),
+				model.gamesSetup)));
+};
+var _user$project$MainLobbyView$isHost = function (model) {
+	var username = model.playerInfo.username;
+	return function (s) {
+		return _elm_lang$core$Native_Utils.cmp(s, 0) > 0;
+	}(
+		_elm_lang$core$Dict$size(
+			A2(
+				_elm_lang$core$Dict$filter,
+				F2(
+					function (k, v) {
+						return _elm_lang$core$Native_Utils.eq(
+							v.host,
+							_elm_lang$core$Maybe$Just(username));
+					}),
+				model.gamesSetup)));
+};
+var _user$project$MainLobbyView$gameSetupView = F2(
+	function (model, _p0) {
+		var _p1 = _p0;
+		var _p5 = _p1.joined;
+		var _p4 = _p1.gameId;
+		var _p2 = _p1.host;
+		if (_p2.ctor === 'Nothing') {
+			return _mdgriffith$stylish_elephants$Element$empty;
+		} else {
+			var _p3 = _p2._0;
+			var canStart = _elm_lang$core$Native_Utils.cmp(
+				_elm_lang$core$List$length(_p5) + 1,
+				_p1.gameMeta.minPlayers) > -1;
+			var hasJoinedGameSetup = A2(_elm_lang$core$List$member, model.playerInfo.username, _p5);
+			var isGameSetupHost = _elm_lang$core$Native_Utils.eq(model.playerInfo.username, _p3);
+			var gameTitle = A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Tuple$first(_p4).name,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' ',
+					_elm_lang$core$Basics$toString(
+						_elm_lang$core$Tuple$second(_p4))));
+			return A2(
+				_mdgriffith$stylish_elephants$Element$column,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Font$size(16),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightOrange),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$height(
+									_mdgriffith$stylish_elephants$Element$px(200)),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$padding(10),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$alignTop,
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$el,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$bold,
+							_1: {ctor: '[]'}
+						},
+						_mdgriffith$stylish_elephants$Element$text(gameTitle)),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{ctor: '[]'},
+							_mdgriffith$stylish_elephants$Element$text(
+								A2(_elm_lang$core$Basics_ops['++'], 'Game hosted by: ', _p3))),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$stylish_elephants$Element$column,
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$scrollbarY,
+										_1: {ctor: '[]'}
+									}
+								},
+								A2(
+									_elm_lang$core$List$map,
+									function (usr) {
+										return A2(
+											_mdgriffith$stylish_elephants$Element$el,
+											{ctor: '[]'},
+											_mdgriffith$stylish_elephants$Element$text(usr));
+									},
+									_p5)),
+							_1: {
+								ctor: '::',
+								_0: isGameSetupHost ? A2(
+									_mdgriffith$stylish_elephants$Element_Input$button,
+									{
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightRed),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$padding(10),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+												_1: {
+													ctor: '::',
+													_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+														{
+															ctor: '::',
+															_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightRed, 7),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									},
+									{
+										onPress: _elm_lang$core$Maybe$Just(
+											_user$project$MainLobbyTypes$DeleteGame(_p4)),
+										label: _mdgriffith$stylish_elephants$Element$text('Delete Game')
+									}) : (((!_user$project$MainLobbyView$hasJoined(model)) && (!_user$project$MainLobbyView$isHost(model))) ? A2(
+									_mdgriffith$stylish_elephants$Element_Input$button,
+									{
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$padding(10),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+												_1: {
+													ctor: '::',
+													_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+														{
+															ctor: '::',
+															_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									},
+									{
+										onPress: _elm_lang$core$Maybe$Just(
+											_user$project$MainLobbyTypes$JoinGame(_p4)),
+										label: _mdgriffith$stylish_elephants$Element$text('Join game!')
+									}) : (hasJoinedGameSetup ? A2(
+									_mdgriffith$stylish_elephants$Element_Input$button,
+									{
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$padding(10),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+												_1: {
+													ctor: '::',
+													_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+														{
+															ctor: '::',
+															_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									},
+									{
+										onPress: _elm_lang$core$Maybe$Just(
+											_user$project$MainLobbyTypes$LeaveGame(_p4)),
+										label: _mdgriffith$stylish_elephants$Element$text('Leave game')
+									}) : _mdgriffith$stylish_elephants$Element$empty)),
+								_1: {
+									ctor: '::',
+									_0: canStart ? A2(
+										_mdgriffith$stylish_elephants$Element_Input$button,
+										{
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightGreen),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$padding(10),
+												_1: {
+													ctor: '::',
+													_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+													_1: {
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+															{
+																ctor: '::',
+																_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightGreen, 7),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										},
+										{
+											onPress: _elm_lang$core$Maybe$Just(
+												_user$project$MainLobbyTypes$StartGame(_p4)),
+											label: _mdgriffith$stylish_elephants$Element$text('Start game')
+										}) : _mdgriffith$stylish_elephants$Element$empty,
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				});
+		}
+	});
+var _user$project$MainLobbyView$gameMetaView = function (_p6) {
+	var _p7 = _p6;
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$padding(10),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Events$onClick(
+							_user$project$MainLobbyTypes$SelectGame(_p7)),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$pointer,
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightGrey),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+										{
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$grey),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element_Font$size(17),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_mdgriffith$stylish_elephants$Element$el,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element_Font$bold,
+					_1: {ctor: '[]'}
+				},
+				_mdgriffith$stylish_elephants$Element$text(_p7.name)),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$el,
+					{ctor: '[]'},
+					_mdgriffith$stylish_elephants$Element$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Min players: ',
+							_elm_lang$core$Basics$toString(_p7.minPlayers)))),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$el,
+						{ctor: '[]'},
+						_mdgriffith$stylish_elephants$Element$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Max players: ',
+								_elm_lang$core$Basics$toString(_p7.maxPlayers)))),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{ctor: '[]'},
+							_mdgriffith$stylish_elephants$Element$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'Has AI: ',
+									_elm_lang$core$Basics$toString(_p7.hasIA)))),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$MainLobbyView$gamesSetupView = function (model) {
+	var _p8 = model.currentSelectedGame;
+	if (_p8.ctor === 'Nothing') {
+		return A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$text('choose a game:'),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$paragraph,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+							_1: {ctor: '[]'}
+						},
+						A2(
+							_elm_lang$core$List$map,
+							_user$project$MainLobbyView$gameMetaView,
+							_elm_lang$core$Dict$values(model.gamesMeta))),
+					_1: {ctor: '[]'}
+				}
+			});
+	} else {
+		var _p9 = _p8._0;
+		return A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$el,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Font$bold,
+						_1: {ctor: '[]'}
+					},
+					_mdgriffith$stylish_elephants$Element$text(_p9.name)),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$row,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$fill),
+								_1: {ctor: '[]'}
+							}
+						},
+						A2(
+							_elm_lang$core$List$map,
+							_user$project$MainLobbyView$gameSetupView(model),
+							_elm_lang$core$Dict$values(
+								A2(
+									_elm_lang$core$Dict$filter,
+									F2(
+										function (k, v) {
+											return _elm_lang$core$Native_Utils.eq(v.gameMeta.name, _p9.name);
+										}),
+									model.gamesSetup)))),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$row,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$alignBottom,
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: ((!_user$project$MainLobbyView$hasJoined(model)) && (!_user$project$MainLobbyView$isHost(model))) ? A2(
+									_mdgriffith$stylish_elephants$Element_Input$button,
+									{
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$padding(10),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+												_1: {
+													ctor: '::',
+													_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+														{
+															ctor: '::',
+															_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									},
+									{
+										onPress: _elm_lang$core$Maybe$Just(_user$project$MainLobbyTypes$NewGame),
+										label: _mdgriffith$stylish_elephants$Element$text('New Game!')
+									}) : _mdgriffith$stylish_elephants$Element$empty,
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_mdgriffith$stylish_elephants$Element_Input$button,
+										{
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$padding(10),
+												_1: {
+													ctor: '::',
+													_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+													_1: {
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+															{
+																ctor: '::',
+																_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										},
+										{
+											onPress: _elm_lang$core$Maybe$Just(_user$project$MainLobbyTypes$UnSelectGame),
+											label: _mdgriffith$stylish_elephants$Element$text('Back to game list')
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	}
+};
 var _user$project$MainLobbyView$channelStatusView = F2(
 	function (model, topic) {
-		var _p0 = A2(_elm_lang$core$Dict$get, topic, model.phxSocket.channels);
-		if (_p0.ctor === 'Nothing') {
+		var _p10 = A2(_elm_lang$core$Dict$get, topic, model.phxSocket.channels);
+		if (_p10.ctor === 'Nothing') {
 			return A2(
 				_mdgriffith$stylish_elephants$Element$el,
 				{ctor: '[]'},
 				_mdgriffith$stylish_elephants$Element$text('no channel corresponding to that topic'));
 		} else {
-			var _p2 = _p0._0;
+			var _p12 = _p10._0;
 			var controlButton = function () {
-				var _p1 = _p2.state;
-				if (_p1.ctor === 'Joined') {
+				var _p11 = _p12.state;
+				if (_p11.ctor === 'Joined') {
 					return A2(
 						_mdgriffith$stylish_elephants$Element_Input$button,
 						{
@@ -23300,7 +24329,16 @@ var _user$project$MainLobbyView$channelStatusView = F2(
 								_1: {
 									ctor: '::',
 									_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+											{
+												ctor: '::',
+												_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightRed, 7),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						},
@@ -23321,7 +24359,16 @@ var _user$project$MainLobbyView$channelStatusView = F2(
 								_1: {
 									ctor: '::',
 									_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+											{
+												ctor: '::',
+												_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						},
@@ -23345,7 +24392,7 @@ var _user$project$MainLobbyView$channelStatusView = F2(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							'Channel status: ',
-							_elm_lang$core$Basics$toString(_p2.state))),
+							_elm_lang$core$Basics$toString(_p12.state))),
 					_1: {
 						ctor: '::',
 						_0: controlButton,
@@ -23449,8 +24496,8 @@ var _user$project$MainLobbyView$prettyDate = function (timeStamp) {
 				_elm_lang$core$Basics$toString(minute))));
 };
 var _user$project$MainLobbyView$chatLogView = function (model) {
-	var messageView = function (_p3) {
-		var _p4 = _p3;
+	var messageView = function (_p13) {
+		var _p14 = _p13;
 		return A2(
 			_mdgriffith$stylish_elephants$Element$column,
 			{
@@ -23488,7 +24535,7 @@ var _user$project$MainLobbyView$chatLogView = function (model) {
 									}
 								}
 							},
-							_mdgriffith$stylish_elephants$Element$text(_p4.author.username)),
+							_mdgriffith$stylish_elephants$Element$text(_p14.author.username)),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -23511,7 +24558,7 @@ var _user$project$MainLobbyView$chatLogView = function (model) {
 									}
 								},
 								_mdgriffith$stylish_elephants$Element$text(
-									_user$project$MainLobbyView$prettyDate(_p4.timeStamp))),
+									_user$project$MainLobbyView$prettyDate(_p14.timeStamp))),
 							_1: {ctor: '[]'}
 						}
 					}),
@@ -23535,7 +24582,7 @@ var _user$project$MainLobbyView$chatLogView = function (model) {
 						},
 						{
 							ctor: '::',
-							_0: _mdgriffith$stylish_elephants$Element$text(_p4.message),
+							_0: _mdgriffith$stylish_elephants$Element$text(_p14.message),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
@@ -23616,7 +24663,11 @@ var _user$project$MainLobbyView$presencesView = function (model) {
 		{
 			ctor: '::',
 			_0: _mdgriffith$stylish_elephants$Element$spacing(15),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',
@@ -23635,34 +24686,34 @@ var _user$project$MainLobbyView$presencesView = function (model) {
 			}
 		});
 };
-var _user$project$MainLobbyView$view = function (model) {
+var _user$project$MainLobbyView$chatView = function (model) {
 	return A2(
-		_mdgriffith$stylish_elephants$Element$layout,
+		_mdgriffith$stylish_elephants$Element$row,
 		{
 			ctor: '::',
-			_0: _mdgriffith$stylish_elephants$Element$padding(15),
+			_0: _mdgriffith$stylish_elephants$Element$spacing(20),
 			_1: {ctor: '[]'}
 		},
-		A2(
-			_mdgriffith$stylish_elephants$Element$column,
-			{
-				ctor: '::',
-				_0: _mdgriffith$stylish_elephants$Element$spacing(15),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_mdgriffith$stylish_elephants$Element$row,
-					{
+		{
+			ctor: '::',
+			_0: A2(
+				_mdgriffith$stylish_elephants$Element$column,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+					_1: {
 						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$spacing(20),
+						_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
 						_1: {ctor: '[]'}
-					},
-					{
+					}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$MainLobbyView$chatLogView(model),
+					_1: {
 						ctor: '::',
 						_0: A2(
-							_mdgriffith$stylish_elephants$Element$column,
+							_mdgriffith$stylish_elephants$Element$row,
 							{
 								ctor: '::',
 								_0: _mdgriffith$stylish_elephants$Element$spacing(10),
@@ -23670,99 +24721,130 @@ var _user$project$MainLobbyView$view = function (model) {
 							},
 							{
 								ctor: '::',
-								_0: _user$project$MainLobbyView$chatLogView(model),
+								_0: A2(
+									_mdgriffith$stylish_elephants$Element_Input$text,
+									{
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$width(
+											_mdgriffith$stylish_elephants$Element$px(300)),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element_Events$onFocus(_user$project$MainLobbyTypes$FocusChatMessageBox),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element_Events$onLoseFocus(_user$project$MainLobbyTypes$UnfocusChatMessageBox),
+												_1: {ctor: '[]'}
+											}
+										}
+									},
+									{
+										onChange: _elm_lang$core$Maybe$Just(_user$project$MainLobbyTypes$ChatMessageInput),
+										text: model.chatMessageInput,
+										placeholder: _elm_lang$core$Maybe$Nothing,
+										label: A2(
+											_mdgriffith$stylish_elephants$Element_Input$labelAbove,
+											{ctor: '[]'},
+											_mdgriffith$stylish_elephants$Element$text('message: '))
+									}),
 								_1: {
 									ctor: '::',
 									_0: A2(
-										_mdgriffith$stylish_elephants$Element$row,
+										_mdgriffith$stylish_elephants$Element_Input$button,
 										{
 											ctor: '::',
-											_0: _mdgriffith$stylish_elephants$Element$spacing(10),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: A2(
-												_mdgriffith$stylish_elephants$Element_Input$text,
-												{
+											_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$padding(10),
+												_1: {
 													ctor: '::',
-													_0: _mdgriffith$stylish_elephants$Element$width(
-														_mdgriffith$stylish_elephants$Element$px(300)),
+													_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
 													_1: {
 														ctor: '::',
-														_0: _mdgriffith$stylish_elephants$Element_Events$onFocus(_user$project$MainLobbyTypes$FocusChatMessageBox),
+														_0: _mdgriffith$stylish_elephants$Element$alignBottom,
 														_1: {
 															ctor: '::',
-															_0: _mdgriffith$stylish_elephants$Element_Events$onLoseFocus(_user$project$MainLobbyTypes$UnfocusChatMessageBox),
+															_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+																{
+																	ctor: '::',
+																	_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+																	_1: {ctor: '[]'}
+																}),
 															_1: {ctor: '[]'}
 														}
 													}
-												},
-												{
-													onChange: _elm_lang$core$Maybe$Just(_user$project$MainLobbyTypes$ChatMessageInput),
-													text: model.chatMessageInput,
-													placeholder: _elm_lang$core$Maybe$Nothing,
-													label: A2(
-														_mdgriffith$stylish_elephants$Element_Input$labelAbove,
-														{ctor: '[]'},
-														_mdgriffith$stylish_elephants$Element$text('message: '))
-												}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_mdgriffith$stylish_elephants$Element_Input$button,
-													{
-														ctor: '::',
-														_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
-														_1: {
-															ctor: '::',
-															_0: _mdgriffith$stylish_elephants$Element$padding(10),
-															_1: {
-																ctor: '::',
-																_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
-																_1: {
-																	ctor: '::',
-																	_0: _mdgriffith$stylish_elephants$Element$alignBottom,
-																	_1: {ctor: '[]'}
-																}
-															}
-														}
-													},
-													{
-														onPress: _elm_lang$core$Maybe$Just(
-															_user$project$MainLobbyTypes$RequestDate(_user$project$MainLobbyTypes$SendChatMessage)),
-														label: _mdgriffith$stylish_elephants$Element$text('Send')
-													}),
-												_1: {ctor: '[]'}
+												}
 											}
+										},
+										{
+											onPress: _elm_lang$core$Maybe$Just(
+												_user$project$MainLobbyTypes$RequestDate(_user$project$MainLobbyTypes$SendChatMessage)),
+											label: _mdgriffith$stylish_elephants$Element$text('Send')
 										}),
 									_1: {ctor: '[]'}
 								}
 							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _user$project$MainLobbyView$presencesView(model),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$MainLobbyView$view = function (model) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element$layout,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$padding(15),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element_Font$size(18),
+				_1: {ctor: '[]'}
+			}
+		},
+		A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$spacing(20),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$el,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Font$size(32),
 						_1: {
 							ctor: '::',
-							_0: A2(
-								_mdgriffith$stylish_elephants$Element$column,
-								{
-									ctor: '::',
-									_0: _mdgriffith$stylish_elephants$Element$spacing(10),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _user$project$MainLobbyView$presencesView(model),
-									_1: {
-										ctor: '::',
-										_0: A2(_user$project$MainLobbyView$channelStatusView, model, 'lobby:chat'),
-										_1: {ctor: '[]'}
-									}
-								}),
+							_0: _mdgriffith$stylish_elephants$Element_Font$bold,
 							_1: {ctor: '[]'}
 						}
-					}),
+					},
+					_mdgriffith$stylish_elephants$Element$text('Game Lobby')),
 				_1: {
 					ctor: '::',
-					_0: _user$project$MainLobbyView$debugView(model),
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$row,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$spacing(15),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _user$project$MainLobbyView$chatView(model),
+							_1: {
+								ctor: '::',
+								_0: _user$project$MainLobbyView$gamesSetupView(model),
+								_1: {ctor: '[]'}
+							}
+						}),
 					_1: {ctor: '[]'}
 				}
 			}));
@@ -24177,31 +25259,123 @@ var _user$project$MainLobby$update = F2(
 							model,
 							{currentSelectedGame: _elm_lang$core$Maybe$Nothing}),
 						{ctor: '[]'});
-				case 'HostGame':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
-						{ctor: '[]'});
+				case 'NewGame':
+					var _p15 = model.currentSelectedGame;
+					if (_p15.ctor === 'Nothing') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							model,
+							{ctor: '[]'});
+					} else {
+						var payload = _user$project$MainLobbyComs$encodeNewGameMessage(
+							{name: _p15._0.name, host: model.playerInfo.username});
+						var pushMsg = A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+							_user$project$MainLobbyTypes$ServerError,
+							A2(
+								_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+								payload,
+								A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'new_game_message', 'lobby:mainlobby')));
+						var _p16 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+						var newSocket = _p16._0;
+						var phxCmd = _p16._1;
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{log: 'message sent', phxSocket: newSocket}),
+							{
+								ctor: '::',
+								_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+								_1: {ctor: '[]'}
+							});
+					}
 				case 'DeleteGame':
+					var payload = _user$project$MainLobbyComs$encodeDeleteGameMessage(_p0._0);
+					var pushMsg = A2(
+						_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+						_user$project$MainLobbyTypes$ServerError,
+						A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+							payload,
+							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'delete_game_message', 'lobby:mainlobby')));
+					var _p17 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+					var newSocket = _p17._0;
+					var phxCmd = _p17._1;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
-						{ctor: '[]'});
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{log: 'message sent', phxSocket: newSocket}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
 				case 'JoinGame':
+					var payload = A2(_user$project$MainLobbyComs$encodeJoinGameMessage, model.playerInfo.username, _p0._0);
+					var pushMsg = A2(
+						_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+						_user$project$MainLobbyTypes$ServerError,
+						A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+							payload,
+							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'join_game_message', 'lobby:mainlobby')));
+					var _p18 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+					var newSocket = _p18._0;
+					var phxCmd = _p18._1;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
-						{ctor: '[]'});
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{log: 'message sent', phxSocket: newSocket}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
 				case 'LeaveGame':
+					var payload = A2(_user$project$MainLobbyComs$encodeLeaveGameMessage, model.playerInfo.username, _p0._0);
+					var pushMsg = A2(
+						_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+						_user$project$MainLobbyTypes$ServerError,
+						A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+							payload,
+							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'leave_game_message', 'lobby:mainlobby')));
+					var _p19 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+					var newSocket = _p19._0;
+					var phxCmd = _p19._1;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
-						{ctor: '[]'});
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{log: 'message sent', phxSocket: newSocket}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
 				case 'StartGame':
+					var gameUrl = function () {
+						var _p20 = _p0._0._0.name;
+						switch (_p20) {
+							case 'hexaboard':
+								return '/hexaboard';
+							case 'war':
+								return '/war';
+							default:
+								return '';
+						}
+					}();
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						model,
-						{ctor: '[]'});
+						{
+							ctor: '::',
+							_0: _elm_lang$navigation$Navigation$load(gameUrl),
+							_1: {ctor: '[]'}
+						});
 				default:
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
@@ -24213,15 +25387,15 @@ var _user$project$MainLobby$update = F2(
 var _user$project$MainLobby$init = function (flags) {
 	var lobbyMainlobby = _user$project$MainLobby$initPhoenixChannel('lobby:mainlobby');
 	var lobbyChat = _user$project$MainLobby$initPhoenixChannel('lobby:chat');
-	var _p15 = A2(
+	var _p21 = A2(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
 		lobbyChat,
 		_user$project$MainLobby$initialSocket(flags));
-	var newSocket1 = _p15._0;
-	var phxCmd1 = _p15._1;
-	var _p16 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
-	var newSocket2 = _p16._0;
-	var phxCmd2 = _p16._1;
+	var newSocket1 = _p21._0;
+	var phxCmd1 = _p21._1;
+	var _p22 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
+	var newSocket2 = _p22._0;
+	var phxCmd2 = _p22._1;
 	var phxCmd = _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',

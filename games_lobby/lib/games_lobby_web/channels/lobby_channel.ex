@@ -47,9 +47,44 @@ alias GamesLobbyWeb.Presence
 
     {:noreply, socket}
   end  
-
   
 
-   
+  def handle_in("new_game_message", %{"name" => name, "host" => host}, socket) do 
+    Mainlobby.GameSetupServer.new_game(safe_atomize(name), host)
+    broadcast!(socket, "games_setup", %{games_setup: Mainlobby.GameSetupServer.get_games_setup})
+    
+    {:noreply, socket}
+  end 
+
+  def handle_in("delete_game_message", %{"name" => name, "id" => id}, socket) do
+    Mainlobby.GameSetupServer.delete_game({safe_atomize(name), id})
+    broadcast!(socket, "games_setup", %{games_setup: Mainlobby.GameSetupServer.get_games_setup})
+    
+    {:noreply, socket}
+  end
+  
+  def handle_in("join_game_message", %{"player" => player, "game_id" => game_id}, socket) do 
+    Mainlobby.GameSetupServer.join_game(player, {safe_atomize(game_id["name"]), game_id["id"]})
+    broadcast!(socket, "games_setup", %{games_setup: Mainlobby.GameSetupServer.get_games_setup})
+    
+    {:noreply, socket}
+  end   
+  
+  def handle_in("leave_game_message", %{"player" => player, "game_id" => game_id}, socket) do 
+    Mainlobby.GameSetupServer.leave_game(player, {safe_atomize(game_id["name"]), game_id["id"]})
+    broadcast!(socket, "games_setup", %{games_setup: Mainlobby.GameSetupServer.get_games_setup})
+    
+    {:noreply, socket}
+  end
+
+  
+  defp safe_atomize(external) do 
+    try do 
+      String.to_existing_atom(external)
+    rescue
+      ArgumentError -> 
+        :unknown_atom
+    end 
+  end
 
 end 

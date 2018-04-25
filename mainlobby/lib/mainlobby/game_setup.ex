@@ -12,16 +12,12 @@ defmodule Mainlobby.GameSetup do
                              Map.put(acc, k2, v2) end
                   )
   end 
-
-  def set_host(games_setup, game_id, player) do 
-   put_in(games_setup, [game_id, :host], player)
-  end 
   
-  def new_game(games_setup, game_name) do
+  def new_game(games_setup, game_name, player) do
     next_id = games_setup.next_id
     new_game = %{ game_meta: Mainlobby.GamesMeta.games_meta[game_name], 
                   joined: [],
-                  host: nil,
+                  host: player,
                 }
     game_id = {game_name, next_id}
     

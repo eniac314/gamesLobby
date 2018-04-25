@@ -17,6 +17,7 @@ import Keyboard exposing (..)
 import MainLobbyComs exposing (..)
 import MainLobbyTypes exposing (..)
 import MainLobbyView exposing (..)
+import Navigation exposing (..)
 import Phoenix.Channel
 import Phoenix.Presence as Presence
 import Phoenix.Push
@@ -66,6 +67,9 @@ init flags =
     , gamesMeta = Dict.empty
     , gamesSetup = Dict.empty
     , currentSelectedGame = Nothing
+
+    --, currentlyHosting = False
+    --, currentlyJoining = False
     }
         ! [ Cmd.map PhoenixMsg phxCmd ]
 
@@ -292,20 +296,117 @@ update msg model =
         UnSelectGame ->
             { model | currentSelectedGame = Nothing } ! []
 
-        HostGame ->
-            model ! []
+        NewGame ->
+            case model.currentSelectedGame of
+                Nothing ->
+                    model ! []
 
-        DeleteGame ->
-            model ! []
+                Just gameMeta ->
+                    let
+                        payload =
+                            encodeNewGameMessage
+                                { name = gameMeta.name
+                                , host = model.playerInfo.username
+                                }
+
+                        pushMsg =
+                            Phoenix.Push.init "new_game_message" "lobby:mainlobby"
+                                |> Phoenix.Push.withPayload payload
+                                |> Phoenix.Push.onError ServerError
+
+                        ( newSocket, phxCmd ) =
+                            Phoenix.Socket.push pushMsg model.phxSocket
+                    in
+                    { model
+                        | log = "message sent"
+                        , phxSocket = newSocket
+
+                        --, currentlyHosting = True
+                    }
+                        ! [ Cmd.map PhoenixMsg phxCmd ]
+
+        DeleteGame gameId ->
+            let
+                payload =
+                    encodeDeleteGameMessage
+                        gameId
+
+                pushMsg =
+                    Phoenix.Push.init "delete_game_message" "lobby:mainlobby"
+                        |> Phoenix.Push.withPayload payload
+                        |> Phoenix.Push.onError ServerError
+
+                ( newSocket, phxCmd ) =
+                    Phoenix.Socket.push pushMsg model.phxSocket
+            in
+            { model
+                | log = "message sent"
+                , phxSocket = newSocket
+
+                --, currentlyHosting = False
+            }
+                ! [ Cmd.map PhoenixMsg phxCmd ]
 
         JoinGame gameId ->
-            model ! []
+            let
+                payload =
+                    encodeJoinGameMessage
+                        model.playerInfo.username
+                        gameId
 
-        LeaveGame ->
-            model ! []
+                pushMsg =
+                    Phoenix.Push.init "join_game_message" "lobby:mainlobby"
+                        |> Phoenix.Push.withPayload payload
+                        |> Phoenix.Push.onError ServerError
 
-        StartGame ->
-            model ! []
+                ( newSocket, phxCmd ) =
+                    Phoenix.Socket.push pushMsg model.phxSocket
+            in
+            { model
+                | log = "message sent"
+                , phxSocket = newSocket
+
+                --, currentlyJoining = True
+            }
+                ! [ Cmd.map PhoenixMsg phxCmd ]
+
+        LeaveGame gameId ->
+            let
+                payload =
+                    encodeLeaveGameMessage
+                        model.playerInfo.username
+                        gameId
+
+                pushMsg =
+                    Phoenix.Push.init "leave_game_message" "lobby:mainlobby"
+                        |> Phoenix.Push.withPayload payload
+                        |> Phoenix.Push.onError ServerError
+
+                ( newSocket, phxCmd ) =
+                    Phoenix.Socket.push pushMsg model.phxSocket
+            in
+            { model
+                | log = "message sent"
+                , phxSocket = newSocket
+
+                --, currentlyJoining = False
+            }
+                ! [ Cmd.map PhoenixMsg phxCmd ]
+
+        StartGame ( gameMeta, id ) ->
+            let
+                gameUrl =
+                    case gameMeta.name of
+                        "hexaboard" ->
+                            "/hexaboard"
+
+                        "war" ->
+                            "/war"
+
+                        _ ->
+                            ""
+            in
+            model ! [ load gameUrl ]
 
         Default ->
             model ! []
