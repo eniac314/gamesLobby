@@ -34,6 +34,25 @@ var _user$project$MainLobbyComs$gameIdDecoder = function (model) {
 			_user$project$MainLobbyComs$idStrToGameId(model),
 			_elm_lang$core$Json_Decode$string));
 };
+var _user$project$MainLobbyComs$decodeGameId = F2(
+	function (model, jsonVal) {
+		return A2(
+			_elm_lang$core$Json_Decode$decodeValue,
+			A2(
+				_elm_lang$core$Json_Decode$field,
+				'game_id',
+				_user$project$MainLobbyComs$gameIdDecoder(model)),
+			jsonVal);
+	});
+var _user$project$MainLobbyComs$hasStartedDecoder = function (model) {
+	return _elm_lang$core$Json_Decode$list(
+		A2(
+			_elm_lang$core$Json_Decode$andThen,
+			function (p) {
+				return A2(_elm_lang$core$Dict$member, p, model.presences) ? _elm_lang$core$Json_Decode$succeed(p) : _elm_lang$core$Json_Decode$fail('invalid player name');
+			},
+			_elm_lang$core$Json_Decode$string));
+};
 var _user$project$MainLobbyComs$joinedDecoder = function (model) {
 	return _elm_lang$core$Json_Decode$list(
 		A2(
@@ -60,14 +79,18 @@ var _user$project$MainLobbyComs$gameMetaDecoder = A5(
 	A2(_elm_lang$core$Json_Decode$field, 'max_players', _elm_lang$core$Json_Decode$int),
 	A2(_elm_lang$core$Json_Decode$field, 'has_ia', _elm_lang$core$Json_Decode$bool));
 var _user$project$MainLobbyComs$gameSetupDecoder = function (model) {
-	return A5(
-		_elm_lang$core$Json_Decode$map4,
+	return A6(
+		_elm_lang$core$Json_Decode$map5,
 		_user$project$MainLobbyTypes$GameSetup,
 		A2(_elm_lang$core$Json_Decode$field, 'game_meta', _user$project$MainLobbyComs$gameMetaDecoder),
 		A2(
 			_elm_lang$core$Json_Decode$field,
 			'joined',
 			_user$project$MainLobbyComs$joinedDecoder(model)),
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'has_started',
+			_user$project$MainLobbyComs$hasStartedDecoder(model)),
 		A2(
 			_elm_lang$core$Json_Decode$field,
 			'host',
@@ -212,7 +235,7 @@ var _user$project$MainLobbyComs$encodeLeaveGameMessage = F2(
 				}
 			});
 	});
-var _user$project$MainLobbyComs$encodeJoinGameMessage = F2(
+var _user$project$MainLobbyComs$encodeStartGameMessage = F2(
 	function (player, _p6) {
 		var _p7 = _p6;
 		return _elm_lang$core$Json_Encode$object(
@@ -251,28 +274,46 @@ var _user$project$MainLobbyComs$encodeJoinGameMessage = F2(
 				}
 			});
 	});
-var _user$project$MainLobbyComs$encodeDeleteGameMessage = function (_p8) {
-	var _p9 = _p8;
-	return _elm_lang$core$Json_Encode$object(
-		{
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: 'name',
-				_1: _elm_lang$core$Json_Encode$string(_p9._0.name)
-			},
-			_1: {
+var _user$project$MainLobbyComs$encodeJoinGameMessage = F2(
+	function (player, _p8) {
+		var _p9 = _p8;
+		return _elm_lang$core$Json_Encode$object(
+			{
 				ctor: '::',
 				_0: {
 					ctor: '_Tuple2',
-					_0: 'id',
-					_1: _elm_lang$core$Json_Encode$int(_p9._1)
+					_0: 'player',
+					_1: _elm_lang$core$Json_Encode$string(player)
 				},
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$MainLobbyComs$encodeNewGameMessage = function (_p10) {
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'game_id',
+						_1: _elm_lang$core$Json_Encode$object(
+							{
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'name',
+									_1: _elm_lang$core$Json_Encode$string(_p9._0.name)
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'id',
+										_1: _elm_lang$core$Json_Encode$int(_p9._1)
+									},
+									_1: {ctor: '[]'}
+								}
+							})
+					},
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$MainLobbyComs$encodeDeleteGameMessage = function (_p10) {
 	var _p11 = _p10;
 	return _elm_lang$core$Json_Encode$object(
 		{
@@ -280,21 +321,42 @@ var _user$project$MainLobbyComs$encodeNewGameMessage = function (_p10) {
 			_0: {
 				ctor: '_Tuple2',
 				_0: 'name',
-				_1: _elm_lang$core$Json_Encode$string(_p11.name)
+				_1: _elm_lang$core$Json_Encode$string(_p11._0.name)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'id',
+					_1: _elm_lang$core$Json_Encode$int(_p11._1)
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$MainLobbyComs$encodeNewGameMessage = function (_p12) {
+	var _p13 = _p12;
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'name',
+				_1: _elm_lang$core$Json_Encode$string(_p13.name)
 			},
 			_1: {
 				ctor: '::',
 				_0: {
 					ctor: '_Tuple2',
 					_0: 'host',
-					_1: _elm_lang$core$Json_Encode$string(_p11.host)
+					_1: _elm_lang$core$Json_Encode$string(_p13.host)
 				},
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$MainLobbyComs$encodeChatMessage = function (_p12) {
-	var _p13 = _p12;
+var _user$project$MainLobbyComs$encodeChatMessage = function (_p14) {
+	var _p15 = _p14;
 	return _elm_lang$core$Json_Encode$object(
 		{
 			ctor: '::',
@@ -302,21 +364,21 @@ var _user$project$MainLobbyComs$encodeChatMessage = function (_p12) {
 				ctor: '_Tuple2',
 				_0: 'time_stamp',
 				_1: _elm_lang$core$Json_Encode$float(
-					_elm_lang$core$Date$toTime(_p13.timeStamp))
+					_elm_lang$core$Date$toTime(_p15.timeStamp))
 			},
 			_1: {
 				ctor: '::',
 				_0: {
 					ctor: '_Tuple2',
 					_0: 'author',
-					_1: _user$project$MainLobbyComs$encodePlayer(_p13.author)
+					_1: _user$project$MainLobbyComs$encodePlayer(_p15.author)
 				},
 				_1: {
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'message',
-						_1: _elm_lang$core$Json_Encode$string(_p13.message)
+						_1: _elm_lang$core$Json_Encode$string(_p15.message)
 					},
 					_1: {ctor: '[]'}
 				}

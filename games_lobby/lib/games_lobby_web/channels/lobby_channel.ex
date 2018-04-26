@@ -77,6 +77,16 @@ alias GamesLobbyWeb.Presence
     {:noreply, socket}
   end
 
+  def handle_in("start_game_message", %{"player" => player, "game_id" => game_id}, socket) do 
+    Mainlobby.GameSetupServer.has_started(player, {safe_atomize(game_id["name"]), game_id["id"]})
+    if Mainlobby.GameSetupServer.everybody_started?({safe_atomize(game_id["name"]), game_id["id"]}) do 
+      broadcast!(socket, "ready_to_launch", %{game_id: game_id})
+    else 
+      broadcast!(socket, "games_setup", %{games_setup: Mainlobby.GameSetupServer.get_games_setup})
+    end 
+    {:noreply, socket}
+  end
+
   
   defp safe_atomize(external) do 
     try do 

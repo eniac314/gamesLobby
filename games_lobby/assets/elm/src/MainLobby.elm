@@ -67,9 +67,7 @@ init flags =
     , gamesMeta = Dict.empty
     , gamesSetup = Dict.empty
     , currentSelectedGame = Nothing
-
-    --, currentlyHosting = False
-    --, currentlyJoining = False
+    , waitingForOthers = False
     }
         ! [ Cmd.map PhoenixMsg phxCmd ]
 
@@ -102,6 +100,7 @@ initialSocket flags =
         |> Phoenix.Socket.on "chat_history" "lobby:chat" UpdateChatLog
         |> Phoenix.Socket.on "games_meta" "lobby:mainlobby" ReceiveGamesMeta
         |> Phoenix.Socket.on "games_setup" "lobby:mainlobby" ReceiveGamesSetup
+        |> Phoenix.Socket.on "ready_to_launch" "lobby:mainlobby" Launch
         --|> Phoenix.Socket.withoutHeartbeat
         |> Phoenix.Socket.withDebug
 
@@ -393,20 +392,49 @@ update msg model =
             }
                 ! [ Cmd.map PhoenixMsg phxCmd ]
 
-        StartGame ( gameMeta, id ) ->
+        StartGame gameId ->
             let
-                gameUrl =
-                    case gameMeta.name of
+                payload =
+                    encodeStartGameMessage
+                        model.playerInfo.username
+                        gameId
+
+                pushMsg =
+                    Phoenix.Push.init "start_game_message" "lobby:mainlobby"
+                        |> Phoenix.Push.withPayload payload
+                        |> Phoenix.Push.onError ServerError
+
+                ( newSocket, phxCmd ) =
+                    Phoenix.Socket.push pushMsg model.phxSocket
+            in
+            { model
+                | waitingForOthers = True
+                , phxSocket = newSocket
+            }
+                ! [ Cmd.map PhoenixMsg phxCmd ]
+
+        Launch jsonVal ->
+            let
+                gameName =
+                    Maybe.withDefault "" (Maybe.map .name model.currentSelectedGame)
+
+                gameUrl id =
+                    case gameName of
                         "hexaboard" ->
-                            "/hexaboard"
+                            "/game?game_name=hexaboard&game_id=" ++ id
 
                         "war" ->
-                            "/war"
+                            "/game?game_name=war&game_id=" ++ id
 
                         _ ->
                             ""
             in
-            model ! [ load gameUrl ]
+            case decodeGameId model jsonVal of
+                Ok ( gameMeta, id ) ->
+                    model ! [ load (gameUrl (gameMeta.name ++ "_" ++ toString id)) ]
+
+                Err e ->
+                    { model | errors = e } ! []
 
         Default ->
             model ! []

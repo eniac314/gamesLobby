@@ -46,6 +46,18 @@ encodeJoinGameMessage player ( gameMeta, id ) =
         ]
 
 
+encodeStartGameMessage player ( gameMeta, id ) =
+    Encode.object
+        [ ( "player", Encode.string player )
+        , ( "game_id"
+          , Encode.object
+                [ ( "name", Encode.string gameMeta.name )
+                , ( "id", Encode.int id )
+                ]
+          )
+        ]
+
+
 encodeLeaveGameMessage player ( gameMeta, id ) =
     Encode.object
         [ ( "player", Encode.string player )
@@ -149,9 +161,10 @@ gamesSetupDecoder model =
 
 
 gameSetupDecoder model =
-    Decode.map4 GameSetup
+    Decode.map5 GameSetup
         (Decode.field "game_meta" gameMetaDecoder)
         (Decode.field "joined" (joinedDecoder model))
+        (Decode.field "has_started" (hasStartedDecoder model))
         (Decode.field "host" (hostDecoder model))
         (Decode.field "game_id" (gameIdDecoder model))
 
@@ -181,6 +194,25 @@ joinedDecoder model =
                         Decode.fail "invalid player name"
                 )
         )
+
+
+hasStartedDecoder model =
+    Decode.list
+        (Decode.string
+            |> Decode.andThen
+                (\p ->
+                    if Dict.member p model.presences then
+                        Decode.succeed p
+                    else
+                        Decode.fail "invalid player name"
+                )
+        )
+
+
+decodeGameId model jsonVal =
+    Decode.decodeValue
+        (Decode.field "game_id" (gameIdDecoder model))
+        jsonVal
 
 
 gameIdDecoder : Model -> Decode.Decoder GameId

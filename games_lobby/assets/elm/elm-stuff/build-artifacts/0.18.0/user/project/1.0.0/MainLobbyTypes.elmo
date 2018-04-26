@@ -16,7 +16,9 @@ var _user$project$MainLobbyTypes$Model = function (a) {
 											return function (l) {
 												return function (m) {
 													return function (n) {
-														return {wsUrl: a, authToken: b, authSalt: c, phxSocket: d, playerInfo: e, log: f, errors: g, presences: h, chatMessageInput: i, chatLog: j, chatMessageBoxFocused: k, gamesMeta: l, gamesSetup: m, currentSelectedGame: n};
+														return function (o) {
+															return {wsUrl: a, authToken: b, authSalt: c, phxSocket: d, playerInfo: e, log: f, errors: g, presences: h, chatMessageInput: i, chatLog: j, chatMessageBoxFocused: k, gamesMeta: l, gamesSetup: m, currentSelectedGame: n, waitingForOthers: o};
+														};
 													};
 												};
 											};
@@ -35,9 +37,9 @@ var _user$project$MainLobbyTypes$GameMeta = F4(
 	function (a, b, c, d) {
 		return {name: a, minPlayers: b, maxPlayers: c, hasIA: d};
 	});
-var _user$project$MainLobbyTypes$GameSetup = F4(
-	function (a, b, c, d) {
-		return {gameMeta: a, joined: b, host: c, gameId: d};
+var _user$project$MainLobbyTypes$GameSetup = F5(
+	function (a, b, c, d, e) {
+		return {gameMeta: a, joined: b, hasStarted: c, host: d, gameId: e};
 	});
 var _user$project$MainLobbyTypes$ChatMessage = F3(
 	function (a, b, c) {
@@ -50,6 +52,9 @@ var _user$project$MainLobbyTypes$Player = F2(
 var _user$project$MainLobbyTypes$defPlayer = A2(_user$project$MainLobbyTypes$Player, '', '');
 var _user$project$MainLobbyTypes$StartGame = function (a) {
 	return {ctor: 'StartGame', _0: a};
+};
+var _user$project$MainLobbyTypes$Launch = function (a) {
+	return {ctor: 'Launch', _0: a};
 };
 var _user$project$MainLobbyTypes$LeaveGame = function (a) {
 	return {ctor: 'LeaveGame', _0: a};

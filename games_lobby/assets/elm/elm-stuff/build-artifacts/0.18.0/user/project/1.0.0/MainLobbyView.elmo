@@ -38,6 +38,14 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 			return _mdgriffith$stylish_elephants$Element$empty;
 		} else {
 			var _p3 = _p2._0;
+			var usrView = function (usr) {
+				var usrHasStarted = A2(_elm_lang$core$List$member, usr, _p1.hasStarted) ? ' Ok' : '';
+				var usrStr = A2(_elm_lang$core$Basics_ops['++'], usr, usrHasStarted);
+				return A2(
+					_mdgriffith$stylish_elephants$Element$el,
+					{ctor: '[]'},
+					_mdgriffith$stylish_elephants$Element$text(usrStr));
+			};
 			var canStart = _elm_lang$core$Native_Utils.cmp(
 				_elm_lang$core$List$length(_p5) + 1,
 				_p1.gameMeta.minPlayers) > -1;
@@ -117,15 +125,7 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 										_1: {ctor: '[]'}
 									}
 								},
-								A2(
-									_elm_lang$core$List$map,
-									function (usr) {
-										return A2(
-											_mdgriffith$stylish_elephants$Element$el,
-											{ctor: '[]'},
-											_mdgriffith$stylish_elephants$Element$text(usr));
-									},
-									_p5)),
+								A2(_elm_lang$core$List$map, usrView, _p5)),
 							_1: {
 								ctor: '::',
 								_0: isGameSetupHost ? A2(
@@ -215,7 +215,7 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 									}) : _mdgriffith$stylish_elephants$Element$empty)),
 								_1: {
 									ctor: '::',
-									_0: canStart ? A2(
+									_0: (canStart && (!model.waitingForOthers)) ? A2(
 										_mdgriffith$stylish_elephants$Element_Input$button,
 										{
 											ctor: '::',
@@ -243,7 +243,10 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 											onPress: _elm_lang$core$Maybe$Just(
 												_user$project$MainLobbyTypes$StartGame(_p4)),
 											label: _mdgriffith$stylish_elephants$Element$text('Start game')
-										}) : _mdgriffith$stylish_elephants$Element$empty,
+										}) : (model.waitingForOthers ? A2(
+										_mdgriffith$stylish_elephants$Element$el,
+										{ctor: '[]'},
+										_mdgriffith$stylish_elephants$Element$text('waiting to start...')) : _mdgriffith$stylish_elephants$Element$empty),
 									_1: {ctor: '[]'}
 								}
 							}
@@ -1036,7 +1039,11 @@ var _user$project$MainLobbyView$view = function (model) {
 							_1: {
 								ctor: '::',
 								_0: _user$project$MainLobbyView$gamesSetupView(model),
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: _user$project$MainLobbyView$debugView(model),
+									_1: {ctor: '[]'}
+								}
 							}
 						}),
 					_1: {ctor: '[]'}

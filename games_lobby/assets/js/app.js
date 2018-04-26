@@ -21,14 +21,14 @@ import "phoenix_html"
 // import socket from "./socket"
 
 // Elm
-import Elm from "./mainlobby"
+// import Elm from "./mainlobby"
 
-const elmContainer = document.querySelector("#elm-container");
+// const elmContainer = document.querySelector("#elm-container");
 
-if (elmContainer){
- Elm.MainLobby.embed(elmContainer, {
-    authToken: elmContainer.getAttribute("data-auth-token"),
-    authSalt : elmContainer.getAttribute("data-auth-salt"),
-    wsUrl: elmContainer.getAttribute("data-ws-url")
-  })
-};
+// if (elmContainer){
+//  Elm.MainLobby.embed(elmContainer, {
+//     authToken: elmContainer.getAttribute("data-auth-token"),
+//     authSalt : elmContainer.getAttribute("data-auth-salt"),
+//     wsUrl: elmContainer.getAttribute("data-ws-url")
+//   })
+// };

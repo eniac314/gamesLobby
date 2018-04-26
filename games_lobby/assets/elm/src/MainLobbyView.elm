@@ -32,8 +32,7 @@ view model =
             , row [ spacing 15 ]
                 [ chatView model
                 , gamesSetupView model
-
-                --, debugView model
+                , debugView model
                 ]
             ]
 
@@ -233,7 +232,7 @@ gameMetaView ({ name, minPlayers, maxPlayers, hasIA } as gamesMeta) =
 
 
 gameSetupView : Model -> GameSetup -> Element Msg
-gameSetupView model { gameMeta, joined, host, gameId } =
+gameSetupView model { gameMeta, joined, hasStarted, host, gameId } =
     case host of
         Nothing ->
             Element.empty
@@ -253,6 +252,19 @@ gameSetupView model { gameMeta, joined, host, gameId } =
 
                 canStart =
                     List.length joined + 1 >= gameMeta.minPlayers
+
+                usrView usr =
+                    let
+                        usrHasStarted =
+                            if List.member usr hasStarted then
+                                " Ok"
+                            else
+                                ""
+
+                        usrStr =
+                            usr ++ usrHasStarted
+                    in
+                    el [] (text usrStr)
             in
             column
                 [ spacing 10
@@ -270,7 +282,7 @@ gameSetupView model { gameMeta, joined, host, gameId } =
                     [ spacing 10
                     , scrollbarY
                     ]
-                    (List.map (\usr -> el [] (text usr)) joined)
+                    (List.map usrView joined)
                 , if isGameSetupHost then
                     Input.button
                         [ Background.color Color.lightRed
@@ -303,7 +315,7 @@ gameSetupView model { gameMeta, joined, host, gameId } =
                         }
                   else
                     Element.empty
-                , if canStart then
+                , if canStart && not model.waitingForOthers then
                     Input.button
                         [ Background.color Color.lightGreen
                         , padding 10
@@ -313,6 +325,8 @@ gameSetupView model { gameMeta, joined, host, gameId } =
                         { onPress = Just <| StartGame gameId
                         , label = text "Start game"
                         }
+                  else if model.waitingForOthers then
+                    el [] (text "waiting to start...")
                   else
                     Element.empty
                 ]

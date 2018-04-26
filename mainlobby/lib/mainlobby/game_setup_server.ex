@@ -32,6 +32,14 @@ defmodule Mainlobby.GameSetupServer do
     GenServer.call @name, {:join_game, game_id, player}
   end  
 
+  def has_started(player, game_id) do 
+    GenServer.call @name, {:has_started, game_id, player}
+  end
+
+  def everybody_started?(game_id) do 
+    GenServer.call @name, {:everybody_started?, game_id}
+  end
+
   # Server callbacks
 
   def init(_init_state) do 
@@ -62,6 +70,16 @@ defmodule Mainlobby.GameSetupServer do
   def handle_call({:join_game, game_id, player}, _from, state) do 
     new_state = GameSetup.join_game(state, game_id, player)
     {:reply, new_state, new_state}
+  end
+
+  def handle_call({:has_started, game_id, player}, _from, state) do 
+    new_state = GameSetup.has_started(state, game_id, player)
+    {:reply, new_state, new_state}
+  end
+
+  def handle_call({:everybody_started?, game_id}, _from, state) do 
+    bool = GameSetup.everybody_started?(state, game_id)
+    {:reply, bool, state}
   end
 
 end 

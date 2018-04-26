@@ -24,40 +24,45 @@ var _user$project$MainLobby$initialSocket = function (flags) {
 	return _fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
 		A4(
 			_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-			'games_setup',
+			'ready_to_launch',
 			'lobby:mainlobby',
-			_user$project$MainLobbyTypes$ReceiveGamesSetup,
+			_user$project$MainLobbyTypes$Launch,
 			A4(
 				_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-				'games_meta',
+				'games_setup',
 				'lobby:mainlobby',
-				_user$project$MainLobbyTypes$ReceiveGamesMeta,
+				_user$project$MainLobbyTypes$ReceiveGamesSetup,
 				A4(
 					_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-					'chat_history',
-					'lobby:chat',
-					_user$project$MainLobbyTypes$UpdateChatLog,
+					'games_meta',
+					'lobby:mainlobby',
+					_user$project$MainLobbyTypes$ReceiveGamesMeta,
 					A4(
 						_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-						'new_chat_message',
+						'chat_history',
 						'lobby:chat',
-						_user$project$MainLobbyTypes$ReceiveChatMessage,
+						_user$project$MainLobbyTypes$UpdateChatLog,
 						A4(
 							_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-							'presence_diff',
+							'new_chat_message',
 							'lobby:chat',
-							_user$project$MainLobbyTypes$ReceivePresenceDiff,
+							_user$project$MainLobbyTypes$ReceiveChatMessage,
 							A4(
 								_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-								'presence_state',
+								'presence_diff',
 								'lobby:chat',
-								_user$project$MainLobbyTypes$ReceivePresenceState,
+								_user$project$MainLobbyTypes$ReceivePresenceDiff,
 								A4(
 									_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-									'greetings',
+									'presence_state',
 									'lobby:chat',
-									_user$project$MainLobbyTypes$ReceivePlayerInfo,
-									_fbonetti$elm_phoenix_socket$Phoenix_Socket$init(wsUrlWithAuth)))))))));
+									_user$project$MainLobbyTypes$ReceivePresenceState,
+									A4(
+										_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+										'greetings',
+										'lobby:chat',
+										_user$project$MainLobbyTypes$ReceivePlayerInfo,
+										_fbonetti$elm_phoenix_socket$Phoenix_Socket$init(wsUrlWithAuth))))))))));
 };
 var _user$project$MainLobby$initPhoenixChannel = function (topic) {
 	return _fbonetti$elm_phoenix_socket$Phoenix_Channel$init(topic);
@@ -505,25 +510,74 @@ var _user$project$MainLobby$update = F2(
 							_1: {ctor: '[]'}
 						});
 				case 'StartGame':
-					var gameUrl = function () {
-						var _p20 = _p0._0._0.name;
-						switch (_p20) {
+					var payload = A2(_user$project$MainLobbyComs$encodeStartGameMessage, model.playerInfo.username, _p0._0);
+					var pushMsg = A2(
+						_fbonetti$elm_phoenix_socket$Phoenix_Push$onError,
+						_user$project$MainLobbyTypes$ServerError,
+						A2(
+							_fbonetti$elm_phoenix_socket$Phoenix_Push$withPayload,
+							payload,
+							A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'start_game_message', 'lobby:mainlobby')));
+					var _p20 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+					var newSocket = _p20._0;
+					var phxCmd = _p20._1;
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{waitingForOthers: true, phxSocket: newSocket}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
+				case 'Launch':
+					var gameName = A2(
+						_elm_lang$core$Maybe$withDefault,
+						'',
+						A2(
+							_elm_lang$core$Maybe$map,
+							function (_) {
+								return _.name;
+							},
+							model.currentSelectedGame));
+					var gameUrl = function (id) {
+						var _p21 = gameName;
+						switch (_p21) {
 							case 'hexaboard':
-								return '/hexaboard';
+								return A2(_elm_lang$core$Basics_ops['++'], '/game?game_name=hexaboard&game_id=', id);
 							case 'war':
-								return '/war';
+								return A2(_elm_lang$core$Basics_ops['++'], '/game?game_name=war&game_id=', id);
 							default:
 								return '';
 						}
-					}();
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
-						{
-							ctor: '::',
-							_0: _elm_lang$navigation$Navigation$load(gameUrl),
-							_1: {ctor: '[]'}
-						});
+					};
+					var _p22 = A2(_user$project$MainLobbyComs$decodeGameId, model, _p0._0);
+					if (_p22.ctor === 'Ok') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							model,
+							{
+								ctor: '::',
+								_0: _elm_lang$navigation$Navigation$load(
+									gameUrl(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											_p22._0._0.name,
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'_',
+												_elm_lang$core$Basics$toString(_p22._0._1))))),
+								_1: {ctor: '[]'}
+							});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{errors: _p22._0}),
+							{ctor: '[]'});
+					}
 				default:
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
@@ -535,15 +589,15 @@ var _user$project$MainLobby$update = F2(
 var _user$project$MainLobby$init = function (flags) {
 	var lobbyMainlobby = _user$project$MainLobby$initPhoenixChannel('lobby:mainlobby');
 	var lobbyChat = _user$project$MainLobby$initPhoenixChannel('lobby:chat');
-	var _p21 = A2(
+	var _p23 = A2(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
 		lobbyChat,
 		_user$project$MainLobby$initialSocket(flags));
-	var newSocket1 = _p21._0;
-	var phxCmd1 = _p21._1;
-	var _p22 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
-	var newSocket2 = _p22._0;
-	var phxCmd2 = _p22._1;
+	var newSocket1 = _p23._0;
+	var phxCmd1 = _p23._1;
+	var _p24 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
+	var newSocket2 = _p24._0;
+	var phxCmd2 = _p24._1;
 	var phxCmd = _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',
@@ -570,7 +624,8 @@ var _user$project$MainLobby$init = function (flags) {
 			chatMessageBoxFocused: false,
 			gamesMeta: _elm_lang$core$Dict$empty,
 			gamesSetup: _elm_lang$core$Dict$empty,
-			currentSelectedGame: _elm_lang$core$Maybe$Nothing
+			currentSelectedGame: _elm_lang$core$Maybe$Nothing,
+			waitingForOthers: false
 		},
 		{
 			ctor: '::',

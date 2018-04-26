@@ -22,6 +22,11 @@
   </head>
 
   <body>
+    <%= if assigns[:elm_app_path] do %>
+      <script src="<%= static_path(@conn, assigns[:elm_app_path]) %>"></script> 
+    <% else %>
+      <span></span>
+    <%end %>
     <div class="container">
       <header class="header">
         <nav role="navigation" id="authBlock">
@@ -55,5 +60,6 @@
 
     </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+
   </body>
 </html>

@@ -1,2 +1,43 @@
-var _user$project$Hexaboard$main = _elm_lang$virtual_dom$Native_VirtualDom.staticProgram(
-	_elm_lang$html$Html$text('this is a test'));
+var _user$project$Hexaboard$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Hexaboard$update = F2(
+	function (msg, model) {
+		return A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			model,
+			{ctor: '[]'});
+	});
+var _user$project$Hexaboard$view = function (model) {
+	return _elm_lang$html$Html$text('this is a test');
+};
+var _user$project$Hexaboard$init = function (flags) {
+	return A2(
+		_elm_lang$core$Platform_Cmd_ops['!'],
+		'',
+		{ctor: '[]'});
+};
+var _user$project$Hexaboard$main = _elm_lang$html$Html$programWithFlags(
+	{init: _user$project$Hexaboard$init, view: _user$project$Hexaboard$view, update: _user$project$Hexaboard$update, subscriptions: _user$project$Hexaboard$subscriptions})(
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (authSalt) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (authToken) {
+					return A2(
+						_elm_lang$core$Json_Decode$andThen,
+						function (wsUrl) {
+							return _elm_lang$core$Json_Decode$succeed(
+								{authSalt: authSalt, authToken: authToken, wsUrl: wsUrl});
+						},
+						A2(_elm_lang$core$Json_Decode$field, 'wsUrl', _elm_lang$core$Json_Decode$string));
+				},
+				A2(_elm_lang$core$Json_Decode$field, 'authToken', _elm_lang$core$Json_Decode$string));
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'authSalt', _elm_lang$core$Json_Decode$string)));
+var _user$project$Hexaboard$Flags = F3(
+	function (a, b, c) {
+		return {authToken: a, authSalt: b, wsUrl: c};
+	});
+var _user$project$Hexaboard$Default = {ctor: 'Default'};

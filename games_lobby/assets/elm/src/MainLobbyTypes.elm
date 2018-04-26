@@ -34,9 +34,7 @@ type alias Model =
     , gamesMeta : Dict String GameMeta
     , gamesSetup : Dict String GameSetup
     , currentSelectedGame : Maybe GameMeta
-
-    --, currentlyHosting : Bool
-    --, currentlyJoining : Bool
+    , waitingForOthers : Bool
     }
 
 
@@ -59,6 +57,7 @@ type alias Username =
 type alias GameSetup =
     { gameMeta : GameMeta
     , joined : List Username
+    , hasStarted : List Username
     , host : Maybe Username
     , gameId : GameId
     }
@@ -109,4 +108,5 @@ type Msg
     | DeleteGame GameId
     | JoinGame GameId
     | LeaveGame GameId
+    | Launch Decode.Value
     | StartGame GameId

@@ -51,7 +51,7 @@ exports.config = {
       elmFolder: "elm",
       mainModules: ["src/MainLobby.elm", "src/hexaboard/Hexaboard.elm"],
       makeParameters: [],
-      outputFolder: "../js"
+      outputFolder: "../../priv/static/js"
     }
 
   },
