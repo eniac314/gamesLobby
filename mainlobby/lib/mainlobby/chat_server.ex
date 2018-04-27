@@ -6,7 +6,7 @@ defmodule Mainlobby.ChatServer do
   
 
   # Client API
-  def start(init_state \\ []) do 
+  def start(init_state \\ %{mainlobby: []}) do 
   	IO.puts "Starting the main lobby chat server..."
     GenServer.start_link( __MODULE__, 
     	                  init_state,
@@ -17,12 +17,16 @@ defmodule Mainlobby.ChatServer do
     GenServer.stop @name, reason, :infinity
   end 
   
-  def get_chat_history do
-    GenServer.call @name, :get_chat_history
+  def get_chat_history(channel) do
+    GenServer.call @name, {:get_chat_history, channel}
   end
 
-  def add_message(message) do
-    GenServer.call @name, {:add_message, message}
+  def add_message(message, channel) do
+    GenServer.call @name, {:add_message, message, channel}
+  end 
+
+  def delete_channel(channel) do 
+    GenServer.call @name, {:delete_channel, channel}
   end 
 
 
@@ -31,14 +35,19 @@ defmodule Mainlobby.ChatServer do
     {:ok, init_state}
   end 
 
-  def handle_call({:add_message, message}, _from, state) do 
-    new_state = Chat.add_message(message,state) 
+  def handle_call({:add_message, message, channel}, _from, state) do 
+    new_state = Chat.add_message(state, message, channel) 
     {:reply, "message added", new_state}
   end 
 
-  def handle_call(:get_chat_history, _from, state) do 
-    history = Chat.get_chat_history(state)
+  def handle_call({:get_chat_history, channel}, _from, state) do 
+    history = Chat.get_chat_history(state, channel)
     {:reply, history, state}
   end
+
+  def handle_call({:delete_channel, channel}, _from, state) do 
+    new_state = Chat.delete_channel(state, channel)
+    {:reply, "channel deleted", new_state}
+  end 
 
 end

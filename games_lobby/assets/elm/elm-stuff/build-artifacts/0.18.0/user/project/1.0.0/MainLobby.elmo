@@ -563,7 +563,7 @@ var _user$project$MainLobby$update = F2(
 									gameUrl(
 										A2(
 											_elm_lang$core$Basics_ops['++'],
-											_p22._0._0.name,
+											_p22._0._0,
 											A2(
 												_elm_lang$core$Basics_ops['++'],
 												'_',

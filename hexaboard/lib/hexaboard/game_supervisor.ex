@@ -15,10 +15,10 @@ defmodule Hexaboard.GameSupervisor do
   @doc """
   Starts a `GameServer` process and supervises it.
   """
-  def start_game(init_state \\ nil) do
+  def start_game(name, init_state \\ nil) do
       child_spec = %{
         id: GameServer, 
-        start: {GameServer, :start, [init_state]},
+        start: {GameServer, :start, [name, init_state]},
         restart: :transient
       }
 

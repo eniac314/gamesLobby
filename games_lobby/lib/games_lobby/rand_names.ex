@@ -1,4 +1,4 @@
-defmodule Hexaboard.RandNames do 
+defmodule GamesLobby.RandNames do 
 
   def rand_name() do 
     adj = Enum.random(adjectives())

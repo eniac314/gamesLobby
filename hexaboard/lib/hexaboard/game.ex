@@ -4,10 +4,11 @@ defmodule Hexaboard.Game do
 	alias Hexaboard.Player
 	alias Hexaboard.Cell
 
-	defp initial_state({n, nbr_players, name}) do 
+	defp initial_state({n, players, name}) do 
+    nbr_players = length(players)
     %{ board: Board.board_with_edge(n),
-       players: Range.new(0, nbr_players - 1)
-                |> Enum.map(fn(id) -> {id, %Player{id: id, deck: Range.new(0,14) |> MapSet.new}} end)
+       players: Enum.zip(Range.new(0, nbr_players - 1), players)
+                |> Enum.map(fn({id, n}) -> {id, %Player{id: id, name: n, deck: Range.new(0,14) |> MapSet.new}} end)
                 |> Map.new,
        turn_selection_order: [],
        available_turns: MapSet.new(Range.new(1,nbr_players)),
@@ -19,7 +20,7 @@ defmodule Hexaboard.Game do
   def new_game(init_state) do 
   	if init_state != nil do 
   	  initial_state(init_state)
-    else initial_state({6,2,"default"})
+    else initial_state({6,["tom","jerry"],"default"})
     end  
   end
 

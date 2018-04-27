@@ -7,9 +7,10 @@ defmodule Mainlobby.GameSetup do
   
   def get_games_setup(games_setup) do 
     Map.delete(games_setup, :next_id)
+    |> Enum.filter(fn ({_k,v}) -> not v.ready end )
     |> Enum.reduce(%{}, fn({k,v}, acc) -> 
                              {k2, v2} = stringify_game_id({k,v})
-                             Map.put(acc, k2, v2) end #Map.delete(v2, :has_started)) end
+                             Map.put(acc, k2, v2) end
                   )
   end 
   
@@ -18,7 +19,9 @@ defmodule Mainlobby.GameSetup do
     new_game = %{ game_meta: Mainlobby.GamesMeta.games_meta[game_name], 
                   joined: [],
                   has_started: [],
+                  has_loaded: [],
                   host: player,
+                  ready: false
                 }
     game_id = {game_name, next_id}
     
@@ -53,6 +56,24 @@ defmodule Mainlobby.GameSetup do
       games_setup
     end 
   end
+  
+  def has_loaded(games_setup, game_id, player) do 
+    has_loaded = get_in(games_setup, [game_id, :has_loaded])
+
+    if Enum.member?(has_loaded, player) do  
+      update_in(games_setup, [game_id, :has_loaded], &([player | &1]))
+    else 
+      games_setup
+    end 
+  end
+
+  def game_ready(games_setup, game_id) do
+    put_in(games_setup, [game_id, :ready], true)
+  end 
+
+  def game_ready?(games_setup, game_id) do
+    get_in(games_setup, [game_id, :ready])
+  end  
 
   def everybody_started?(games_setup, game_id) do 
     joined = [get_in(games_setup, [game_id, :host]) | get_in(games_setup, [game_id, :joined])]
@@ -66,6 +87,19 @@ defmodule Mainlobby.GameSetup do
     Enum.reduce(joined, true, has_started?)
     
   end  
+
+  def everybody_loaded?(games_setup, game_id) do 
+    has_started = get_in(games_setup, [game_id, :has_started])
+    has_loaded = get_in(games_setup, [game_id, :has_loaded])
+    has_loaded? = 
+      fn (player, acc) -> 
+          acc and Enum.member?(has_loaded, player)
+      end 
+    
+    Enum.reduce(has_started, true, has_loaded?)
+    
+  end  
+
 
   def game_id_to_string({game_name, id}) do 
     n = to_string game_name

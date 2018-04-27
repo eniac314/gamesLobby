@@ -16,11 +16,11 @@ defmodule Hexaboard.GameServer do
       iex> answer == :ok
       true
   """
-  def start(init_state \\ nil) do
-    name = RandNames.rand_name()
+  def start(name, init_state \\ nil) do
+    
     init_state = 
       case init_state do
-        {size, nbr_player} -> {size, nbr_player, name}
+        {size, players} -> {size, players, name}
         _ -> init_state
       end
 
@@ -72,9 +72,9 @@ defmodule Hexaboard.GameServer do
     {:via, Registry, {Hexaboard.GameRegistry, game_name}}
   end  
   
-  defp my_game_name do
-    Registry.keys(Hexaboard.GameRegistry, self()) |> List.first
-  end
+  # def my_game_name do
+  #   Registry.keys(Hexaboard.GameRegistry, self()) |> List.first
+  # end
   
   @doc """
   Returns the `pid` of the game server process registered under the 
@@ -132,7 +132,9 @@ defmodule Hexaboard.GameServer do
        _ -> 
         {:reply, state, state}
     end
-  end	
+  end
+
+  
 
 
 

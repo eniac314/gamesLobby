@@ -430,8 +430,8 @@ update msg model =
                             ""
             in
             case decodeGameId model jsonVal of
-                Ok ( gameMeta, id ) ->
-                    model ! [ load (gameUrl (gameMeta.name ++ "_" ++ toString id)) ]
+                Ok ( name, id ) ->
+                    model ! [ load (gameUrl (name ++ "_" ++ toString id)) ]
 
                 Err e ->
                     { model | errors = e } ! []

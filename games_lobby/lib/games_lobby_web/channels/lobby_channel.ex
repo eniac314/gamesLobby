@@ -16,7 +16,7 @@ alias GamesLobbyWeb.Presence
   def handle_info({:after_join, "chat"}, socket) do 
     push(socket, "greetings", %{username: socket.assigns.current_player.username})
     
-    push(socket, "chat_history", %{chat_history: Mainlobby.ChatServer.get_chat_history()})
+    push(socket, "chat_history", %{chat_history: Mainlobby.ChatServer.get_chat_history(:mainlobby)})
 
     push(socket, "presence_state", Presence.list(socket))
 
@@ -38,7 +38,7 @@ alias GamesLobbyWeb.Presence
   end
 
   def handle_in("new_chat_message", %{"time_stamp" => time_stamp, "author" => author, "message" => message} = new_message, socket) do
-    Mainlobby.ChatServer.add_message(new_message)
+    Mainlobby.ChatServer.add_message(new_message, :mainlobby)
     broadcast!(socket, "new_chat_message", %{
       time_stamp: time_stamp,
       author: author,
@@ -77,10 +77,14 @@ alias GamesLobbyWeb.Presence
     {:noreply, socket}
   end
 
-  def handle_in("start_game_message", %{"player" => player, "game_id" => game_id}, socket) do 
-    Mainlobby.GameSetupServer.has_started(player, {safe_atomize(game_id["name"]), game_id["id"]})
-    if Mainlobby.GameSetupServer.everybody_started?({safe_atomize(game_id["name"]), game_id["id"]}) do 
-      broadcast!(socket, "ready_to_launch", %{game_id: game_id})
+  def handle_in("start_game_message", %{"player" => player, "game_id" => ext_game_id}, socket) do 
+    game_id = {safe_atomize(ext_game_id["name"]), ext_game_id["id"]}
+    
+    Mainlobby.GameSetupServer.has_started(player, game_id)
+    
+    if Mainlobby.GameSetupServer.everybody_started?(game_id) do 
+      Mainlobby.GameSetupServer.game_ready(game_id)
+      broadcast!(socket, "ready_to_launch", %{game_id: ext_game_id})
     else 
       broadcast!(socket, "games_setup", %{games_setup: Mainlobby.GameSetupServer.get_games_setup})
     end 

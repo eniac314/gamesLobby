@@ -210,8 +210,14 @@ hasStartedDecoder model =
 
 
 decodeGameId model jsonVal =
+    let
+        gameIdDecoder =
+            Decode.map2 (,)
+                (Decode.field "name" Decode.string)
+                (Decode.field "id" Decode.int)
+    in
     Decode.decodeValue
-        (Decode.field "game_id" (gameIdDecoder model))
+        (Decode.field "game_id" gameIdDecoder)
         jsonVal
 
 

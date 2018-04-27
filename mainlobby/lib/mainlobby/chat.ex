@@ -1,19 +1,23 @@
 defmodule Mainlobby.Chat do 
 
-# %{
-#       time_stamp: time_stamp,
-#       author: author,
-#       message: message,
-#     }
-
-def get_chat_history(chat) do 
-  chat
+def get_chat_history(chat, channel) do 
+  Map.get(chat, channel) 
 end
 
+def add_channel(chat, channel) do 
+  Map.put(chat, channel, [])
+end
 
-def add_message(message, chat) do 
-  lastMessages = Enum.take(chat, 9)
-  [ message | lastMessages ]
+def delete_channel(chat, channel) do 
+   Map.delete(chat, channel)
+end
+
+def add_message(chat, message, channel) do 
+  lastMessages = 
+    get_chat_history(chat,channel)
+    |> Enum.take(49)
+  new_messages = [ message | lastMessages ]
+  Map.put(chat, channel, new_messages)
 end 
 
 end

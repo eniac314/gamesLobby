@@ -5,6 +5,7 @@ defmodule GamesLobbyWeb.UserSocket do
 
   ## Channels
   channel "lobby:*", GamesLobbyWeb.LobbyChannel
+  channel "hexaboard:*", GamesLobbyWeb.HexaboardChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

@@ -36,9 +36,25 @@ defmodule Mainlobby.GameSetupServer do
     GenServer.call @name, {:has_started, game_id, player}
   end
 
+  def has_loaded(player, game_id) do 
+    GenServer.call @name, {:has_loaded, game_id, player}
+  end
+  
+  def game_ready(game_id) do 
+    GenServer.call @name, {:game_ready, game_id}
+  end
+  
+  def game_ready?(game_id) do 
+    GenServer.call @name, {:game_ready?, game_id}
+  end
+
   def everybody_started?(game_id) do 
     GenServer.call @name, {:everybody_started?, game_id}
   end
+
+  def everybody_loaded?(game_id) do 
+    GenServer.call @name, {:everybody_loaded?, game_id}
+  end  
 
   # Server callbacks
 
@@ -77,8 +93,28 @@ defmodule Mainlobby.GameSetupServer do
     {:reply, new_state, new_state}
   end
 
+  def handle_call({:has_loaded, game_id, player}, _from, state) do 
+    new_state = GameSetup.has_loaded(state, game_id, player)
+    {:reply, new_state, new_state}
+  end
+
+  def handle_call({:game_ready, game_id}, _from, state) do 
+    new_state = GameSetup.game_ready(state, game_id)
+    {:reply, new_state, new_state}
+  end
+
+  def handle_call({:game_ready?, game_id}, _from, state) do 
+    bool = GameSetup.game_ready?(state, game_id)
+    {:reply, bool, state}
+  end
+
   def handle_call({:everybody_started?, game_id}, _from, state) do 
     bool = GameSetup.everybody_started?(state, game_id)
+    {:reply, bool, state}
+  end
+
+  def handle_call({:everybody_loaded?, game_id}, _from, state) do 
+    bool = GameSetup.everybody_loaded?(state, game_id)
     {:reply, bool, state}
   end
 
