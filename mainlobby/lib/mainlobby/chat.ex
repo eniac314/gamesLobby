@@ -5,7 +5,10 @@ def get_chat_history(chat, channel) do
 end
 
 def add_channel(chat, channel) do 
-  Map.put(chat, channel, [])
+  if not Map.has_key(chat, channel) do 
+  	Map.put(chat, channel, [])
+  else chat 
+  end 
 end
 
 def delete_channel(chat, channel) do 

@@ -8,17 +8,93 @@ var _user$project$Hexaboard$update = F2(
 			model,
 			{ctor: '[]'});
 	});
-var _user$project$Hexaboard$view = function (model) {
-	return _elm_lang$html$Html$text('this is a test');
+var _user$project$Hexaboard$initialSocket = function (flags) {
+	var wsUrlWithAuth = A2(
+		_elm_lang$core$Basics_ops['++'],
+		flags.wsUrl,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'?token=',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				flags.authToken,
+				A2(_elm_lang$core$Basics_ops['++'], '&salt=', flags.authSalt))));
+	return _fbonetti$elm_phoenix_socket$Phoenix_Socket$withDebug(
+		A4(
+			_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+			'chat_history',
+			'hexaboard:chat',
+			_user$project$Hexaboard_HexaboardTypes$UpdateChatLog,
+			A4(
+				_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+				'new_chat_message',
+				'hexaboard:chat',
+				_user$project$Hexaboard_HexaboardTypes$ReceiveChatMessage,
+				A4(
+					_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+					'presence_diff',
+					'hexaboard:chat',
+					_user$project$Hexaboard_HexaboardTypes$ReceivePresenceDiff,
+					A4(
+						_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+						'presence_state',
+						'hexaboard:chat',
+						_user$project$Hexaboard_HexaboardTypes$ReceivePresenceState,
+						A4(
+							_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+							'greetings',
+							'hexaboard:chat',
+							_user$project$Hexaboard_HexaboardTypes$ReceivePlayerInfo,
+							_fbonetti$elm_phoenix_socket$Phoenix_Socket$init(wsUrlWithAuth)))))));
+};
+var _user$project$Hexaboard$initPhoenixChannel = function (topic) {
+	return _fbonetti$elm_phoenix_socket$Phoenix_Channel$init(topic);
 };
 var _user$project$Hexaboard$init = function (flags) {
+	var hexaboardGame = _user$project$Hexaboard$initPhoenixChannel('hexaboard:game');
+	var hexaboardChat = _user$project$Hexaboard$initPhoenixChannel('hexaboard:chat');
+	var _p0 = A2(
+		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
+		hexaboardChat,
+		_user$project$Hexaboard$initialSocket(flags));
+	var newSocket1 = _p0._0;
+	var phxCmd1 = _p0._1;
+	var _p1 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, hexaboardGame, newSocket1);
+	var newSocket2 = _p1._0;
+	var phxCmd2 = _p1._1;
+	var phxCmd = _elm_lang$core$Platform_Cmd$batch(
+		{
+			ctor: '::',
+			_0: phxCmd1,
+			_1: {
+				ctor: '::',
+				_0: phxCmd2,
+				_1: {ctor: '[]'}
+			}
+		});
 	return A2(
 		_elm_lang$core$Platform_Cmd_ops['!'],
-		'',
-		{ctor: '[]'});
+		{
+			wsUrl: flags.wsUrl,
+			authToken: flags.authToken,
+			authSalt: flags.authSalt,
+			phxSocket: newSocket2,
+			playerInfo: _user$project$Hexaboard_HexaboardTypes$defPlayer,
+			presences: _elm_lang$core$Dict$empty,
+			chatMessageInput: '',
+			chatLog: {ctor: '[]'},
+			chatMessageBoxFocused: false,
+			board: _elm_lang$core$Dict$empty,
+			gameState: _user$project$Hexaboard_HexaboardTypes$PieceSelection
+		},
+		{
+			ctor: '::',
+			_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Hexaboard_HexaboardTypes$PhoenixMsg, phxCmd),
+			_1: {ctor: '[]'}
+		});
 };
 var _user$project$Hexaboard$main = _elm_lang$html$Html$programWithFlags(
-	{init: _user$project$Hexaboard$init, view: _user$project$Hexaboard$view, update: _user$project$Hexaboard$update, subscriptions: _user$project$Hexaboard$subscriptions})(
+	{init: _user$project$Hexaboard$init, view: _user$project$Hexaboard_HexaboardView$view, update: _user$project$Hexaboard$update, subscriptions: _user$project$Hexaboard$subscriptions})(
 	A2(
 		_elm_lang$core$Json_Decode$andThen,
 		function (authSalt) {
@@ -36,8 +112,3 @@ var _user$project$Hexaboard$main = _elm_lang$html$Html$programWithFlags(
 				A2(_elm_lang$core$Json_Decode$field, 'authToken', _elm_lang$core$Json_Decode$string));
 		},
 		A2(_elm_lang$core$Json_Decode$field, 'authSalt', _elm_lang$core$Json_Decode$string)));
-var _user$project$Hexaboard$Flags = F3(
-	function (a, b, c) {
-		return {authToken: a, authSalt: b, wsUrl: c};
-	});
-var _user$project$Hexaboard$Default = {ctor: 'Default'};

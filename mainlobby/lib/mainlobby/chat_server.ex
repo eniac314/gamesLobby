@@ -24,6 +24,10 @@ defmodule Mainlobby.ChatServer do
   def add_message(message, channel) do
     GenServer.call @name, {:add_message, message, channel}
   end 
+  
+  def add_channel(channel) do 
+    GenServer.call @name, {:add_channel, channel}
+  end 
 
   def delete_channel(channel) do 
     GenServer.call @name, {:delete_channel, channel}
@@ -44,7 +48,12 @@ defmodule Mainlobby.ChatServer do
     history = Chat.get_chat_history(state, channel)
     {:reply, history, state}
   end
-
+  
+  def handle_call({:add_channel, channel}, _from, state) do 
+    new_state = Chat.delete_channel(state, channel)
+    {:reply, "channel added", new_state}
+  end
+  
   def handle_call({:delete_channel, channel}, _from, state) do 
     new_state = Chat.delete_channel(state, channel)
     {:reply, "channel deleted", new_state}

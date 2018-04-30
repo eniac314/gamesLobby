@@ -1,0 +1,109 @@
+var _user$project$Hexaboard_HexaboardTypes$dummyPiece = {value: 0, playerId: -1};
+var _user$project$Hexaboard_HexaboardTypes$defPlayer = {
+	onlineAt: '',
+	username: '',
+	choice: _elm_lang$core$Maybe$Nothing,
+	turn: _elm_lang$core$Maybe$Nothing,
+	score: 0,
+	deck: {ctor: '[]'}
+};
+var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return {wsUrl: a, authToken: b, authSalt: c, phxSocket: d, playerInfo: e, presences: f, chatMessageInput: g, chatLog: h, chatMessageBoxFocused: i, board: j, gameState: k};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$Hexaboard_HexaboardTypes$Flags = F3(
+	function (a, b, c) {
+		return {authToken: a, authSalt: b, wsUrl: c};
+	});
+var _user$project$Hexaboard_HexaboardTypes$ChatMessage = F3(
+	function (a, b, c) {
+		return {timeStamp: a, author: b, message: c};
+	});
+var _user$project$Hexaboard_HexaboardTypes$Player = F6(
+	function (a, b, c, d, e, f) {
+		return {onlineAt: a, username: b, choice: c, turn: d, score: e, deck: f};
+	});
+var _user$project$Hexaboard_HexaboardTypes$Cell = F3(
+	function (a, b, c) {
+		return {xPos: a, yPos: b, state: c};
+	});
+var _user$project$Hexaboard_HexaboardTypes$Piece = F2(
+	function (a, b) {
+		return {value: a, playerId: b};
+	});
+var _user$project$Hexaboard_HexaboardTypes$TimeUpdate = function (a) {
+	return {ctor: 'TimeUpdate', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$RequestDate = function (a) {
+	return {ctor: 'RequestDate', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$KeyDown = function (a) {
+	return {ctor: 'KeyDown', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$UnfocusChatMessageBox = {ctor: 'UnfocusChatMessageBox'};
+var _user$project$Hexaboard_HexaboardTypes$FocusChatMessageBox = {ctor: 'FocusChatMessageBox'};
+var _user$project$Hexaboard_HexaboardTypes$ReceiveChatMessage = function (a) {
+	return {ctor: 'ReceiveChatMessage', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$SendChatMessage = function (a) {
+	return {ctor: 'SendChatMessage', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$ChatMessageInput = function (a) {
+	return {ctor: 'ChatMessageInput', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$ServerError = function (a) {
+	return {ctor: 'ServerError', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$ServerMsg = function (a) {
+	return {ctor: 'ServerMsg', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$UpdateChatLog = function (a) {
+	return {ctor: 'UpdateChatLog', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$ReceivePresenceDiff = function (a) {
+	return {ctor: 'ReceivePresenceDiff', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$ReceivePresenceState = function (a) {
+	return {ctor: 'ReceivePresenceState', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$ReceivePlayerInfo = function (a) {
+	return {ctor: 'ReceivePlayerInfo', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$PhoenixMsg = function (a) {
+	return {ctor: 'PhoenixMsg', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$Default = {ctor: 'Default'};
+var _user$project$Hexaboard_HexaboardTypes$EndGame = {ctor: 'EndGame'};
+var _user$project$Hexaboard_HexaboardTypes$Playing = {ctor: 'Playing'};
+var _user$project$Hexaboard_HexaboardTypes$TurnSelection = {ctor: 'TurnSelection'};
+var _user$project$Hexaboard_HexaboardTypes$PieceSelection = {ctor: 'PieceSelection'};
+var _user$project$Hexaboard_HexaboardTypes$Empty = {ctor: 'Empty'};
+var _user$project$Hexaboard_HexaboardTypes$Contain = function (a) {
+	return {ctor: 'Contain', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$UnPlayable = function (a) {
+	return {ctor: 'UnPlayable', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$Rainbow = function (a) {
+	return {ctor: 'Rainbow', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$Grey = {ctor: 'Grey'};

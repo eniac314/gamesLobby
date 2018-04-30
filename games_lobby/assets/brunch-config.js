@@ -49,7 +49,7 @@ exports.config = {
       ignore: [/vendor/, "js/mainlobby.js", "js/hexaboard.js"]},
     elmBrunch: {
       elmFolder: "elm",
-      mainModules: ["src/MainLobby.elm", "src/hexaboard/Hexaboard.elm"],
+      mainModules: ["src/MainLobby.elm", "src/Hexaboard/Hexaboard.elm"],
       makeParameters: [],
       outputFolder: "../../priv/static/js"
     }

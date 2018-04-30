@@ -1,0 +1,21 @@
+var _user$project$Hexaboard_HexaboardView$view = function (model) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element$layout,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$padding(15),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element_Font$size(18),
+				_1: {ctor: '[]'}
+			}
+		},
+		A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$text('this is a test'),
+				_1: {ctor: '[]'}
+			}));
+};
