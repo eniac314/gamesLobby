@@ -1,7 +1,8 @@
 <div id="elm-container"
  data-auth-token="<%= @auth_token%>"
  data-ws-url="<%= ws_url() %>"  
- data-auth-salt="<%= @auth_salt %>">
+ data-auth-salt="<%= @auth_salt %>" 
+ game-id="<%= @game_id %>"> 
 </div>
 
 <script type="text/javascript">
@@ -12,7 +13,8 @@
          Elm.Hexaboard.embed(elmContainer, {
             authToken: elmContainer.getAttribute("data-auth-token"),
             authSalt : elmContainer.getAttribute("data-auth-salt"),
-            wsUrl: elmContainer.getAttribute("data-ws-url")
+            wsUrl: elmContainer.getAttribute("data-ws-url"),
+            gameId: elmContainer.getAttribute("game-id")
           })
         };
 

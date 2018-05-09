@@ -1,0 +1,140 @@
+var _mdgriffith$stylish_elephants$Element_Background$gradient = F2(
+	function (angle, colors) {
+		return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+			A3(
+				_mdgriffith$stylish_elephants$Internal_Model$Single,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'bg-gradient-',
+					A2(
+						_elm_lang$core$String$join,
+						'-',
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Internal_Model$floatClass(angle),
+							_1: A2(_elm_lang$core$List$map, _mdgriffith$stylish_elephants$Internal_Model$formatColorClass, colors)
+						})),
+				'background',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'linear-gradient(',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						A2(
+							_elm_lang$core$String$join,
+							', ',
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(angle),
+									'rad'),
+								_1: A2(_elm_lang$core$List$map, _mdgriffith$stylish_elephants$Internal_Model$formatColor, colors)
+							}),
+						')'))));
+	});
+var _mdgriffith$stylish_elephants$Element_Background$tiledY = function (src) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'bg-image-',
+				_mdgriffith$stylish_elephants$Internal_Model$className(src)),
+			'background',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'url(\"',
+				A2(_elm_lang$core$Basics_ops['++'], src, '\") repeat-y'))));
+};
+var _mdgriffith$stylish_elephants$Element_Background$tiledX = function (src) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'bg-image-',
+				_mdgriffith$stylish_elephants$Internal_Model$className(src)),
+			'background',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'url(\"',
+				A2(_elm_lang$core$Basics_ops['++'], src, '\") repeat-x'))));
+};
+var _mdgriffith$stylish_elephants$Element_Background$tiled = function (src) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'bg-image-',
+				_mdgriffith$stylish_elephants$Internal_Model$className(src)),
+			'background',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'url(\"',
+				A2(_elm_lang$core$Basics_ops['++'], src, '\") repeat'))));
+};
+var _mdgriffith$stylish_elephants$Element_Background$uncropped = function (src) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'bg-fitted-image-',
+				_mdgriffith$stylish_elephants$Internal_Model$className(src)),
+			'background',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'url(\"',
+				A2(_elm_lang$core$Basics_ops['++'], src, '\") center / contain no-repeat'))));
+};
+var _mdgriffith$stylish_elephants$Element_Background$image = function (src) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'bg-image-',
+				_mdgriffith$stylish_elephants$Internal_Model$className(src)),
+			'background',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'url(\"',
+				A2(_elm_lang$core$Basics_ops['++'], src, '\") center / cover no-repeat'))));
+};
+var _mdgriffith$stylish_elephants$Element_Background$color = function (clr) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Colored,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'bg-',
+				_mdgriffith$stylish_elephants$Internal_Model$formatColorClass(clr)),
+			'background-color',
+			clr));
+};
+var _mdgriffith$stylish_elephants$Element_Background$ToAngle = function (a) {
+	return {ctor: 'ToAngle', _0: a};
+};
+var _mdgriffith$stylish_elephants$Element_Background$ToBottomLeft = {ctor: 'ToBottomLeft'};
+var _mdgriffith$stylish_elephants$Element_Background$ToTopLeft = {ctor: 'ToTopLeft'};
+var _mdgriffith$stylish_elephants$Element_Background$ToLeft = {ctor: 'ToLeft'};
+var _mdgriffith$stylish_elephants$Element_Background$ToBottomRight = {ctor: 'ToBottomRight'};
+var _mdgriffith$stylish_elephants$Element_Background$ToTopRight = {ctor: 'ToTopRight'};
+var _mdgriffith$stylish_elephants$Element_Background$ToRight = {ctor: 'ToRight'};
+var _mdgriffith$stylish_elephants$Element_Background$ToDown = {ctor: 'ToDown'};
+var _mdgriffith$stylish_elephants$Element_Background$ToUp = {ctor: 'ToUp'};
+var _mdgriffith$stylish_elephants$Element_Background$PxStep = F2(
+	function (a, b) {
+		return {ctor: 'PxStep', _0: a, _1: b};
+	});
+var _mdgriffith$stylish_elephants$Element_Background$px = _mdgriffith$stylish_elephants$Element_Background$PxStep;
+var _mdgriffith$stylish_elephants$Element_Background$PercentStep = F2(
+	function (a, b) {
+		return {ctor: 'PercentStep', _0: a, _1: b};
+	});
+var _mdgriffith$stylish_elephants$Element_Background$ColorStep = function (a) {
+	return {ctor: 'ColorStep', _0: a};
+};
+var _mdgriffith$stylish_elephants$Element_Background$step = _mdgriffith$stylish_elephants$Element_Background$ColorStep;

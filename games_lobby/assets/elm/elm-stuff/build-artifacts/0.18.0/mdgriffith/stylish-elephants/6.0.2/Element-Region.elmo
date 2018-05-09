@@ -1,0 +1,14 @@
+var _mdgriffith$stylish_elephants$Element_Region$description = function (_p0) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Describe(
+		_mdgriffith$stylish_elephants$Internal_Model$Label(_p0));
+};
+var _mdgriffith$stylish_elephants$Element_Region$announce = _mdgriffith$stylish_elephants$Internal_Model$Describe(_mdgriffith$stylish_elephants$Internal_Model$LivePolite);
+var _mdgriffith$stylish_elephants$Element_Region$announceUrgently = _mdgriffith$stylish_elephants$Internal_Model$Describe(_mdgriffith$stylish_elephants$Internal_Model$LiveAssertive);
+var _mdgriffith$stylish_elephants$Element_Region$heading = function (_p1) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Describe(
+		_mdgriffith$stylish_elephants$Internal_Model$Heading(_p1));
+};
+var _mdgriffith$stylish_elephants$Element_Region$footer = _mdgriffith$stylish_elephants$Internal_Model$Describe(_mdgriffith$stylish_elephants$Internal_Model$ContentInfo);
+var _mdgriffith$stylish_elephants$Element_Region$navigation = _mdgriffith$stylish_elephants$Internal_Model$Describe(_mdgriffith$stylish_elephants$Internal_Model$Navigation);
+var _mdgriffith$stylish_elephants$Element_Region$aside = _mdgriffith$stylish_elephants$Internal_Model$Describe(_mdgriffith$stylish_elephants$Internal_Model$Complementary);
+var _mdgriffith$stylish_elephants$Element_Region$mainContent = _mdgriffith$stylish_elephants$Internal_Model$Describe(_mdgriffith$stylish_elephants$Internal_Model$Main);

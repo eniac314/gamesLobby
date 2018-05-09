@@ -2,7 +2,6 @@ defmodule Hexaboard.GameServer do
   alias Hexaboard.Game 
 
   use GenServer
-  alias Hexaboard.RandNames
 
   require Logger
 
@@ -21,7 +20,7 @@ defmodule Hexaboard.GameServer do
     init_state = 
       case init_state do
         {size, players} -> {size, players, name}
-        _ -> init_state
+        players -> {6, players, name}
       end
 
 
@@ -47,7 +46,11 @@ defmodule Hexaboard.GameServer do
 
   def get_state(name) do
     GenServer.call via_tuple(name), :get_state 
-  end 
+  end
+
+  def get_encodable_state(name) do
+    GenServer.call via_tuple(name), :get_encodable_state 
+  end  
 
   def set_player_piece(name, player_id, piece) do 
   	GenServer.call via_tuple(name), {:set_player_piece, player_id, piece}
@@ -96,6 +99,11 @@ defmodule Hexaboard.GameServer do
   def handle_call(:get_state, _from, state) do
     game_state = Game.game_state(state) 
     {:reply, game_state, game_state}
+  end
+
+  def handle_call(:get_encodable_state, _from, state) do
+    game_state = Game.encodable_state(state) 
+    {:reply, game_state, state}
   end
 
   def handle_call({:set_player_piece, player_id, piece}, _from, state) do

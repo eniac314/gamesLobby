@@ -2,6 +2,8 @@ module Hexaboard.HexaboardTypes exposing (..)
 
 import Date exposing (..)
 import Dict exposing (..)
+import Dom exposing (Error)
+import Element exposing (Device)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Keyboard exposing (..)
@@ -10,32 +12,47 @@ import Phoenix.Presence as Presence
 import Phoenix.Push
 import Phoenix.Socket
 import Time exposing (Time, every, second)
+import Window exposing (Size)
 
 
 type alias Model =
     { wsUrl : String
     , authToken : String
     , authSalt : String
+    , gameId : String
     , phxSocket : Phoenix.Socket.Socket Msg
     , playerInfo : Player
     , presences : Presence.PresenceState Player
     , chatMessageInput : String
-    , chatLog : List ChatMessage
+    , consoleLog : List ConsoleMsg
     , chatMessageBoxFocused : Bool
     , board : Board
+    , choice : Maybe Piece
+    , turn : Maybe Int
+    , score : Int
+    , deck : List Piece
     , gameState : GameState
+    , device : Device
+    , winSize : Size
     }
 
 
 type Msg
     = Default
+    | DropRes (Result Error ())
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | ReceivePlayerInfo Decode.Value
+    | RequestGameState Decode.Value
     | ReceivePresenceState Decode.Value
     | ReceivePresenceDiff Decode.Value
     | UpdateChatLog Decode.Value
+    | UpdateGameState Decode.Value
     | ServerMsg Decode.Value
     | ServerError Decode.Value
+    | DebugJson (Decode.Decoder Decode.Value -> Decode.Decoder Decode.Value) Decode.Value
+    | AddServerMsg String Date
+    | AddServerError String Date
+    | AddGameMsg String Date
     | ChatMessageInput String
     | SendChatMessage Date
     | ReceiveChatMessage Decode.Value
@@ -44,13 +61,25 @@ type Msg
     | KeyDown KeyCode
     | RequestDate (Date -> Msg)
     | TimeUpdate Time
+    | PickUpPiece Piece
+    | SelectTurn Int
+    | PutDownPiece ( Int, Int )
+    | Resizes Size
 
 
 type alias Flags =
     { authToken : String
     , authSalt : String
     , wsUrl : String
+    , gameId : String
     }
+
+
+type ConsoleMsg
+    = ChatMsg ChatMessage
+    | ServerComMsg SystemMessage
+    | ServerErrorMsg SystemMessage
+    | GameMsg SystemMessage
 
 
 type alias ChatMessage =
@@ -60,23 +89,23 @@ type alias ChatMessage =
     }
 
 
+type alias SystemMessage =
+    { timeStamp : Date
+    , message : String
+    }
+
+
 type alias Player =
     { onlineAt : String
     , username : Username
-    , choice : Maybe Piece
-    , turn : Maybe Int
-    , score : Int
-    , deck : List Piece
+    , playerId : Int
     }
 
 
 defPlayer =
     { onlineAt = ""
     , username = ""
-    , choice = Nothing
-    , turn = Nothing
-    , score = 0
-    , deck = []
+    , playerId = -1
     }
 
 
@@ -86,8 +115,12 @@ type alias Board =
 
 type GameState
     = PieceSelection
+    | WaitingForEndOfPieceSelection
     | TurnSelection
+    | WaitingForEndOfTurnSelection
+    | WaitingForOwnTurn
     | Playing
+    | WaitingForEndOfRound
     | EndGame
 
 

@@ -552,7 +552,7 @@ var _user$project$MainLobby$update = F2(
 								return '';
 						}
 					};
-					var _p22 = A2(_user$project$MainLobbyComs$decodeGameId, model, _p0._0);
+					var _p22 = A2(_user$project$MainLobbyComs$decodeGameIdWithName, model, _p0._0);
 					if (_p22.ctor === 'Ok') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
@@ -560,14 +560,7 @@ var _user$project$MainLobby$update = F2(
 							{
 								ctor: '::',
 								_0: _elm_lang$navigation$Navigation$load(
-									gameUrl(
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											_p22._0._0,
-											A2(
-												_elm_lang$core$Basics_ops['++'],
-												'_',
-												_elm_lang$core$Basics$toString(_p22._0._1))))),
+									gameUrl(_p22._0._2)),
 								_1: {ctor: '[]'}
 							});
 					} else {

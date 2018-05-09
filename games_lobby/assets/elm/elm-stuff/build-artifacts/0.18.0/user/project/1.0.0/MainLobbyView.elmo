@@ -1,3 +1,56 @@
+var _user$project$MainLobbyView$nChunks = F2(
+	function (n, xs) {
+		var go = F4(
+			function (acc1, acc2, m, xs) {
+				go:
+				while (true) {
+					var _p0 = xs;
+					if (_p0.ctor === '[]') {
+						return _elm_lang$core$List$reverse(
+							{
+								ctor: '::',
+								_0: _elm_lang$core$List$reverse(acc2),
+								_1: acc1
+							});
+					} else {
+						var _p2 = _p0._1;
+						var _p1 = _p0._0;
+						if (_elm_lang$core$Native_Utils.eq(m, 1)) {
+							var _v1 = {
+								ctor: '::',
+								_0: _elm_lang$core$List$reverse(
+									{ctor: '::', _0: _p1, _1: acc2}),
+								_1: acc1
+							},
+								_v2 = {ctor: '[]'},
+								_v3 = n,
+								_v4 = _p2;
+							acc1 = _v1;
+							acc2 = _v2;
+							m = _v3;
+							xs = _v4;
+							continue go;
+						} else {
+							var _v5 = acc1,
+								_v6 = {ctor: '::', _0: _p1, _1: acc2},
+								_v7 = m - 1,
+								_v8 = _p2;
+							acc1 = _v5;
+							acc2 = _v6;
+							m = _v7;
+							xs = _v8;
+							continue go;
+						}
+					}
+				}
+			});
+		return A4(
+			go,
+			{ctor: '[]'},
+			{ctor: '[]'},
+			n,
+			xs);
+	});
 var _user$project$MainLobbyView$hasJoined = function (model) {
 	var username = model.playerInfo.username;
 	return function (s) {
@@ -29,17 +82,17 @@ var _user$project$MainLobbyView$isHost = function (model) {
 				model.gamesSetup)));
 };
 var _user$project$MainLobbyView$gameSetupView = F2(
-	function (model, _p0) {
-		var _p1 = _p0;
-		var _p5 = _p1.joined;
-		var _p4 = _p1.gameId;
-		var _p2 = _p1.host;
-		if (_p2.ctor === 'Nothing') {
-			return _mdgriffith$stylish_elephants$Element$empty;
+	function (model, _p3) {
+		var _p4 = _p3;
+		var _p8 = _p4.joined;
+		var _p7 = _p4.gameId;
+		var _p5 = _p4.host;
+		if (_p5.ctor === 'Nothing') {
+			return _mdgriffith$stylish_elephants$Element$none;
 		} else {
-			var _p3 = _p2._0;
+			var _p6 = _p5._0;
 			var usrView = function (usr) {
-				var usrHasStarted = A2(_elm_lang$core$List$member, usr, _p1.hasStarted) ? ' Ok' : '';
+				var usrHasStarted = A2(_elm_lang$core$List$member, usr, _p4.hasStarted) ? ' Ok' : '';
 				var usrStr = A2(_elm_lang$core$Basics_ops['++'], usr, usrHasStarted);
 				return A2(
 					_mdgriffith$stylish_elephants$Element$el,
@@ -47,18 +100,18 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 					_mdgriffith$stylish_elephants$Element$text(usrStr));
 			};
 			var canStart = _elm_lang$core$Native_Utils.cmp(
-				_elm_lang$core$List$length(_p5) + 1,
-				_p1.gameMeta.minPlayers) > -1;
-			var hasJoinedGameSetup = A2(_elm_lang$core$List$member, model.playerInfo.username, _p5);
-			var isGameSetupHost = _elm_lang$core$Native_Utils.eq(model.playerInfo.username, _p3);
+				_elm_lang$core$List$length(_p8) + 1,
+				_p4.gameMeta.minPlayers) > -1;
+			var hasJoinedGameSetup = A2(_elm_lang$core$List$member, model.playerInfo.username, _p8);
+			var isGameSetupHost = _elm_lang$core$Native_Utils.eq(model.playerInfo.username, _p6);
 			var gameTitle = A2(
 				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$Tuple$first(_p4).name,
+				_elm_lang$core$Tuple$first(_p7).name,
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					' ',
 					_elm_lang$core$Basics$toString(
-						_elm_lang$core$Tuple$second(_p4))));
+						_elm_lang$core$Tuple$second(_p7))));
 			return A2(
 				_mdgriffith$stylish_elephants$Element$column,
 				{
@@ -111,7 +164,7 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 							_mdgriffith$stylish_elephants$Element$el,
 							{ctor: '[]'},
 							_mdgriffith$stylish_elephants$Element$text(
-								A2(_elm_lang$core$Basics_ops['++'], 'Game hosted by: ', _p3))),
+								A2(_elm_lang$core$Basics_ops['++'], 'Game hosted by: ', _p6))),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -125,7 +178,7 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 										_1: {ctor: '[]'}
 									}
 								},
-								A2(_elm_lang$core$List$map, usrView, _p5)),
+								A2(_elm_lang$core$List$map, usrView, _p8)),
 							_1: {
 								ctor: '::',
 								_0: isGameSetupHost ? A2(
@@ -154,7 +207,7 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 									},
 									{
 										onPress: _elm_lang$core$Maybe$Just(
-											_user$project$MainLobbyTypes$DeleteGame(_p4)),
+											_user$project$MainLobbyTypes$DeleteGame(_p7)),
 										label: _mdgriffith$stylish_elephants$Element$text('Delete Game')
 									}) : (((!_user$project$MainLobbyView$hasJoined(model)) && (!_user$project$MainLobbyView$isHost(model))) ? A2(
 									_mdgriffith$stylish_elephants$Element_Input$button,
@@ -182,7 +235,7 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 									},
 									{
 										onPress: _elm_lang$core$Maybe$Just(
-											_user$project$MainLobbyTypes$JoinGame(_p4)),
+											_user$project$MainLobbyTypes$JoinGame(_p7)),
 										label: _mdgriffith$stylish_elephants$Element$text('Join game!')
 									}) : (hasJoinedGameSetup ? A2(
 									_mdgriffith$stylish_elephants$Element_Input$button,
@@ -210,9 +263,9 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 									},
 									{
 										onPress: _elm_lang$core$Maybe$Just(
-											_user$project$MainLobbyTypes$LeaveGame(_p4)),
+											_user$project$MainLobbyTypes$LeaveGame(_p7)),
 										label: _mdgriffith$stylish_elephants$Element$text('Leave game')
-									}) : _mdgriffith$stylish_elephants$Element$empty)),
+									}) : _mdgriffith$stylish_elephants$Element$none)),
 								_1: {
 									ctor: '::',
 									_0: (canStart && (!model.waitingForOthers)) ? A2(
@@ -241,12 +294,12 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 										},
 										{
 											onPress: _elm_lang$core$Maybe$Just(
-												_user$project$MainLobbyTypes$StartGame(_p4)),
+												_user$project$MainLobbyTypes$StartGame(_p7)),
 											label: _mdgriffith$stylish_elephants$Element$text('Start game')
 										}) : (model.waitingForOthers ? A2(
 										_mdgriffith$stylish_elephants$Element$el,
 										{ctor: '[]'},
-										_mdgriffith$stylish_elephants$Element$text('waiting to start...')) : _mdgriffith$stylish_elephants$Element$empty),
+										_mdgriffith$stylish_elephants$Element$text('waiting to start...')) : _mdgriffith$stylish_elephants$Element$none),
 									_1: {ctor: '[]'}
 								}
 							}
@@ -255,8 +308,8 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 				});
 		}
 	});
-var _user$project$MainLobbyView$gameMetaView = function (_p6) {
-	var _p7 = _p6;
+var _user$project$MainLobbyView$gameMetaView = function (_p9) {
+	var _p10 = _p9;
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -271,7 +324,7 @@ var _user$project$MainLobbyView$gameMetaView = function (_p6) {
 					_1: {
 						ctor: '::',
 						_0: _mdgriffith$stylish_elephants$Element_Events$onClick(
-							_user$project$MainLobbyTypes$SelectGame(_p7)),
+							_user$project$MainLobbyTypes$SelectGame(_p10)),
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$stylish_elephants$Element$pointer,
@@ -311,7 +364,7 @@ var _user$project$MainLobbyView$gameMetaView = function (_p6) {
 					_0: _mdgriffith$stylish_elephants$Element_Font$bold,
 					_1: {ctor: '[]'}
 				},
-				_mdgriffith$stylish_elephants$Element$text(_p7.name)),
+				_mdgriffith$stylish_elephants$Element$text(_p10.name)),
 			_1: {
 				ctor: '::',
 				_0: A2(
@@ -321,7 +374,7 @@ var _user$project$MainLobbyView$gameMetaView = function (_p6) {
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							'Min players: ',
-							_elm_lang$core$Basics$toString(_p7.minPlayers)))),
+							_elm_lang$core$Basics$toString(_p10.minPlayers)))),
 				_1: {
 					ctor: '::',
 					_0: A2(
@@ -331,7 +384,7 @@ var _user$project$MainLobbyView$gameMetaView = function (_p6) {
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								'Max players: ',
-								_elm_lang$core$Basics$toString(_p7.maxPlayers)))),
+								_elm_lang$core$Basics$toString(_p10.maxPlayers)))),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -341,7 +394,7 @@ var _user$project$MainLobbyView$gameMetaView = function (_p6) {
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									'Has AI: ',
-									_elm_lang$core$Basics$toString(_p7.hasIA)))),
+									_elm_lang$core$Basics$toString(_p10.hasIA)))),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -349,8 +402,24 @@ var _user$project$MainLobbyView$gameMetaView = function (_p6) {
 		});
 };
 var _user$project$MainLobbyView$gamesSetupView = function (model) {
-	var _p8 = model.currentSelectedGame;
-	if (_p8.ctor === 'Nothing') {
+	var _p11 = model.currentSelectedGame;
+	if (_p11.ctor === 'Nothing') {
+		var rows = A2(
+			_elm_lang$core$List$map,
+			function (r) {
+				return A2(
+					_mdgriffith$stylish_elephants$Element$row,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+						_1: {ctor: '[]'}
+					},
+					A2(_elm_lang$core$List$map, _user$project$MainLobbyView$gameMetaView, r));
+			},
+			A2(
+				_user$project$MainLobbyView$nChunks,
+				3,
+				_elm_lang$core$Dict$values(model.gamesMeta)));
 		return A2(
 			_mdgriffith$stylish_elephants$Element$column,
 			{
@@ -364,21 +433,18 @@ var _user$project$MainLobbyView$gamesSetupView = function (model) {
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_mdgriffith$stylish_elephants$Element$paragraph,
+						_mdgriffith$stylish_elephants$Element$column,
 						{
 							ctor: '::',
 							_0: _mdgriffith$stylish_elephants$Element$spacing(10),
 							_1: {ctor: '[]'}
 						},
-						A2(
-							_elm_lang$core$List$map,
-							_user$project$MainLobbyView$gameMetaView,
-							_elm_lang$core$Dict$values(model.gamesMeta))),
+						rows),
 					_1: {ctor: '[]'}
 				}
 			});
 	} else {
-		var _p9 = _p8._0;
+		var _p12 = _p11._0;
 		return A2(
 			_mdgriffith$stylish_elephants$Element$column,
 			{
@@ -395,7 +461,7 @@ var _user$project$MainLobbyView$gamesSetupView = function (model) {
 						_0: _mdgriffith$stylish_elephants$Element_Font$bold,
 						_1: {ctor: '[]'}
 					},
-					_mdgriffith$stylish_elephants$Element$text(_p9.name)),
+					_mdgriffith$stylish_elephants$Element$text(_p12.name)),
 				_1: {
 					ctor: '::',
 					_0: A2(
@@ -417,7 +483,7 @@ var _user$project$MainLobbyView$gamesSetupView = function (model) {
 									_elm_lang$core$Dict$filter,
 									F2(
 										function (k, v) {
-											return _elm_lang$core$Native_Utils.eq(v.gameMeta.name, _p9.name);
+											return _elm_lang$core$Native_Utils.eq(v.gameMeta.name, _p12.name);
 										}),
 									model.gamesSetup)))),
 					_1: {
@@ -462,7 +528,7 @@ var _user$project$MainLobbyView$gamesSetupView = function (model) {
 									{
 										onPress: _elm_lang$core$Maybe$Just(_user$project$MainLobbyTypes$NewGame),
 										label: _mdgriffith$stylish_elephants$Element$text('New Game!')
-									}) : _mdgriffith$stylish_elephants$Element$empty,
+									}) : _mdgriffith$stylish_elephants$Element$none,
 								_1: {
 									ctor: '::',
 									_0: A2(
@@ -504,17 +570,17 @@ var _user$project$MainLobbyView$gamesSetupView = function (model) {
 };
 var _user$project$MainLobbyView$channelStatusView = F2(
 	function (model, topic) {
-		var _p10 = A2(_elm_lang$core$Dict$get, topic, model.phxSocket.channels);
-		if (_p10.ctor === 'Nothing') {
+		var _p13 = A2(_elm_lang$core$Dict$get, topic, model.phxSocket.channels);
+		if (_p13.ctor === 'Nothing') {
 			return A2(
 				_mdgriffith$stylish_elephants$Element$el,
 				{ctor: '[]'},
 				_mdgriffith$stylish_elephants$Element$text('no channel corresponding to that topic'));
 		} else {
-			var _p12 = _p10._0;
+			var _p15 = _p13._0;
 			var controlButton = function () {
-				var _p11 = _p12.state;
-				if (_p11.ctor === 'Joined') {
+				var _p14 = _p15.state;
+				if (_p14.ctor === 'Joined') {
 					return A2(
 						_mdgriffith$stylish_elephants$Element_Input$button,
 						{
@@ -589,7 +655,7 @@ var _user$project$MainLobbyView$channelStatusView = F2(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							'Channel status: ',
-							_elm_lang$core$Basics$toString(_p12.state))),
+							_elm_lang$core$Basics$toString(_p15.state))),
 					_1: {
 						ctor: '::',
 						_0: controlButton,
@@ -693,8 +759,8 @@ var _user$project$MainLobbyView$prettyDate = function (timeStamp) {
 				_elm_lang$core$Basics$toString(minute))));
 };
 var _user$project$MainLobbyView$chatLogView = function (model) {
-	var messageView = function (_p13) {
-		var _p14 = _p13;
+	var messageView = function (_p16) {
+		var _p17 = _p16;
 		return A2(
 			_mdgriffith$stylish_elephants$Element$column,
 			{
@@ -732,7 +798,7 @@ var _user$project$MainLobbyView$chatLogView = function (model) {
 									}
 								}
 							},
-							_mdgriffith$stylish_elephants$Element$text(_p14.author.username)),
+							_mdgriffith$stylish_elephants$Element$text(_p17.author.username)),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -755,7 +821,7 @@ var _user$project$MainLobbyView$chatLogView = function (model) {
 									}
 								},
 								_mdgriffith$stylish_elephants$Element$text(
-									_user$project$MainLobbyView$prettyDate(_p14.timeStamp))),
+									_user$project$MainLobbyView$prettyDate(_p17.timeStamp))),
 							_1: {ctor: '[]'}
 						}
 					}),
@@ -774,12 +840,16 @@ var _user$project$MainLobbyView$chatLogView = function (model) {
 							_1: {
 								ctor: '::',
 								_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+									_1: {ctor: '[]'}
+								}
 							}
 						},
 						{
 							ctor: '::',
-							_0: _mdgriffith$stylish_elephants$Element$text(_p14.message),
+							_0: _mdgriffith$stylish_elephants$Element$text(_p17.message),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
@@ -849,7 +919,11 @@ var _user$project$MainLobbyView$presencesView = function (model) {
 					_1: {
 						ctor: '::',
 						_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$grey),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$centerX,
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			},
@@ -872,10 +946,10 @@ var _user$project$MainLobbyView$presencesView = function (model) {
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_mdgriffith$stylish_elephants$Element$paragraph,
+					_mdgriffith$stylish_elephants$Element$column,
 					{
 						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+						_0: _mdgriffith$stylish_elephants$Element$spacing(10),
 						_1: {ctor: '[]'}
 					},
 					A2(_elm_lang$core$List$map, playerView, players)),
@@ -889,7 +963,11 @@ var _user$project$MainLobbyView$chatView = function (model) {
 		{
 			ctor: '::',
 			_0: _mdgriffith$stylish_elephants$Element$spacing(20),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',
@@ -1031,7 +1109,11 @@ var _user$project$MainLobbyView$view = function (model) {
 						{
 							ctor: '::',
 							_0: _mdgriffith$stylish_elephants$Element$spacing(15),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+								_1: {ctor: '[]'}
+							}
 						},
 						{
 							ctor: '::',
@@ -1039,14 +1121,14 @@ var _user$project$MainLobbyView$view = function (model) {
 							_1: {
 								ctor: '::',
 								_0: _user$project$MainLobbyView$gamesSetupView(model),
-								_1: {
-									ctor: '::',
-									_0: _user$project$MainLobbyView$debugView(model),
-									_1: {ctor: '[]'}
-								}
+								_1: {ctor: '[]'}
 							}
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _user$project$MainLobbyView$debugView(model),
+						_1: {ctor: '[]'}
+					}
 				}
 			}));
 };

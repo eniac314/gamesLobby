@@ -1,0 +1,89 @@
+var _mdgriffith$stylish_elephants$Element_Font$glow = F2(
+	function (color, size) {
+		return _mdgriffith$stylish_elephants$Internal_Model$TextShadow(
+			{
+				offset: {ctor: '_Tuple2', _0: 0, _1: 0},
+				blur: size * 2,
+				color: color
+			});
+	});
+var _mdgriffith$stylish_elephants$Element_Font$shadow = function (_p0) {
+	var _p1 = _p0;
+	return _mdgriffith$stylish_elephants$Internal_Model$TextShadow(
+		{offset: _p1.offset, blur: _p1.blur, color: _p1.color});
+};
+var _mdgriffith$stylish_elephants$Element_Font$unitalicized = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textUnitalicized);
+var _mdgriffith$stylish_elephants$Element_Font$heavy = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textHeavy);
+var _mdgriffith$stylish_elephants$Element_Font$extraBold = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textExtraBold);
+var _mdgriffith$stylish_elephants$Element_Font$medium = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textMedium);
+var _mdgriffith$stylish_elephants$Element_Font$semiBold = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textSemiBold);
+var _mdgriffith$stylish_elephants$Element_Font$regular = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textNormalWeight);
+var _mdgriffith$stylish_elephants$Element_Font$extraLight = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textExtraLight);
+var _mdgriffith$stylish_elephants$Element_Font$hairline = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textThin);
+var _mdgriffith$stylish_elephants$Element_Font$light = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textLight);
+var _mdgriffith$stylish_elephants$Element_Font$bold = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.bold);
+var _mdgriffith$stylish_elephants$Element_Font$italic = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.italic);
+var _mdgriffith$stylish_elephants$Element_Font$strike = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.strike);
+var _mdgriffith$stylish_elephants$Element_Font$underline = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.underline);
+var _mdgriffith$stylish_elephants$Element_Font$justify = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textJustify);
+var _mdgriffith$stylish_elephants$Element_Font$center = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textCenter);
+var _mdgriffith$stylish_elephants$Element_Font$alignRight = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textRight);
+var _mdgriffith$stylish_elephants$Element_Font$alignLeft = _mdgriffith$stylish_elephants$Internal_Model$class(_mdgriffith$stylish_elephants$Internal_Style$classes.textLeft);
+var _mdgriffith$stylish_elephants$Element_Font$wordSpacing = function (offset) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'word-spacing-',
+				_mdgriffith$stylish_elephants$Internal_Model$floatClass(offset)),
+			'word-spacing',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(offset),
+				'px')));
+};
+var _mdgriffith$stylish_elephants$Element_Font$letterSpacing = function (offset) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'letter-spacing-',
+				_mdgriffith$stylish_elephants$Internal_Model$floatClass(offset)),
+			'letter-spacing',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(offset),
+				'px')));
+};
+var _mdgriffith$stylish_elephants$Element_Font$size = function (size) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		_mdgriffith$stylish_elephants$Internal_Model$FontSize(size));
+};
+var _mdgriffith$stylish_elephants$Element_Font$external = function (_p2) {
+	var _p3 = _p2;
+	return A2(_mdgriffith$stylish_elephants$Internal_Model$ImportFont, _p3.name, _p3.url);
+};
+var _mdgriffith$stylish_elephants$Element_Font$typeface = _mdgriffith$stylish_elephants$Internal_Model$Typeface;
+var _mdgriffith$stylish_elephants$Element_Font$monospace = _mdgriffith$stylish_elephants$Internal_Model$Monospace;
+var _mdgriffith$stylish_elephants$Element_Font$sansSerif = _mdgriffith$stylish_elephants$Internal_Model$SansSerif;
+var _mdgriffith$stylish_elephants$Element_Font$serif = _mdgriffith$stylish_elephants$Internal_Model$Serif;
+var _mdgriffith$stylish_elephants$Element_Font$family = function (families) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A2(
+			_mdgriffith$stylish_elephants$Internal_Model$FontFamily,
+			A3(_elm_lang$core$List$foldl, _mdgriffith$stylish_elephants$Internal_Model$renderFontClassName, 'font-', families),
+			families));
+};
+var _mdgriffith$stylish_elephants$Element_Font$color = function (fontColor) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Colored,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'font-color-',
+				_mdgriffith$stylish_elephants$Internal_Model$formatColorClass(fontColor)),
+			'color',
+			fontColor));
+};

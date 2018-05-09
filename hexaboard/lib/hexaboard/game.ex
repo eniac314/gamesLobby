@@ -28,6 +28,36 @@ defmodule Hexaboard.Game do
     game
   end 
 
+  def encodable_state(game) do 
+    encodable_cell = 
+      fn (%{state: state} = cell) -> 
+        case state do 
+          :empty -> cell
+          
+          {:unplayable, color} -> 
+            %{cell | state: %{unplayable: color}}
+          
+          {:contain, piece} -> 
+            %{cell | state: %{contain: piece}}
+        end
+      end    
+
+    encodable_board = 
+      Map.values(game.board)
+      |> Enum.map(encodable_cell)
+
+    encodable_players = 
+      game.players
+      |> Enum.map(fn({_k,p}) -> 
+                    %{ p | deck: MapSet.to_list(p.deck)} end)
+      |> Enum.reduce(%{}, fn(p,acc) ->
+                             Map.put(acc, p.name, p) end)
+
+    %{game | board: encodable_board,
+             players: encodable_players
+     }
+  end 
+
   def compute_turns(game) do
   	players = game[:players]
     

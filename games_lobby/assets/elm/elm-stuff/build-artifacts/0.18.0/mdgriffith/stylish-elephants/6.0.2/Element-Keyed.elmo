@@ -1,0 +1,71 @@
+var _mdgriffith$stylish_elephants$Element_Keyed$column = F2(
+	function (attrs, children) {
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$NoStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asColumn,
+			_elm_lang$core$Maybe$Nothing,
+			{
+				ctor: '::',
+				_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'y-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentTop),
+				_1: {
+					ctor: '::',
+					_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'x-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentLeft),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$fill),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+							_1: attrs
+						}
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Keyed(children));
+	});
+var _mdgriffith$stylish_elephants$Element_Keyed$row = F2(
+	function (attrs, children) {
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$NoStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asRow,
+			_elm_lang$core$Maybe$Nothing,
+			{
+				ctor: '::',
+				_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'x-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentLeft),
+				_1: {
+					ctor: '::',
+					_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'y-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterY),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+						_1: attrs
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Keyed(children));
+	});
+var _mdgriffith$stylish_elephants$Element_Keyed$el = F2(
+	function (attrs, child) {
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$NoStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asEl,
+			_elm_lang$core$Maybe$Nothing,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+					_1: attrs
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Keyed(
+				{
+					ctor: '::',
+					_0: child,
+					_1: {ctor: '[]'}
+				}));
+	});

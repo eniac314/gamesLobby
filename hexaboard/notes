@@ -1,0 +1,61 @@
+Elm files:
+
+lobbyRoom.elm
+hexa.elm
+
+lobby room:
+
+- logged out: 
+  
+  * game presentation
+  * leaderboard
+  * sign in - sign up
+
+- logged in: 
+  
+  * sign out
+  * leaderboard
+  * See games looking for players
+	* Chat
+	* join a game
+  * Host a game
+
+hexa:
+  - logged out:
+    * redirect to lobby room
+
+  - logged in:
+    * game
+    * realtime chat / log / messages prompt
+    * redirect to lobby room when game ends
+
+
+  - gameplay flow
+    * choose a piece
+    |-> wait for everyone to choose (chat available, list player whith done/still playing status)
+
+    * choose a turn
+    |-> List available turns in realtime, possibility to choose when one's turn is up.
+
+    * put down piece
+    |-> display board status in real time, possibility to play when one's turn is up.
+
+    * game over
+    |-> display scores, leaderboard
+    |-> chat available
+    |-> back to lobby button
+
+Elixir:
+
+- need a way to represent the board
+- need a function to determine players order to choose their turn
+- need a function to compute and store the score
+- need a function to process pieces conversion
+- need to store scores in database
+
+
+Postgres:
+
+- tables:
+  * players 
+  * leaderboard

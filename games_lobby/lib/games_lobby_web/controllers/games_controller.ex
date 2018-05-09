@@ -3,7 +3,7 @@ defmodule GamesLobbyWeb.GamesController do
   plug :authenticate when action in [:index]
   
   def index(conn,  params) do
-    {path, template} = get_path_and_tenplate(params)
+    {path, template} = get_path_and_template(params)
     salt = random_string(64)
     
     conn 
@@ -11,6 +11,7 @@ defmodule GamesLobbyWeb.GamesController do
     |> assign(:auth_token, generate_auth_token(conn, salt))
     |> assign(:custom_css, true)
     |> assign(:elm_app_path, path)
+    |> assign(:game_id, Map.get(params, "game_id"))
     |> render(template)
   end 
 
@@ -35,7 +36,7 @@ defmodule GamesLobbyWeb.GamesController do
   :crypto.strong_rand_bytes(length) |> Base.url_encode64 |> binary_part(0, length)
  end
  
- defp get_path_and_tenplate(params) do 
+ defp get_path_and_template(params) do 
    case Map.get(params, "game_name") do 
      "hexaboard" -> 
        {"/js/hexaboard.js", "hexaboard.html"}

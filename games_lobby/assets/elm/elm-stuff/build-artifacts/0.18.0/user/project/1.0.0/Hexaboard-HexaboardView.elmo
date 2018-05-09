@@ -1,3 +1,652 @@
+var _user$project$Hexaboard_HexaboardView$prettyDate = function (timeStamp) {
+	var minute = _elm_lang$core$Date$minute(timeStamp);
+	var hour = _elm_lang$core$Date$hour(timeStamp);
+	var year = _elm_lang$core$Date$year(timeStamp);
+	var month = _elm_lang$core$Date$month(timeStamp);
+	var day = _elm_lang$core$Date$day(timeStamp);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		A3(
+			_elm_lang$core$String$padLeft,
+			2,
+			_elm_lang$core$Native_Utils.chr('0'),
+			_elm_lang$core$Basics$toString(hour)),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			':',
+			A3(
+				_elm_lang$core$String$padLeft,
+				2,
+				_elm_lang$core$Native_Utils.chr('0'),
+				_elm_lang$core$Basics$toString(minute))));
+};
+var _user$project$Hexaboard_HexaboardView$presencesView = function (model) {
+	var players = _elm_lang$core$Dict$keys(model.presences);
+	var playerView = function (player) {
+		return A2(
+			_mdgriffith$stylish_elephants$Element$el,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$padding(5),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$grey),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Element$text(player));
+	};
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(15),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$text('players online:'),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$paragraph,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+						_1: {ctor: '[]'}
+					},
+					A2(_elm_lang$core$List$map, playerView, players)),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Hexaboard_HexaboardView$gameMsgView = function (_p0) {
+	var _p1 = _p0;
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(3),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_mdgriffith$stylish_elephants$Element$row,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$el,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$bold,
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$centerY,
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$blue),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						},
+						_mdgriffith$stylish_elephants$Element$text('game message')),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$alignRight,
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$grey),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$centerY,
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							},
+							_mdgriffith$stylish_elephants$Element$text(
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p1.timeStamp))),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$paragraph,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Font$family(
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$typeface('monospace'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$text(_p1.message),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Hexaboard_HexaboardView$serverErrorMsgView = function (_p2) {
+	var _p3 = _p2;
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(3),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_mdgriffith$stylish_elephants$Element$row,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$el,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$bold,
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$centerY,
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$red),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						},
+						_mdgriffith$stylish_elephants$Element$text('server error')),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$alignRight,
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$grey),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$centerY,
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							},
+							_mdgriffith$stylish_elephants$Element$text(
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p3.timeStamp))),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$paragraph,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Font$family(
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$typeface('monospace'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$text(_p3.message),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Hexaboard_HexaboardView$serverComMsgView = function (_p4) {
+	var _p5 = _p4;
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(3),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_mdgriffith$stylish_elephants$Element$row,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$el,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$bold,
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$centerY,
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$purple),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						},
+						_mdgriffith$stylish_elephants$Element$text('server com')),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$alignRight,
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$grey),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$centerY,
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							},
+							_mdgriffith$stylish_elephants$Element$text(
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p5.timeStamp))),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$paragraph,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Font$family(
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$typeface('monospace'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$text(_p5.message),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p6) {
+	var _p7 = _p6;
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(3),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_mdgriffith$stylish_elephants$Element$row,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$el,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$bold,
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$centerY,
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						_mdgriffith$stylish_elephants$Element$text(_p7.author.username)),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$alignRight,
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$grey),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$centerY,
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							},
+							_mdgriffith$stylish_elephants$Element$text(
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p7.timeStamp))),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$paragraph,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Font$family(
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Font$typeface('monospace'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Font$size(15),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$text(_p7.message),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Hexaboard_HexaboardView$consoleLogView = function (model) {
+	var messageView = function (msg) {
+		var _p8 = msg;
+		switch (_p8.ctor) {
+			case 'ChatMsg':
+				return _user$project$Hexaboard_HexaboardView$chatMsgView(_p8._0);
+			case 'ServerComMsg':
+				return _user$project$Hexaboard_HexaboardView$serverComMsgView(_p8._0);
+			case 'ServerErrorMsg':
+				return _user$project$Hexaboard_HexaboardView$serverErrorMsgView(_p8._0);
+			default:
+				return _user$project$Hexaboard_HexaboardView$gameMsgView(_p8._0);
+		}
+	};
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$padding(10),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element_Border$solid,
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Border$width(2),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Border$color(_elm_lang$core$Color$lightGrey),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$scrollbarY,
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$htmlAttribute(
+												_elm_lang$html$Html_Attributes$id('chatLogContainer')),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		_elm_lang$core$List$reverse(
+			A2(_elm_lang$core$List$map, messageView, model.consoleLog)));
+};
+var _user$project$Hexaboard_HexaboardView$consoleView = function (model) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$height(
+					_mdgriffith$stylish_elephants$Element$px(model.winSize.height - 160)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$width(
+						A2(_mdgriffith$stylish_elephants$Element$maximum, 350, _mdgriffith$stylish_elephants$Element$fill)),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$alignLeft,
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$alignTop,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Hexaboard_HexaboardView$consoleLogView(model),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$row,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element_Input$text,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Events$onFocus(_user$project$Hexaboard_HexaboardTypes$FocusChatMessageBox),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Events$onLoseFocus(_user$project$Hexaboard_HexaboardTypes$UnfocusChatMessageBox),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{
+								onChange: _elm_lang$core$Maybe$Just(_user$project$Hexaboard_HexaboardTypes$ChatMessageInput),
+								text: model.chatMessageInput,
+								placeholder: _elm_lang$core$Maybe$Nothing,
+								label: A2(
+									_mdgriffith$stylish_elephants$Element_Input$labelAbove,
+									{ctor: '[]'},
+									_mdgriffith$stylish_elephants$Element$text('message: '))
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$stylish_elephants$Element_Input$button,
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$padding(10),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$alignBottom,
+												_1: {
+													ctor: '::',
+													_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+														{
+															ctor: '::',
+															_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								},
+								{
+									onPress: _elm_lang$core$Maybe$Just(
+										_user$project$Hexaboard_HexaboardTypes$RequestDate(_user$project$Hexaboard_HexaboardTypes$SendChatMessage)),
+									label: _mdgriffith$stylish_elephants$Element$text('Send')
+								}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$Hexaboard_HexaboardView$view = function (model) {
 	return A2(
 		_mdgriffith$stylish_elephants$Element$layout,
@@ -7,15 +656,87 @@ var _user$project$Hexaboard_HexaboardView$view = function (model) {
 			_1: {
 				ctor: '::',
 				_0: _mdgriffith$stylish_elephants$Element_Font$size(18),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$fill),
+					_1: {ctor: '[]'}
+				}
 			}
 		},
 		A2(
-			_mdgriffith$stylish_elephants$Element$column,
-			{ctor: '[]'},
+			_mdgriffith$stylish_elephants$Element$row,
 			{
 				ctor: '::',
-				_0: _mdgriffith$stylish_elephants$Element$text('this is a test'),
-				_1: {ctor: '[]'}
+				_0: _mdgriffith$stylish_elephants$Element$spacing(20),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$fill),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _user$project$Hexaboard_HexaboardView$consoleView(model),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$column,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+							_1: {
+								ctor: '::',
+								_0: model.device.tablet ? _mdgriffith$stylish_elephants$Element$width(
+									A2(_mdgriffith$stylish_elephants$Element$maximum, 350, _mdgriffith$stylish_elephants$Element$fill)) : (model.device.desktop ? _mdgriffith$stylish_elephants$Element$width(
+									A2(_mdgriffith$stylish_elephants$Element$maximum, 450, _mdgriffith$stylish_elephants$Element$fill)) : _mdgriffith$stylish_elephants$Element$width(
+									A2(_mdgriffith$stylish_elephants$Element$maximum, 600, _mdgriffith$stylish_elephants$Element$fill))),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$stylish_elephants$Element$el,
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$centerX,
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$alignTop,
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								A3(_user$project$Hexaboard_BoardView$hexaBoardSvg, 6, 35, model.board)),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_mdgriffith$stylish_elephants$Element$row,
+									{
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$alignTop,
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$alignRight,
+												_1: {ctor: '[]'}
+											}
+										}
+									},
+									{
+										ctor: '::',
+										_0: _user$project$Hexaboard_DeckView$deckSvg(model),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
 			}));
 };

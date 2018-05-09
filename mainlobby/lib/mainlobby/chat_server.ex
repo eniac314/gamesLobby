@@ -17,6 +17,10 @@ defmodule Mainlobby.ChatServer do
     GenServer.stop @name, reason, :infinity
   end 
   
+  def get_whole_state do 
+    GenServer.call @name, :get_whole_state
+  end
+
   def get_chat_history(channel) do
     GenServer.call @name, {:get_chat_history, channel}
   end
@@ -48,9 +52,14 @@ defmodule Mainlobby.ChatServer do
     history = Chat.get_chat_history(state, channel)
     {:reply, history, state}
   end
+
+  def handle_call(:get_whole_state, _from, state) do 
+    whole_state = Chat.get_whole_state(state)
+    {:reply, whole_state, state}
+  end 
   
   def handle_call({:add_channel, channel}, _from, state) do 
-    new_state = Chat.delete_channel(state, channel)
+    new_state = Chat.add_channel(state, channel)
     {:reply, "channel added", new_state}
   end
   

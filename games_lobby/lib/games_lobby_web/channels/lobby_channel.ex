@@ -5,6 +5,7 @@ alias GamesLobbyWeb.Presence
 
   def join("lobby:chat", _params, socket) do 
 	  send(self(), {:after_join, "chat"})
+    Mainlobby.ChatServer.add_channel(:mainlobby)
     {:ok, socket}
   end   
 
@@ -84,7 +85,22 @@ alias GamesLobbyWeb.Presence
     
     if Mainlobby.GameSetupServer.everybody_started?(game_id) do 
       Mainlobby.GameSetupServer.game_ready(game_id)
-      broadcast!(socket, "ready_to_launch", %{game_id: ext_game_id})
+      
+      case game_id do 
+        {:hexaboard, _id} ->
+          name = GamesLobby.RandNames.rand_name()
+          players = Mainlobby.GameSetupServer.get_players(game_id)
+          case Hexaboard.GameSupervisor.start_game(name, players) do
+            {:ok, _pid} ->
+              Mainlobby.GameSetupServer.delete_game(game_id)
+              game_id_with_name = Map.put(ext_game_id, "rand_name", name)
+              broadcast!(socket, "ready_to_launch", %{game_id_with_name: game_id_with_name})         
+            error -> IO.puts(inspect error) 
+          end
+        _ -> nil
+       end   
+
+      
     else 
       broadcast!(socket, "games_setup", %{games_setup: Mainlobby.GameSetupServer.get_games_setup})
     end 

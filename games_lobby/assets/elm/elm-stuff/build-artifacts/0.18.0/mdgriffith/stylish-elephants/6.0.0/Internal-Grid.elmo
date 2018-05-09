@@ -1,0 +1,300 @@
+var _mdgriffith$stylish_elephants$Internal_Grid$getWidth = function (attrs) {
+	var widthPlease = F2(
+		function (attr, found) {
+			var _p0 = found;
+			if (_p0.ctor === 'Just') {
+				return _elm_lang$core$Maybe$Just(_p0._0);
+			} else {
+				var _p1 = attr;
+				if (_p1.ctor === 'Width') {
+					return _elm_lang$core$Maybe$Just(_p1._0);
+				} else {
+					return _elm_lang$core$Maybe$Nothing;
+				}
+			}
+		});
+	return A3(_elm_lang$core$List$foldr, widthPlease, _elm_lang$core$Maybe$Nothing, attrs);
+};
+var _mdgriffith$stylish_elephants$Internal_Grid$build = F5(
+	function (rowCoord, colCoord, spacingX, spacingY, positioned) {
+		var attributes = {
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+				_mdgriffith$stylish_elephants$Internal_Model$GridPosition(
+					{row: rowCoord, col: colCoord, width: positioned.width, height: positioned.height})),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+					A2(_mdgriffith$stylish_elephants$Internal_Model$SpacingStyle, spacingX, spacingY)),
+				_1: positioned.attrs
+			}
+		};
+		var _p2 = positioned.layout;
+		switch (_p2.ctor) {
+			case 'GridElement':
+				return A5(
+					_mdgriffith$stylish_elephants$Internal_Model$element,
+					_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+					_mdgriffith$stylish_elephants$Internal_Model$asEl,
+					_elm_lang$core$Maybe$Nothing,
+					attributes,
+					_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(positioned.child));
+			case 'Row':
+				return A5(
+					_mdgriffith$stylish_elephants$Internal_Model$element,
+					_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+					_mdgriffith$stylish_elephants$Internal_Model$asRow,
+					_elm_lang$core$Maybe$Nothing,
+					attributes,
+					_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(positioned.child));
+			default:
+				return A5(
+					_mdgriffith$stylish_elephants$Internal_Model$element,
+					_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+					_mdgriffith$stylish_elephants$Internal_Model$asColumn,
+					_elm_lang$core$Maybe$Nothing,
+					attributes,
+					_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(positioned.child));
+		}
+	});
+var _mdgriffith$stylish_elephants$Internal_Grid$Around = F7(
+	function (a, b, c, d, e, f, g) {
+		return {right: a, left: b, primary: c, defaultWidth: d, below: e, above: f, inFront: g};
+	});
+var _mdgriffith$stylish_elephants$Internal_Grid$PositionedElement = F5(
+	function (a, b, c, d, e) {
+		return {layout: a, child: b, attrs: c, width: d, height: e};
+	});
+var _mdgriffith$stylish_elephants$Internal_Grid$InFront = {ctor: 'InFront'};
+var _mdgriffith$stylish_elephants$Internal_Grid$Below = {ctor: 'Below'};
+var _mdgriffith$stylish_elephants$Internal_Grid$Above = {ctor: 'Above'};
+var _mdgriffith$stylish_elephants$Internal_Grid$OnLeft = {ctor: 'OnLeft'};
+var _mdgriffith$stylish_elephants$Internal_Grid$OnRight = {ctor: 'OnRight'};
+var _mdgriffith$stylish_elephants$Internal_Grid$createGrid = F2(
+	function (_p3, nearby) {
+		var _p4 = _p3;
+		var _p11 = _p4._1;
+		var _p10 = _p4._0;
+		var columns = _elm_lang$core$Native_Utils.eq(_elm_lang$core$Maybe$Nothing, nearby.left) ? {left: 0, primary: 1, right: 2} : {left: 1, primary: 2, right: 3};
+		var colCoord = function (pos) {
+			var _p5 = pos;
+			switch (_p5.ctor) {
+				case 'Above':
+					return columns.primary;
+				case 'Below':
+					return columns.primary;
+				case 'OnRight':
+					return columns.right;
+				case 'OnLeft':
+					return columns.left;
+				default:
+					return columns.primary;
+			}
+		};
+		var rows = _elm_lang$core$Native_Utils.eq(nearby.above, _elm_lang$core$Maybe$Nothing) ? {above: 0, primary: 1, below: 2} : {above: 1, primary: 2, below: 3};
+		var rowCoord = function (pos) {
+			var _p6 = pos;
+			switch (_p6.ctor) {
+				case 'Above':
+					return rows.above;
+				case 'Below':
+					return rows.below;
+				case 'OnRight':
+					return rows.primary;
+				case 'OnLeft':
+					return rows.primary;
+				default:
+					return rows.primary;
+			}
+		};
+		var place = F2(
+			function (pos, el) {
+				return A5(
+					_mdgriffith$stylish_elephants$Internal_Grid$build,
+					rowCoord(pos),
+					colCoord(pos),
+					_p10,
+					_p11,
+					el);
+			});
+		var colCount = _elm_lang$core$List$sum(
+			{
+				ctor: '::',
+				_0: 1,
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$core$Native_Utils.eq(_elm_lang$core$Maybe$Nothing, nearby.left) ? 0 : 1,
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$core$Native_Utils.eq(_elm_lang$core$Maybe$Nothing, nearby.right) ? 0 : 1,
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+		var rowCount = _elm_lang$core$List$sum(
+			{
+				ctor: '::',
+				_0: 1,
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$core$Native_Utils.eq(_elm_lang$core$Maybe$Nothing, nearby.above) ? 0 : 1,
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$core$Native_Utils.eq(_elm_lang$core$Maybe$Nothing, nearby.below) ? 0 : 1,
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+		return {
+			ctor: '_Tuple2',
+			_0: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+					_mdgriffith$stylish_elephants$Internal_Model$GridTemplateStyle(
+						{
+							spacing: {
+								ctor: '_Tuple2',
+								_0: _mdgriffith$stylish_elephants$Internal_Model$Px(_p10),
+								_1: _mdgriffith$stylish_elephants$Internal_Model$Px(_p11)
+							},
+							columns: A2(
+								_elm_lang$core$List$filterMap,
+								_elm_lang$core$Basics$identity,
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$core$Maybe$map,
+										function (el) {
+											return A2(
+												_elm_lang$core$Maybe$withDefault,
+												nearby.defaultWidth,
+												_mdgriffith$stylish_elephants$Internal_Grid$getWidth(el.attrs));
+										},
+										nearby.left),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$core$Maybe$Just(
+											A2(
+												_elm_lang$core$Maybe$withDefault,
+												nearby.defaultWidth,
+												function (_p7) {
+													var _p8 = _p7;
+													return _mdgriffith$stylish_elephants$Internal_Grid$getWidth(_p8._1);
+												}(nearby.primary))),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$core$Maybe$map,
+												function (el) {
+													return A2(
+														_elm_lang$core$Maybe$withDefault,
+														nearby.defaultWidth,
+														_mdgriffith$stylish_elephants$Internal_Grid$getWidth(el.attrs));
+												},
+												nearby.right),
+											_1: {ctor: '[]'}
+										}
+									}
+								}),
+							rows: A2(
+								_elm_lang$core$List$map,
+								_elm_lang$core$Basics$always(_mdgriffith$stylish_elephants$Internal_Model$Content),
+								A2(_elm_lang$core$List$range, 1, rowCount))
+						})),
+				_1: {ctor: '[]'}
+			},
+			_1: A2(
+				_elm_lang$core$List$filterMap,
+				_elm_lang$core$Basics$identity,
+				{
+					ctor: '::',
+					_0: _elm_lang$core$Maybe$Just(
+						function () {
+							var _p9 = nearby.primary;
+							return A5(
+								_mdgriffith$stylish_elephants$Internal_Model$element,
+								_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+								_mdgriffith$stylish_elephants$Internal_Model$asEl,
+								_p9._0,
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+										_mdgriffith$stylish_elephants$Internal_Model$GridPosition(
+											{row: rows.primary, col: columns.primary, width: 1, height: 1})),
+									_1: _p9._1
+								},
+								_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(_p9._2));
+						}()),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$core$Maybe$map,
+							place(_mdgriffith$stylish_elephants$Internal_Grid$OnLeft),
+							nearby.left),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$core$Maybe$map,
+								place(_mdgriffith$stylish_elephants$Internal_Grid$OnRight),
+								nearby.right),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$Maybe$map,
+									place(_mdgriffith$stylish_elephants$Internal_Grid$Above),
+									nearby.above),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$core$Maybe$map,
+										place(_mdgriffith$stylish_elephants$Internal_Grid$Below),
+										nearby.below),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$core$Maybe$map,
+											place(_mdgriffith$stylish_elephants$Internal_Grid$InFront),
+											nearby.inFront),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				})
+		};
+	});
+var _mdgriffith$stylish_elephants$Internal_Grid$relative = F3(
+	function (node, attributes, around) {
+		var make = function (positioned) {
+			return A5(
+				_mdgriffith$stylish_elephants$Internal_Model$element,
+				_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+				_mdgriffith$stylish_elephants$Internal_Model$asEl,
+				_elm_lang$core$Maybe$Nothing,
+				positioned.attrs,
+				_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(positioned.child));
+		};
+		var _p12 = A2(
+			_mdgriffith$stylish_elephants$Internal_Model$getSpacing,
+			attributes,
+			{ctor: '_Tuple2', _0: 7, _1: 7});
+		var sX = _p12._0;
+		var sY = _p12._1;
+		var _p13 = A2(
+			_mdgriffith$stylish_elephants$Internal_Grid$createGrid,
+			{ctor: '_Tuple2', _0: sX, _1: sY},
+			around);
+		var template = _p13._0;
+		var children = _p13._1;
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asGrid,
+			node,
+			A2(_elm_lang$core$Basics_ops['++'], template, attributes),
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(children));
+	});
+var _mdgriffith$stylish_elephants$Internal_Grid$Column = {ctor: 'Column'};
+var _mdgriffith$stylish_elephants$Internal_Grid$Row = {ctor: 'Row'};
+var _mdgriffith$stylish_elephants$Internal_Grid$GridElement = {ctor: 'GridElement'};

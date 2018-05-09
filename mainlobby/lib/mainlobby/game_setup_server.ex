@@ -16,6 +16,10 @@ defmodule Mainlobby.GameSetupServer do
     GenServer.call @name, :get_games_setup
   end 
   
+  def get_players(game_id) do
+    GenServer.call @name, {:get_players, game_id}
+  end 
+
   def new_game(game_name, player) do 
     GenServer.call @name, {:new_game, game_name, player}
   end
@@ -66,6 +70,11 @@ defmodule Mainlobby.GameSetupServer do
   def handle_call(:get_games_setup, _from, state) do 
     games_setup = GameSetup.get_games_setup(state)
     {:reply, games_setup, state}
+  end
+  
+  def handle_call({:get_players, game_id}, _from, state) do 
+    players = GameSetup.get_players(state, game_id)
+    {:reply, players, state}
   end
 
   def handle_call({:new_game, game_name, player}, _from, state) do

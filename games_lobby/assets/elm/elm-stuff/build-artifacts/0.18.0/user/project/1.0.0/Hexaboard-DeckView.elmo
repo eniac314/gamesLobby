@@ -1,0 +1,312 @@
+var _user$project$Hexaboard_DeckView$piecesPatterns = A2(
+	_elm_lang$core$List$map,
+	function (n) {
+		return A2(
+			_elm_lang$svg$Svg$pattern,
+			{
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$id(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'piece',
+						_elm_lang$core$Basics$toString(n))),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$x('0%'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$y('0%'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$width('100%'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$height('100%'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$viewBox('0 0 100 100'),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$svg$Svg$image,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$x('10'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$y('10'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$height('80'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$width('80'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$xlinkHref(
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'images/hexaboard/pieces/piece',
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													_elm_lang$core$Basics$toString(n),
+													'.png'))),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			});
+	},
+	A2(_elm_lang$core$List$range, 0, 14));
+var _user$project$Hexaboard_DeckView$playerColor = function (playerId) {
+	return _elm_lang$core$Native_Utils.eq(playerId, 1) ? '#ff0000' : (_elm_lang$core$Native_Utils.eq(playerId, 2) ? '#ff7f00' : (_elm_lang$core$Native_Utils.eq(playerId, 3) ? '#ffff00' : (_elm_lang$core$Native_Utils.eq(playerId, 4) ? '#00ff00' : (_elm_lang$core$Native_Utils.eq(playerId, 5) ? '#0000ff' : (_elm_lang$core$Native_Utils.eq(playerId, 6) ? '#b400ff' : 'white')))));
+};
+var _user$project$Hexaboard_DeckView$deckHexaSvg = F4(
+	function (x, y, radius, _p0) {
+		var _p1 = _p0;
+		var _p9 = _p1.value;
+		var _p8 = _p1.playerId;
+		var points = A3(
+			_elm_lang$core$List$foldr,
+			F2(
+				function (_p2, acc) {
+					var _p3 = _p2;
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						acc,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Basics$toString(_p3._0),
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								', ',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(_p3._1),
+									' '))));
+				}),
+			'',
+			A2(
+				_elm_lang$core$List$map,
+				function (_p4) {
+					var _p5 = _p4;
+					return {ctor: '_Tuple2', _0: _p5._0 + x, _1: _p5._1 + y};
+				},
+				A2(
+					_elm_lang$core$List$map,
+					_elm_lang$core$Basics$fromPolar,
+					A2(
+						_elm_lang$core$List$map,
+						function (_p6) {
+							var _p7 = _p6;
+							return {ctor: '_Tuple2', _0: _p7._0, _1: _p7._1 + (_elm_lang$core$Basics$pi / 6)};
+						},
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: radius, _1: 0},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: radius, _1: _elm_lang$core$Basics$pi / 3},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: radius, _1: (2 * _elm_lang$core$Basics$pi) / 3},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: radius, _1: _elm_lang$core$Basics$pi},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: radius, _1: (4 * _elm_lang$core$Basics$pi) / 3},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: radius, _1: (5 * _elm_lang$core$Basics$pi) / 3},
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}))));
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$svg$Svg$polygon,
+				{
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$fill(
+						_user$project$Hexaboard_DeckView$playerColor(_p8)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$points(points),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$svg$Svg$polygon,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$fill(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'url(#piece',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(_p9),
+									')'))),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$stroke('black'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$strokeWidth('2px'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$points(points),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Events$onClick(
+											_user$project$Hexaboard_HexaboardTypes$PickUpPiece(
+												A2(_user$project$Hexaboard_HexaboardTypes$Piece, _p9, _p8))),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$cursor('pointer'),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		};
+	});
+var _user$project$Hexaboard_DeckView$deckSvg = function (_p10) {
+	var _p11 = _p10;
+	var _p19 = _p11.device;
+	var def = A2(
+		_elm_lang$svg$Svg$defs,
+		{ctor: '[]'},
+		_user$project$Hexaboard_DeckView$piecesPatterns);
+	var offset = 5;
+	var l = 35;
+	var _p12 = function () {
+		var j = _p19.tablet ? 3 : 5;
+		var i = _p19.tablet ? 5 : 3;
+		return {ctor: '_Tuple4', _0: (offset * (j - 1)) + ((2 * l) * j), _1: (offset * (i - 1)) + ((2 * l) * i), _2: i, _3: j};
+	}();
+	var sizeX = _p12._0;
+	var sizeY = _p12._1;
+	var i = _p12._2;
+	var j = _p12._3;
+	var coords = F2(
+		function (rowIndex, acc) {
+			coords:
+			while (true) {
+				var _p13 = rowIndex;
+				if (_p13 === 0) {
+					return A2(
+						_elm_lang$core$List$map,
+						function (_p14) {
+							var _p15 = _p14;
+							return {ctor: '_Tuple2', _0: l + (_p15._0 * ((l + l) + offset)), _1: l + (_p15._1 * ((l + l) + offset))};
+						},
+						acc);
+				} else {
+					var _p16 = _p13;
+					var newRow = A2(
+						_elm_lang$core$List$map,
+						function (x) {
+							return {
+								ctor: '_Tuple2',
+								_0: _elm_lang$core$Basics$toFloat(x),
+								_1: i - _p16
+							};
+						},
+						A2(_elm_lang$core$List$range, 0, j - 1));
+					var _v7 = _p16 - 1,
+						_v8 = A2(_elm_lang$core$Basics_ops['++'], acc, newRow);
+					rowIndex = _v7;
+					acc = _v8;
+					continue coords;
+				}
+			}
+		});
+	var pieces = A2(
+		_elm_lang$core$List$concatMap,
+		function (_p17) {
+			var _p18 = _p17;
+			return A4(_user$project$Hexaboard_DeckView$deckHexaSvg, _p18._0._0, _p18._0._1, l, _p18._1);
+		},
+		A3(
+			_elm_lang$core$List$map2,
+			F2(
+				function (v0, v1) {
+					return {ctor: '_Tuple2', _0: v0, _1: v1};
+				}),
+			A2(
+				coords,
+				i,
+				{ctor: '[]'}),
+			_p11.deck));
+	var id = _p11.playerInfo.playerId;
+	return A2(
+		_mdgriffith$stylish_elephants$Element$el,
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$centerX,
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$alignTop,
+				_1: {
+					ctor: '::',
+					_0: _p19.tablet ? _mdgriffith$stylish_elephants$Element$width(
+						_mdgriffith$stylish_elephants$Element$px(200)) : (_p19.desktop ? _mdgriffith$stylish_elephants$Element$width(
+						_mdgriffith$stylish_elephants$Element$px(400)) : _mdgriffith$stylish_elephants$Element$width(
+						_mdgriffith$stylish_elephants$Element$px(350))),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		_mdgriffith$stylish_elephants$Element$html(
+			A2(
+				_elm_lang$svg$Svg$svg,
+				{
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$viewBox(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'0 0 ',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(sizeX),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									' ',
+									_elm_lang$core$Basics$toString(sizeY))))),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$width('100%'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$height('100%'),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{ctor: '::', _0: def, _1: pieces})));
+};

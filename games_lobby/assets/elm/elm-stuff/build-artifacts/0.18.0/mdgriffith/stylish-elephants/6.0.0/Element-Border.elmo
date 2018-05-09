@@ -1,0 +1,208 @@
+var _mdgriffith$stylish_elephants$Element_Border$shadow = function (_p0) {
+	var _p1 = _p0;
+	return _mdgriffith$stylish_elephants$Internal_Model$BoxShadow(
+		{inset: false, offset: _p1.offset, size: _p1.size, blur: _p1.blur, color: _p1.color});
+};
+var _mdgriffith$stylish_elephants$Element_Border$innerShadow = function (_p2) {
+	var _p3 = _p2;
+	return _mdgriffith$stylish_elephants$Internal_Model$BoxShadow(
+		{inset: true, offset: _p3.offset, size: _p3.size, blur: _p3.blur, color: _p3.color});
+};
+var _mdgriffith$stylish_elephants$Element_Border$box = function (_p4) {
+	var _p5 = _p4;
+	return _mdgriffith$stylish_elephants$Internal_Model$BoxShadow(
+		{inset: false, offset: _p5.offset, size: _p5.size, blur: _p5.blur, color: _p5.color});
+};
+var _mdgriffith$stylish_elephants$Element_Border$innerGlow = F2(
+	function (color, size) {
+		return _mdgriffith$stylish_elephants$Element_Border$innerShadow(
+			{
+				offset: {ctor: '_Tuple2', _0: 0, _1: 0},
+				size: size,
+				blur: size * 2,
+				color: color
+			});
+	});
+var _mdgriffith$stylish_elephants$Element_Border$glow = F2(
+	function (color, size) {
+		return _mdgriffith$stylish_elephants$Element_Border$box(
+			{
+				offset: {ctor: '_Tuple2', _0: 0, _1: 0},
+				size: size,
+				blur: size * 2,
+				color: color
+			});
+	});
+var _mdgriffith$stylish_elephants$Element_Border$roundEach = function (_p6) {
+	var _p7 = _p6;
+	var _p11 = _p7.topRight;
+	var _p10 = _p7.topLeft;
+	var _p9 = _p7.bottomRight;
+	var _p8 = _p7.bottomLeft;
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'border-radius-',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString(_p10),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'-',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Basics$toString(_p11),
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(_p8),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'-',
+									_elm_lang$core$Basics$toString(_p9))))))),
+			'border-radius',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(_p10),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'px ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(_p11),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'px ',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(_p9),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'px ',
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										_elm_lang$core$Basics$toString(_p8),
+										'px')))))))));
+};
+var _mdgriffith$stylish_elephants$Element_Border$rounded = function (radius) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'border-radius-',
+				_elm_lang$core$Basics$toString(radius)),
+			'border-radius',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(radius),
+				'px')));
+};
+var _mdgriffith$stylish_elephants$Element_Border$dotted = A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'border', _mdgriffith$stylish_elephants$Internal_Style$classes.borderDotted);
+var _mdgriffith$stylish_elephants$Element_Border$dashed = A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'border', _mdgriffith$stylish_elephants$Internal_Style$classes.borderDashed);
+var _mdgriffith$stylish_elephants$Element_Border$solid = A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'border', _mdgriffith$stylish_elephants$Internal_Style$classes.borderSolid);
+var _mdgriffith$stylish_elephants$Element_Border$widthEach = function (_p12) {
+	var _p13 = _p12;
+	var _p17 = _p13.top;
+	var _p16 = _p13.right;
+	var _p15 = _p13.left;
+	var _p14 = _p13.bottom;
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'border-',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString(_p17),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'-',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Basics$toString(_p16),
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(_p14),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'-',
+									_elm_lang$core$Basics$toString(_p15))))))),
+			'border-width',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(_p17),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'px ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(_p16),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'px ',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(_p14),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'px ',
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										_elm_lang$core$Basics$toString(_p15),
+										'px')))))))));
+};
+var _mdgriffith$stylish_elephants$Element_Border$widthXY = F2(
+	function (x, y) {
+		return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+			A3(
+				_mdgriffith$stylish_elephants$Internal_Model$Single,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'border-',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(x),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'-',
+							_elm_lang$core$Basics$toString(y)))),
+				'border-width',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString(y),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'px ',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Basics$toString(x),
+							'px')))));
+	});
+var _mdgriffith$stylish_elephants$Element_Border$width = function (v) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Single,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'border-',
+				_elm_lang$core$Basics$toString(v)),
+			'border-width',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(v),
+				'px')));
+};
+var _mdgriffith$stylish_elephants$Element_Border$color = function (clr) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A3(
+			_mdgriffith$stylish_elephants$Internal_Model$Colored,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'border-color-',
+				_mdgriffith$stylish_elephants$Internal_Model$formatColorClass(clr)),
+			'border-color',
+			clr));
+};

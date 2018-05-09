@@ -1,0 +1,133 @@
+var _mdgriffith$stylish_elephants$Element_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _mdgriffith$stylish_elephants$Element_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _mdgriffith$stylish_elephants$Element_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _mdgriffith$stylish_elephants$Element_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _mdgriffith$stylish_elephants$Element_Events$onWithOptions = F3(
+	function (event, options, decode) {
+		return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+			A3(_elm_lang$html$Html_Events$onWithOptions, event, options, decode));
+	});
+var _mdgriffith$stylish_elephants$Element_Events$on = F2(
+	function (event, decode) {
+		return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+			A2(_elm_lang$html$Html_Events$on, event, decode));
+	});
+var _mdgriffith$stylish_elephants$Element_Events$onFocus = function (_p0) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+		_elm_lang$html$Html_Events$onFocus(_p0));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onLoseFocus = function (_p1) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+		_elm_lang$html$Html_Events$onBlur(_p1));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onMouseMove = function (msg) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element_Events$on,
+		'mousemove',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onMouseLeave = function (_p2) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+		_elm_lang$html$Html_Events$onMouseLeave(_p2));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onMouseEnter = function (_p3) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+		_elm_lang$html$Html_Events$onMouseEnter(_p3));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onDoubleClick = function (_p4) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+		_elm_lang$html$Html_Events$onDoubleClick(_p4));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onClick = function (_p5) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+		_elm_lang$html$Html_Events$onClick(_p5));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onMouseUp = function (_p6) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+		_elm_lang$html$Html_Events$onMouseUp(_p6));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onMouseDown = function (_p7) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+		_elm_lang$html$Html_Events$onMouseDown(_p7));
+};
+var _mdgriffith$stylish_elephants$Element_Events$Coords = F2(
+	function (a, b) {
+		return {x: a, y: b};
+	});
+var _mdgriffith$stylish_elephants$Element_Events$screenCoords = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_mdgriffith$stylish_elephants$Element_Events$Coords,
+	A2(_elm_lang$core$Json_Decode$field, 'screenX', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'screenY', _elm_lang$core$Json_Decode$int));
+var _mdgriffith$stylish_elephants$Element_Events$onClickScreenCoords = function (msg) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element_Events$on,
+		'click',
+		A2(_elm_lang$core$Json_Decode$map, msg, _mdgriffith$stylish_elephants$Element_Events$screenCoords));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onMouseScreenCoords = function (msg) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element_Events$on,
+		'mousemove',
+		A2(_elm_lang$core$Json_Decode$map, msg, _mdgriffith$stylish_elephants$Element_Events$screenCoords));
+};
+var _mdgriffith$stylish_elephants$Element_Events$localCoords = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_mdgriffith$stylish_elephants$Element_Events$Coords,
+	A2(_elm_lang$core$Json_Decode$field, 'offsetX', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'offsetY', _elm_lang$core$Json_Decode$int));
+var _mdgriffith$stylish_elephants$Element_Events$onClickCoords = function (msg) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element_Events$on,
+		'click',
+		A2(_elm_lang$core$Json_Decode$map, msg, _mdgriffith$stylish_elephants$Element_Events$localCoords));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onMouseCoords = function (msg) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element_Events$on,
+		'mousemove',
+		A2(_elm_lang$core$Json_Decode$map, msg, _mdgriffith$stylish_elephants$Element_Events$localCoords));
+};
+var _mdgriffith$stylish_elephants$Element_Events$pageCoords = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_mdgriffith$stylish_elephants$Element_Events$Coords,
+	A2(_elm_lang$core$Json_Decode$field, 'pageX', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'pageY', _elm_lang$core$Json_Decode$int));
+var _mdgriffith$stylish_elephants$Element_Events$onClickPageCoords = function (msg) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element_Events$on,
+		'click',
+		A2(_elm_lang$core$Json_Decode$map, msg, _mdgriffith$stylish_elephants$Element_Events$pageCoords));
+};
+var _mdgriffith$stylish_elephants$Element_Events$onMousePageCoords = function (msg) {
+	return A2(
+		_mdgriffith$stylish_elephants$Element_Events$on,
+		'mousemove',
+		A2(_elm_lang$core$Json_Decode$map, msg, _mdgriffith$stylish_elephants$Element_Events$pageCoords));
+};
+var _mdgriffith$stylish_elephants$Element_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});

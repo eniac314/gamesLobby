@@ -1,0 +1,59 @@
+var _mdgriffith$stylish_elephants$Internal_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _mdgriffith$stylish_elephants$Internal_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _mdgriffith$stylish_elephants$Internal_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _mdgriffith$stylish_elephants$Internal_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _mdgriffith$stylish_elephants$Internal_Events$onWithOptions = F3(
+	function (event, options, decode) {
+		return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+			A3(_elm_lang$html$Html_Events$onWithOptions, event, options, decode));
+	});
+var _mdgriffith$stylish_elephants$Internal_Events$on = F2(
+	function (event, decode) {
+		return _mdgriffith$stylish_elephants$Internal_Model$Attr(
+			A2(_elm_lang$html$Html_Events$on, event, decode));
+	});
+var _mdgriffith$stylish_elephants$Internal_Events$Coords = F2(
+	function (a, b) {
+		return {x: a, y: b};
+	});
+var _mdgriffith$stylish_elephants$Internal_Events$screenCoords = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_mdgriffith$stylish_elephants$Internal_Events$Coords,
+	A2(_elm_lang$core$Json_Decode$field, 'screenX', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'screenY', _elm_lang$core$Json_Decode$int));
+var _mdgriffith$stylish_elephants$Internal_Events$localCoords = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_mdgriffith$stylish_elephants$Internal_Events$Coords,
+	A2(_elm_lang$core$Json_Decode$field, 'offsetX', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'offsetY', _elm_lang$core$Json_Decode$int));
+var _mdgriffith$stylish_elephants$Internal_Events$pageCoords = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_mdgriffith$stylish_elephants$Internal_Events$Coords,
+	A2(_elm_lang$core$Json_Decode$field, 'pageX', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'pageY', _elm_lang$core$Json_Decode$int));
+var _mdgriffith$stylish_elephants$Internal_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});

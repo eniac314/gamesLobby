@@ -1,0 +1,6 @@
+var _user$project$Repl$t_s_o_l = {ctor: '_Tuple0'};
+var _user$project$Repl$d_e_l_t_r_o_n_3_0_3_0 = A2(
+	_elm_lang$core$Result$andThen,
+	_elm_lang$core$Json_Decode$decodeValue(
+		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$int)),
+	A2(_elm_lang$core$Json_Decode$decodeString, _elm_lang$core$Json_Decode$value, '[1,2,3,4,5]'));

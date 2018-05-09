@@ -29,11 +29,16 @@ view model =
                 , Font.bold
                 ]
                 (text "Game Lobby")
-            , row [ spacing 15 ]
+            , row
+                [ spacing 15
+                , width fill
+
+                --, Background.color Color.green
+                ]
                 [ chatView model
                 , gamesSetupView model
-                , debugView model
                 ]
+            , debugView model
             ]
 
 
@@ -44,6 +49,7 @@ presencesView model =
                 [ padding 5
                 , Border.rounded 5
                 , Background.color Color.grey
+                , centerX
                 ]
                 (text player)
 
@@ -53,9 +59,11 @@ presencesView model =
     column
         [ spacing 15
         , width shrink
+
+        --, Background.color Color.purple
         ]
         [ text "players online:"
-        , paragraph [ spacing 5 ] (List.map playerView players)
+        , column [ spacing 10 ] (List.map playerView players)
         ]
 
 
@@ -83,11 +91,13 @@ prettyDate timeStamp =
 
 chatView model =
     row
-        [ spacing 20 ]
+        [ spacing 20
+
+        --, Background.color Color.blue
+        , width shrink
+        ]
         [ column
             [ spacing 10
-
-            --, Background.color Color.blue
             , width shrink
             ]
             [ chatLogView model
@@ -144,6 +154,7 @@ chatLogView model =
                     [ Font.family
                         [ Font.typeface "monospace" ]
                     , Font.size 15
+                    , width fill
                     ]
                     [ text message ]
                 ]
@@ -235,7 +246,7 @@ gameSetupView : Model -> GameSetup -> Element Msg
 gameSetupView model { gameMeta, joined, hasStarted, host, gameId } =
     case host of
         Nothing ->
-            Element.empty
+            Element.none
 
         Just host ->
             let
@@ -314,7 +325,7 @@ gameSetupView model { gameMeta, joined, hasStarted, host, gameId } =
                         , label = text "Leave game"
                         }
                   else
-                    Element.empty
+                    Element.none
                 , if canStart && not model.waitingForOthers then
                     Input.button
                         [ Background.color Color.lightGreen
@@ -328,21 +339,26 @@ gameSetupView model { gameMeta, joined, hasStarted, host, gameId } =
                   else if model.waitingForOthers then
                     el [] (text "waiting to start...")
                   else
-                    Element.empty
+                    Element.none
                 ]
 
 
 gamesSetupView model =
     case model.currentSelectedGame of
         Nothing ->
+            let
+                rows =
+                    nChunks 3 (Dict.values model.gamesMeta)
+                        |> List.map (\r -> row [ spacing 10 ] (List.map gameMetaView r))
+            in
             column
                 [ spacing 10 ]
                 [ text "choose a game:"
-                , paragraph
+                , column
                     [ --Background.color Color.lightGreen
                       spacing 10
                     ]
-                    (List.map gameMetaView (Dict.values model.gamesMeta))
+                    rows
                 ]
 
         Just gameMeta ->
@@ -373,7 +389,7 @@ gamesSetupView model =
                             , label = text "New Game!"
                             }
                       else
-                        Element.empty
+                        Element.none
                     , Input.button
                         [ Background.color Color.lightBlue
                         , padding 10
@@ -407,3 +423,22 @@ hasJoined model =
         |> Dict.filter (\k v -> List.member username v.joined)
         |> Dict.size
         |> (\s -> s > 0)
+
+
+nChunks n xs =
+    let
+        go acc1 acc2 m xs =
+            case xs of
+                [] ->
+                    List.reverse (List.reverse acc2 :: acc1)
+
+                x :: xs ->
+                    if m == 1 then
+                        go (List.reverse (x :: acc2) :: acc1)
+                            []
+                            n
+                            xs
+                    else
+                        go acc1 (x :: acc2) (m - 1) xs
+    in
+    go [] [] n xs

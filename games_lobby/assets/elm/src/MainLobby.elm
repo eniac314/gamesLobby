@@ -429,9 +429,9 @@ update msg model =
                         _ ->
                             ""
             in
-            case decodeGameId model jsonVal of
-                Ok ( name, id ) ->
-                    model ! [ load (gameUrl (name ++ "_" ++ toString id)) ]
+            case decodeGameIdWithName model jsonVal of
+                Ok ( name, id, randName ) ->
+                    model ! [ load (gameUrl randName) ]
 
                 Err e ->
                     { model | errors = e } ! []

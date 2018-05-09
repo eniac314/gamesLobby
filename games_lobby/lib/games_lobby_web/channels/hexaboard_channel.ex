@@ -1,22 +1,24 @@
 defmodule GamesLobbyWeb.HexaboardChannel do 
   use GamesLobbyWeb, :channel
   alias GamesLobbyWeb.Presence
+  alias Hexaboard.GameServer
+  alias Mainlobby.ChatServer
 
-  def join("hexaboard:chat", _params, socket) do 
+  def join("hexaboard:chat:" <> game_id, %{"game_id" => game_id}, socket) do 
     send(self(), {:after_join, "chat"})
-    Mainlobby.ChatServer.add_channel(:hexaboard)
-    {:ok, socket}
+    Mainlobby.ChatServer.add_channel({:hexaboard, game_id})
+    {:ok, assign(socket, :game_id, {:hexaboard, game_id})}
   end
 
-  def join("hexaboard:game", _params, socket) do 
+  def join("hexaboard:game:" <> game_id, _params, socket) do 
     send(self(), {:after_join, "game"})
-    {:ok, socket}
+    {:ok, assign(socket, :game_id, {:hexaboard, game_id})}
   end
 
   def handle_info({:after_join, "chat"}, socket) do 
     push(socket, "greetings", %{username: socket.assigns.current_player.username})
     
-    push(socket, "chat_history", %{chat_history: Mainlobby.ChatServer.get_chat_history(:hexaboard)})
+    push(socket, "chat_history", %{chat_history: ChatServer.get_chat_history(:hexaboard)})
 
     push(socket, "presence_state", Presence.list(socket))
 
@@ -32,7 +34,27 @@ defmodule GamesLobbyWeb.HexaboardChannel do
   end
 
   def handle_info({:after_join, "game"}, socket) do 
+    push(socket, "greetings", %{username: socket.assigns.current_player.username})
     {:noreply, socket}
   end
+  
+  def handle_in("new_chat_message", %{"time_stamp" => time_stamp, "author" => author, "message" => message} = new_message, socket) do
+    ChatServer.add_message(new_message, socket.assigns.game_id)
+    broadcast!(socket, "new_chat_message", %{
+      time_stamp: time_stamp,
+      author: author,
+      message: message,
+    })
+
+    {:noreply, socket}
+  end
+
+  def handle_in("requesting_gamestate", _params, socket) do
+    {:hexaboard, game_id} = socket.assigns.game_id
+    if GameServer.game_pid(game_id) do 
+      push(socket, "game_state", %{game_state: GameServer.get_encodable_state(game_id)})
+    end 
+    {:noreply, socket} 
+  end  
 
 end 

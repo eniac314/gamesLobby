@@ -1,0 +1,826 @@
+var _mdgriffith$stylish_elephants$Element$focused = function (decs) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A2(
+			_mdgriffith$stylish_elephants$Internal_Model$PseudoSelector,
+			_mdgriffith$stylish_elephants$Internal_Model$Focus,
+			A2(
+				_elm_lang$core$List$map,
+				_mdgriffith$stylish_elephants$Internal_Model$tag('focus'),
+				_mdgriffith$stylish_elephants$Internal_Model$unwrapDecorations(decs))));
+};
+var _mdgriffith$stylish_elephants$Element$mouseDown = function (decs) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A2(
+			_mdgriffith$stylish_elephants$Internal_Model$PseudoSelector,
+			_mdgriffith$stylish_elephants$Internal_Model$Active,
+			A2(
+				_elm_lang$core$List$map,
+				_mdgriffith$stylish_elephants$Internal_Model$tag('active'),
+				_mdgriffith$stylish_elephants$Internal_Model$unwrapDecorations(decs))));
+};
+var _mdgriffith$stylish_elephants$Element$mouseOver = function (decs) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A2(
+			_mdgriffith$stylish_elephants$Internal_Model$PseudoSelector,
+			_mdgriffith$stylish_elephants$Internal_Model$Hover,
+			A2(
+				_elm_lang$core$List$map,
+				_mdgriffith$stylish_elephants$Internal_Model$tag('hover'),
+				_mdgriffith$stylish_elephants$Internal_Model$unwrapDecorations(decs))));
+};
+var _mdgriffith$stylish_elephants$Element$modular = F3(
+	function (normal, ratio, scale) {
+		return _elm_lang$core$Native_Utils.eq(scale, 0) ? normal : ((_elm_lang$core$Native_Utils.cmp(scale, 0) < 0) ? (normal * Math.pow(
+			ratio,
+			_elm_lang$core$Basics$toFloat(scale))) : (normal * Math.pow(
+			ratio,
+			_elm_lang$core$Basics$toFloat(scale) - 1)));
+	});
+var _mdgriffith$stylish_elephants$Element$classifyDevice = function (_p0) {
+	var _p1 = _p0;
+	var _p2 = _p1.width;
+	return {
+		phone: _elm_lang$core$Native_Utils.cmp(_p2, 600) < 1,
+		tablet: (_elm_lang$core$Native_Utils.cmp(_p2, 600) > 0) && (_elm_lang$core$Native_Utils.cmp(_p2, 1200) < 1),
+		desktop: (_elm_lang$core$Native_Utils.cmp(_p2, 1200) > 0) && (_elm_lang$core$Native_Utils.cmp(_p2, 1800) < 1),
+		bigDesktop: _elm_lang$core$Native_Utils.cmp(_p2, 1800) > 0,
+		portrait: _elm_lang$core$Native_Utils.cmp(_p2, _p1.height) < 0
+	};
+};
+var _mdgriffith$stylish_elephants$Element$pointer = A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'cursor', _mdgriffith$stylish_elephants$Internal_Style$classes.cursorPointer);
+var _mdgriffith$stylish_elephants$Element$clipX = A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'overflow', _mdgriffith$stylish_elephants$Internal_Style$classes.clipX);
+var _mdgriffith$stylish_elephants$Element$clipY = A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'overflow', _mdgriffith$stylish_elephants$Internal_Style$classes.clipY);
+var _mdgriffith$stylish_elephants$Element$clip = A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'overflow', _mdgriffith$stylish_elephants$Internal_Style$classes.clip);
+var _mdgriffith$stylish_elephants$Element$scrollbarX = A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'overflow', _mdgriffith$stylish_elephants$Internal_Style$classes.scrollbarsX);
+var _mdgriffith$stylish_elephants$Element$scrollbarY = A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'overflow', _mdgriffith$stylish_elephants$Internal_Style$classes.scrollbarsY);
+var _mdgriffith$stylish_elephants$Element$scrollbars = A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'overflow', _mdgriffith$stylish_elephants$Internal_Style$classes.scrollbars);
+var _mdgriffith$stylish_elephants$Element$alpha = function (o) {
+	var transparency = function (x) {
+		return 1 - x;
+	}(
+		A2(
+			_elm_lang$core$Basics$min,
+			1.0,
+			A2(_elm_lang$core$Basics$max, 0.0, o)));
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A2(
+			_mdgriffith$stylish_elephants$Internal_Model$Transparency,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'transparency-',
+				_mdgriffith$stylish_elephants$Internal_Model$floatClass(transparency)),
+			transparency));
+};
+var _mdgriffith$stylish_elephants$Element$transparent = function (on) {
+	return on ? _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A2(_mdgriffith$stylish_elephants$Internal_Model$Transparency, 'transparent', 1.0)) : _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A2(_mdgriffith$stylish_elephants$Internal_Model$Transparency, 'visible', 0.0));
+};
+var _mdgriffith$stylish_elephants$Element$spacingXY = F2(
+	function (x, y) {
+		return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+			A2(_mdgriffith$stylish_elephants$Internal_Model$SpacingStyle, x, y));
+	});
+var _mdgriffith$stylish_elephants$Element$spacing = function (x) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A2(_mdgriffith$stylish_elephants$Internal_Model$SpacingStyle, x, x));
+};
+var _mdgriffith$stylish_elephants$Element$spaceEvenly = A2(
+	_mdgriffith$stylish_elephants$Internal_Model$Class,
+	'x-align',
+	function (_) {
+		return _.spaceEvenly;
+	}(_mdgriffith$stylish_elephants$Internal_Style$classes));
+var _mdgriffith$stylish_elephants$Element$alignRight = _mdgriffith$stylish_elephants$Internal_Model$AlignX(_mdgriffith$stylish_elephants$Internal_Model$Right);
+var _mdgriffith$stylish_elephants$Element$alignLeft = _mdgriffith$stylish_elephants$Internal_Model$AlignX(_mdgriffith$stylish_elephants$Internal_Model$Left);
+var _mdgriffith$stylish_elephants$Element$alignBottom = _mdgriffith$stylish_elephants$Internal_Model$AlignY(_mdgriffith$stylish_elephants$Internal_Model$Bottom);
+var _mdgriffith$stylish_elephants$Element$alignTop = _mdgriffith$stylish_elephants$Internal_Model$AlignY(_mdgriffith$stylish_elephants$Internal_Model$Top);
+var _mdgriffith$stylish_elephants$Element$centerY = _mdgriffith$stylish_elephants$Internal_Model$AlignY(_mdgriffith$stylish_elephants$Internal_Model$CenterY);
+var _mdgriffith$stylish_elephants$Element$centerX = _mdgriffith$stylish_elephants$Internal_Model$AlignX(_mdgriffith$stylish_elephants$Internal_Model$CenterX);
+var _mdgriffith$stylish_elephants$Element$paddingEach = function (_p3) {
+	var _p4 = _p3;
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A4(_mdgriffith$stylish_elephants$Internal_Model$PaddingStyle, _p4.top, _p4.right, _p4.bottom, _p4.left));
+};
+var _mdgriffith$stylish_elephants$Element$paddingXY = F2(
+	function (x, y) {
+		return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+			A4(_mdgriffith$stylish_elephants$Internal_Model$PaddingStyle, y, x, y, x));
+	});
+var _mdgriffith$stylish_elephants$Element$padding = function (x) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		A4(_mdgriffith$stylish_elephants$Internal_Model$PaddingStyle, x, x, x, x));
+};
+var _mdgriffith$stylish_elephants$Element$moveLeft = function (x) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		_mdgriffith$stylish_elephants$Internal_Model$Transform(
+			A3(
+				_mdgriffith$stylish_elephants$Internal_Model$Move,
+				_elm_lang$core$Maybe$Just(
+					_elm_lang$core$Basics$negate(x)),
+				_elm_lang$core$Maybe$Nothing,
+				_elm_lang$core$Maybe$Nothing)));
+};
+var _mdgriffith$stylish_elephants$Element$moveRight = function (x) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		_mdgriffith$stylish_elephants$Internal_Model$Transform(
+			A3(
+				_mdgriffith$stylish_elephants$Internal_Model$Move,
+				_elm_lang$core$Maybe$Just(x),
+				_elm_lang$core$Maybe$Nothing,
+				_elm_lang$core$Maybe$Nothing)));
+};
+var _mdgriffith$stylish_elephants$Element$moveDown = function (y) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		_mdgriffith$stylish_elephants$Internal_Model$Transform(
+			A3(
+				_mdgriffith$stylish_elephants$Internal_Model$Move,
+				_elm_lang$core$Maybe$Nothing,
+				_elm_lang$core$Maybe$Just(y),
+				_elm_lang$core$Maybe$Nothing)));
+};
+var _mdgriffith$stylish_elephants$Element$moveUp = function (y) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		_mdgriffith$stylish_elephants$Internal_Model$Transform(
+			A3(
+				_mdgriffith$stylish_elephants$Internal_Model$Move,
+				_elm_lang$core$Maybe$Nothing,
+				_elm_lang$core$Maybe$Just(
+					_elm_lang$core$Basics$negate(y)),
+				_elm_lang$core$Maybe$Nothing)));
+};
+var _mdgriffith$stylish_elephants$Element$rotate = function (angle) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		_mdgriffith$stylish_elephants$Internal_Model$Transform(
+			A4(_mdgriffith$stylish_elephants$Internal_Model$Rotate, 0, 0, 1, angle)));
+};
+var _mdgriffith$stylish_elephants$Element$scale = function (n) {
+	return _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+		_mdgriffith$stylish_elephants$Internal_Model$Transform(
+			A3(_mdgriffith$stylish_elephants$Internal_Model$Scale, n, n, 1)));
+};
+var _mdgriffith$stylish_elephants$Element$height = _mdgriffith$stylish_elephants$Internal_Model$Height;
+var _mdgriffith$stylish_elephants$Element$width = _mdgriffith$stylish_elephants$Internal_Model$Width;
+var _mdgriffith$stylish_elephants$Element$behind = function (element) {
+	return A2(_mdgriffith$stylish_elephants$Internal_Model$Nearby, _mdgriffith$stylish_elephants$Internal_Model$Behind, element);
+};
+var _mdgriffith$stylish_elephants$Element$inFront = function (element) {
+	return A2(_mdgriffith$stylish_elephants$Internal_Model$Nearby, _mdgriffith$stylish_elephants$Internal_Model$InFront, element);
+};
+var _mdgriffith$stylish_elephants$Element$onLeft = function (element) {
+	return A2(_mdgriffith$stylish_elephants$Internal_Model$Nearby, _mdgriffith$stylish_elephants$Internal_Model$OnLeft, element);
+};
+var _mdgriffith$stylish_elephants$Element$onRight = function (element) {
+	return A2(_mdgriffith$stylish_elephants$Internal_Model$Nearby, _mdgriffith$stylish_elephants$Internal_Model$OnRight, element);
+};
+var _mdgriffith$stylish_elephants$Element$above = function (element) {
+	return A2(_mdgriffith$stylish_elephants$Internal_Model$Nearby, _mdgriffith$stylish_elephants$Internal_Model$Above, element);
+};
+var _mdgriffith$stylish_elephants$Element$below = function (element) {
+	return A2(_mdgriffith$stylish_elephants$Internal_Model$Nearby, _mdgriffith$stylish_elephants$Internal_Model$Below, element);
+};
+var _mdgriffith$stylish_elephants$Element$decorativeImage = F2(
+	function (attrs, _p5) {
+		var _p6 = _p5;
+		var imageAttributes = A2(
+			_elm_lang$core$List$filter,
+			function (a) {
+				var _p7 = a;
+				switch (_p7.ctor) {
+					case 'Width':
+						return true;
+					case 'Height':
+						return true;
+					default:
+						return false;
+				}
+			},
+			attrs);
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asEl,
+			_elm_lang$core$Maybe$Nothing,
+			{ctor: '::', _0: _mdgriffith$stylish_elephants$Element$clip, _1: attrs},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+				{
+					ctor: '::',
+					_0: A5(
+						_mdgriffith$stylish_elephants$Internal_Model$element,
+						_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+						_mdgriffith$stylish_elephants$Internal_Model$asEl,
+						_elm_lang$core$Maybe$Just('img'),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							imageAttributes,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+									_elm_lang$html$Html_Attributes$src(_p6.src)),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+										_elm_lang$html$Html_Attributes$alt('')),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+							{ctor: '[]'})),
+					_1: {ctor: '[]'}
+				}));
+	});
+var _mdgriffith$stylish_elephants$Element$image = F2(
+	function (attrs, _p8) {
+		var _p9 = _p8;
+		var imageAttributes = A2(
+			_elm_lang$core$List$filter,
+			function (a) {
+				var _p10 = a;
+				switch (_p10.ctor) {
+					case 'Width':
+						return true;
+					case 'Height':
+						return true;
+					default:
+						return false;
+				}
+			},
+			attrs);
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asEl,
+			_elm_lang$core$Maybe$Nothing,
+			{ctor: '::', _0: _mdgriffith$stylish_elephants$Element$clip, _1: attrs},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+				{
+					ctor: '::',
+					_0: A5(
+						_mdgriffith$stylish_elephants$Internal_Model$element,
+						_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+						_mdgriffith$stylish_elephants$Internal_Model$asEl,
+						_elm_lang$core$Maybe$Just('img'),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							imageAttributes,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+									_elm_lang$html$Html_Attributes$src(_p9.src)),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+										_elm_lang$html$Html_Attributes$alt(_p9.description)),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+							{ctor: '[]'})),
+					_1: {ctor: '[]'}
+				}));
+	});
+var _mdgriffith$stylish_elephants$Element$text = function (content) {
+	return _mdgriffith$stylish_elephants$Internal_Model$Text(content);
+};
+var _mdgriffith$stylish_elephants$Element$none = _mdgriffith$stylish_elephants$Internal_Model$Empty;
+var _mdgriffith$stylish_elephants$Element$forceHover = _mdgriffith$stylish_elephants$Internal_Model$HoverOption(_mdgriffith$stylish_elephants$Internal_Model$ForceHover);
+var _mdgriffith$stylish_elephants$Element$noHover = _mdgriffith$stylish_elephants$Internal_Model$HoverOption(_mdgriffith$stylish_elephants$Internal_Model$NoHover);
+var _mdgriffith$stylish_elephants$Element$focusStyle = _mdgriffith$stylish_elephants$Internal_Model$FocusStyleOption;
+var _mdgriffith$stylish_elephants$Element$defaultFocus = _mdgriffith$stylish_elephants$Internal_Model$focusDefaultStyle;
+var _mdgriffith$stylish_elephants$Element$noStaticStyleSheet = _mdgriffith$stylish_elephants$Internal_Model$RenderModeOption(_mdgriffith$stylish_elephants$Internal_Model$NoStaticStyleSheet);
+var _mdgriffith$stylish_elephants$Element$layoutWith = F3(
+	function (_p11, attrs, child) {
+		var _p12 = _p11;
+		return A3(
+			_mdgriffith$stylish_elephants$Internal_Model$renderRoot,
+			_p12.options,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Internal_Model$htmlClass('style-elements se el'),
+				_1: {
+					ctor: '::',
+					_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'x-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterX),
+					_1: {
+						ctor: '::',
+						_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'y-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterY),
+						_1: A2(_elm_lang$core$Basics_ops['++'], _mdgriffith$stylish_elephants$Internal_Model$rootStyle, attrs)
+					}
+				}
+			},
+			child);
+	});
+var _mdgriffith$stylish_elephants$Element$layout = _mdgriffith$stylish_elephants$Element$layoutWith(
+	{
+		options: {ctor: '[]'}
+	});
+var _mdgriffith$stylish_elephants$Element$fillPortion = _mdgriffith$stylish_elephants$Internal_Model$Fill;
+var _mdgriffith$stylish_elephants$Element$maximum = F2(
+	function (i, l) {
+		return A2(_mdgriffith$stylish_elephants$Internal_Model$Max, i, l);
+	});
+var _mdgriffith$stylish_elephants$Element$minimum = F2(
+	function (i, l) {
+		return A2(_mdgriffith$stylish_elephants$Internal_Model$Min, i, l);
+	});
+var _mdgriffith$stylish_elephants$Element$fill = _mdgriffith$stylish_elephants$Internal_Model$Fill(1);
+var _mdgriffith$stylish_elephants$Element$column = F2(
+	function (attrs, children) {
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asColumn,
+			_elm_lang$core$Maybe$Nothing,
+			{
+				ctor: '::',
+				_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'y-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentTop),
+				_1: {
+					ctor: '::',
+					_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'x-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentLeft),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$fill),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+							_1: attrs
+						}
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(children));
+	});
+var _mdgriffith$stylish_elephants$Element$paragraph = F2(
+	function (attrs, children) {
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asParagraph,
+			_elm_lang$core$Maybe$Just('p'),
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$width(
+					A2(
+						_mdgriffith$stylish_elephants$Element$maximum,
+						750,
+						A2(_mdgriffith$stylish_elephants$Element$minimum, 500, _mdgriffith$stylish_elephants$Element$fill))),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+					_1: attrs
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(children));
+	});
+var _mdgriffith$stylish_elephants$Element$textColumn = F2(
+	function (attrs, children) {
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asTextColumn,
+			_elm_lang$core$Maybe$Nothing,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$width(
+					A2(
+						_mdgriffith$stylish_elephants$Element$maximum,
+						750,
+						A2(_mdgriffith$stylish_elephants$Element$minimum, 500, _mdgriffith$stylish_elephants$Element$fill))),
+				_1: attrs
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(children));
+	});
+var _mdgriffith$stylish_elephants$Element$shrink = _mdgriffith$stylish_elephants$Internal_Model$Content;
+var _mdgriffith$stylish_elephants$Element$el = F2(
+	function (attrs, child) {
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asEl,
+			_elm_lang$core$Maybe$Nothing,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+					_1: attrs
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+				{
+					ctor: '::',
+					_0: child,
+					_1: {ctor: '[]'}
+				}));
+	});
+var _mdgriffith$stylish_elephants$Element$row = F2(
+	function (attrs, children) {
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asRow,
+			_elm_lang$core$Maybe$Nothing,
+			{
+				ctor: '::',
+				_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'x-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentLeft),
+				_1: {
+					ctor: '::',
+					_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'y-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterY),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+							_1: attrs
+						}
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(children));
+	});
+var _mdgriffith$stylish_elephants$Element$link = F2(
+	function (attrs, _p13) {
+		var _p14 = _p13;
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asEl,
+			_elm_lang$core$Maybe$Just('a'),
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+					_elm_lang$html$Html_Attributes$href(_p14.url)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+						_elm_lang$html$Html_Attributes$rel('noopener noreferrer')),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+							_1: {
+								ctor: '::',
+								_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'x-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterX),
+								_1: {
+									ctor: '::',
+									_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'y-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterY),
+									_1: attrs
+								}
+							}
+						}
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+				{
+					ctor: '::',
+					_0: _p14.label,
+					_1: {ctor: '[]'}
+				}));
+	});
+var _mdgriffith$stylish_elephants$Element$newTabLink = F2(
+	function (attrs, _p15) {
+		var _p16 = _p15;
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asEl,
+			_elm_lang$core$Maybe$Just('a'),
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+					_elm_lang$html$Html_Attributes$href(_p16.url)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+						_elm_lang$html$Html_Attributes$rel('noopener noreferrer')),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+							_elm_lang$html$Html_Attributes$target('_blank')),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+								_1: {
+									ctor: '::',
+									_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'x-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterX),
+									_1: {
+										ctor: '::',
+										_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'y-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterY),
+										_1: attrs
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+				{
+					ctor: '::',
+					_0: _p16.label,
+					_1: {ctor: '[]'}
+				}));
+	});
+var _mdgriffith$stylish_elephants$Element$download = F2(
+	function (attrs, _p17) {
+		var _p18 = _p17;
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asEl,
+			_elm_lang$core$Maybe$Just('a'),
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+					_elm_lang$html$Html_Attributes$href(_p18.url)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+						_elm_lang$html$Html_Attributes$download(true)),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+							_1: {
+								ctor: '::',
+								_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'x-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterX),
+								_1: {
+									ctor: '::',
+									_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'y-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterY),
+									_1: attrs
+								}
+							}
+						}
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+				{
+					ctor: '::',
+					_0: _p18.label,
+					_1: {ctor: '[]'}
+				}));
+	});
+var _mdgriffith$stylish_elephants$Element$downloadAs = F2(
+	function (attrs, _p19) {
+		var _p20 = _p19;
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asEl,
+			_elm_lang$core$Maybe$Just('a'),
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+					_elm_lang$html$Html_Attributes$href(_p20.url)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Internal_Model$Attr(
+						_elm_lang$html$Html_Attributes$downloadAs(_p20.filename)),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+							_1: {
+								ctor: '::',
+								_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'x-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterX),
+								_1: {
+									ctor: '::',
+									_0: A2(_mdgriffith$stylish_elephants$Internal_Model$Class, 'y-content-align', _mdgriffith$stylish_elephants$Internal_Style$classes.contentCenterY),
+									_1: attrs
+								}
+							}
+						}
+					}
+				}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+				{
+					ctor: '::',
+					_0: _p20.label,
+					_1: {ctor: '[]'}
+				}));
+	});
+var _mdgriffith$stylish_elephants$Element$px = _mdgriffith$stylish_elephants$Internal_Model$Px;
+var _mdgriffith$stylish_elephants$Element$tableHelper = F2(
+	function (attrs, config) {
+		var onGrid = F3(
+			function (row, column, el) {
+				return A5(
+					_mdgriffith$stylish_elephants$Internal_Model$element,
+					_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+					_mdgriffith$stylish_elephants$Internal_Model$asEl,
+					_elm_lang$core$Maybe$Nothing,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+							_mdgriffith$stylish_elephants$Internal_Model$GridPosition(
+								{row: row, col: column, width: 1, height: 1})),
+						_1: {ctor: '[]'}
+					},
+					_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+						{
+							ctor: '::',
+							_0: el,
+							_1: {ctor: '[]'}
+						}));
+			});
+		var columnHeader = function (col) {
+			var _p21 = col;
+			if (_p21.ctor === 'InternalIndexedColumn') {
+				return _p21._0.header;
+			} else {
+				return _p21._0.header;
+			}
+		};
+		var maybeHeaders = function (headers) {
+			return A2(
+				_elm_lang$core$List$all,
+				F2(
+					function (x, y) {
+						return _elm_lang$core$Native_Utils.eq(x, y);
+					})(_mdgriffith$stylish_elephants$Internal_Model$Empty),
+				headers) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
+				A2(
+					_elm_lang$core$List$indexedMap,
+					F2(
+						function (col, header) {
+							return A3(onGrid, 1, col + 1, header);
+						}),
+					headers));
+		}(
+			A2(_elm_lang$core$List$map, columnHeader, config.columns));
+		var add = F3(
+			function (cell, columnConfig, cursor) {
+				var _p22 = columnConfig;
+				if (_p22.ctor === 'InternalIndexedColumn') {
+					return _elm_lang$core$Native_Utils.update(
+						cursor,
+						{
+							elements: {
+								ctor: '::',
+								_0: A3(
+									onGrid,
+									cursor.row,
+									cursor.column,
+									A2(
+										_p22._0.view,
+										_elm_lang$core$Native_Utils.eq(maybeHeaders, _elm_lang$core$Maybe$Nothing) ? (cursor.row - 1) : (cursor.row - 2),
+										cell)),
+								_1: cursor.elements
+							},
+							column: cursor.column + 1
+						});
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						cursor,
+						{
+							elements: {
+								ctor: '::',
+								_0: A3(
+									onGrid,
+									cursor.row,
+									cursor.column,
+									_p22._0.view(cell)),
+								_1: cursor.elements
+							},
+							column: cursor.column + 1
+						});
+				}
+			});
+		var build = F3(
+			function (columns, rowData, cursor) {
+				var newCursor = A3(
+					_elm_lang$core$List$foldl,
+					add(rowData),
+					cursor,
+					columns);
+				return _elm_lang$core$Native_Utils.update(
+					newCursor,
+					{row: cursor.row + 1, column: 1});
+			});
+		var children = A3(
+			_elm_lang$core$List$foldl,
+			build(config.columns),
+			{
+				elements: {ctor: '[]'},
+				row: _elm_lang$core$Native_Utils.eq(maybeHeaders, _elm_lang$core$Maybe$Nothing) ? 1 : 2,
+				column: 1
+			},
+			config.data);
+		var _p23 = A2(
+			_mdgriffith$stylish_elephants$Internal_Model$getSpacing,
+			attrs,
+			{ctor: '_Tuple2', _0: 0, _1: 0});
+		var sX = _p23._0;
+		var sY = _p23._1;
+		var template = _mdgriffith$stylish_elephants$Internal_Model$StyleClass(
+			_mdgriffith$stylish_elephants$Internal_Model$GridTemplateStyle(
+				{
+					spacing: {
+						ctor: '_Tuple2',
+						_0: _mdgriffith$stylish_elephants$Element$px(sX),
+						_1: _mdgriffith$stylish_elephants$Element$px(sY)
+					},
+					columns: A2(
+						_elm_lang$core$List$repeat,
+						_elm_lang$core$List$length(config.columns),
+						_mdgriffith$stylish_elephants$Internal_Model$Fill(1)),
+					rows: A2(
+						_elm_lang$core$List$repeat,
+						_elm_lang$core$List$length(config.data),
+						_mdgriffith$stylish_elephants$Internal_Model$Content)
+				}));
+		return A5(
+			_mdgriffith$stylish_elephants$Internal_Model$element,
+			_mdgriffith$stylish_elephants$Internal_Model$noStyleSheet,
+			_mdgriffith$stylish_elephants$Internal_Model$asGrid,
+			_elm_lang$core$Maybe$Nothing,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+				_1: {ctor: '::', _0: template, _1: attrs}
+			},
+			_mdgriffith$stylish_elephants$Internal_Model$Unkeyed(
+				function () {
+					var _p24 = maybeHeaders;
+					if (_p24.ctor === 'Nothing') {
+						return children.elements;
+					} else {
+						return A2(_elm_lang$core$Basics_ops['++'], _p24._0, children.elements);
+					}
+				}()));
+	});
+var _mdgriffith$stylish_elephants$Element$mapAttribute = _mdgriffith$stylish_elephants$Internal_Model$mapAttr;
+var _mdgriffith$stylish_elephants$Element$map = _mdgriffith$stylish_elephants$Internal_Model$map;
+var _mdgriffith$stylish_elephants$Element$htmlAttribute = _mdgriffith$stylish_elephants$Internal_Model$Attr;
+var _mdgriffith$stylish_elephants$Element$html = _mdgriffith$stylish_elephants$Internal_Model$unstyled;
+var _mdgriffith$stylish_elephants$Element$FocusStyle = F3(
+	function (a, b, c) {
+		return {borderColor: a, backgroundColor: b, shadow: c};
+	});
+var _mdgriffith$stylish_elephants$Element$Table = F2(
+	function (a, b) {
+		return {data: a, columns: b};
+	});
+var _mdgriffith$stylish_elephants$Element$Column = F2(
+	function (a, b) {
+		return {header: a, view: b};
+	});
+var _mdgriffith$stylish_elephants$Element$IndexedTable = F2(
+	function (a, b) {
+		return {data: a, columns: b};
+	});
+var _mdgriffith$stylish_elephants$Element$IndexedColumn = F2(
+	function (a, b) {
+		return {header: a, view: b};
+	});
+var _mdgriffith$stylish_elephants$Element$InternalTable = F2(
+	function (a, b) {
+		return {data: a, columns: b};
+	});
+var _mdgriffith$stylish_elephants$Element$Link = F2(
+	function (a, b) {
+		return {url: a, label: b};
+	});
+var _mdgriffith$stylish_elephants$Element$Device = F5(
+	function (a, b, c, d, e) {
+		return {phone: a, tablet: b, desktop: c, bigDesktop: d, portrait: e};
+	});
+var _mdgriffith$stylish_elephants$Element$InternalColumn = function (a) {
+	return {ctor: 'InternalColumn', _0: a};
+};
+var _mdgriffith$stylish_elephants$Element$table = F2(
+	function (attrs, config) {
+		return A2(
+			_mdgriffith$stylish_elephants$Element$tableHelper,
+			attrs,
+			{
+				data: config.data,
+				columns: A2(_elm_lang$core$List$map, _mdgriffith$stylish_elephants$Element$InternalColumn, config.columns)
+			});
+	});
+var _mdgriffith$stylish_elephants$Element$InternalIndexedColumn = function (a) {
+	return {ctor: 'InternalIndexedColumn', _0: a};
+};
+var _mdgriffith$stylish_elephants$Element$indexedTable = F2(
+	function (attrs, config) {
+		return A2(
+			_mdgriffith$stylish_elephants$Element$tableHelper,
+			attrs,
+			{
+				data: config.data,
+				columns: A2(_elm_lang$core$List$map, _mdgriffith$stylish_elephants$Element$InternalIndexedColumn, config.columns)
+			});
+	});

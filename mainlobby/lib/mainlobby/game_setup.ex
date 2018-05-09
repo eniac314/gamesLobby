@@ -14,6 +14,13 @@ defmodule Mainlobby.GameSetup do
                   )
   end 
   
+  def get_players(games_setup, game_id) do 
+    host = get_in(games_setup, [game_id, :host])
+    joined = get_in(games_setup, [game_id, :joined])
+    [host | joined]
+  end 
+
+
   def new_game(games_setup, game_name, player) do
     next_id = games_setup.next_id
     new_game = %{ game_meta: Mainlobby.GamesMeta.games_meta[game_name], 

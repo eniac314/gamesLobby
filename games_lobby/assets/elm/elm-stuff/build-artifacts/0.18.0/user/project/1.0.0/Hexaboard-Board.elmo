@@ -1,0 +1,62 @@
+var _user$project$Hexaboard_Board$isEdge = F2(
+	function (n, _p0) {
+		var _p1 = _p0;
+		var _p3 = _p1.yPos;
+		var _p2 = _p1.xPos;
+		return _elm_lang$core$Native_Utils.eq(_p2, 0) || (_elm_lang$core$Native_Utils.eq(_p3, 0) || (_elm_lang$core$Native_Utils.eq(_p3, 2 * n) || (_elm_lang$core$Native_Utils.eq(_p2, n + _p3) || _elm_lang$core$Native_Utils.eq(_p2 + _p3, 3 * n))));
+	});
+var _user$project$Hexaboard_Board$boardWithEdge = F2(
+	function (n, board) {
+		return A2(
+			_elm_lang$core$Dict$map,
+			F2(
+				function (key, cell) {
+					return _elm_lang$core$Native_Utils.update(
+						cell,
+						{
+							state: A2(_user$project$Hexaboard_Board$isEdge, n, cell) ? _user$project$Hexaboard_HexaboardTypes$UnPlayable(_user$project$Hexaboard_HexaboardTypes$Grey) : cell.state
+						});
+				}),
+			board);
+	});
+var _user$project$Hexaboard_Board$hexaBoard = function (n) {
+	var makeRowBottom = function (i) {
+		return A2(
+			_elm_lang$core$List$map,
+			function (j) {
+				return {ctor: '_Tuple2', _0: j, _1: i};
+			},
+			A2(_elm_lang$core$List$range, 0, (2 * n) + (n - i)));
+	};
+	var bottomHalf = A2(
+		_elm_lang$core$List$concatMap,
+		makeRowBottom,
+		A2(_elm_lang$core$List$range, n + 1, 2 * n));
+	var makeRowTop = function (i) {
+		return A2(
+			_elm_lang$core$List$map,
+			function (j) {
+				return {ctor: '_Tuple2', _0: j, _1: i};
+			},
+			A2(_elm_lang$core$List$range, 0, n + i));
+	};
+	var topHalf = A2(
+		_elm_lang$core$List$concatMap,
+		makeRowTop,
+		A2(_elm_lang$core$List$range, 0, n));
+	return A3(
+		_elm_lang$core$List$foldr,
+		F2(
+			function (_p4, res) {
+				var _p5 = _p4;
+				var _p7 = _p5._1;
+				var _p6 = _p5._0;
+				return A3(
+					_elm_lang$core$Dict$insert,
+					{ctor: '_Tuple2', _0: _p6, _1: _p7},
+					A3(_user$project$Hexaboard_HexaboardTypes$Cell, _p6, _p7, _user$project$Hexaboard_HexaboardTypes$Empty),
+					res);
+			}),
+		_elm_lang$core$Dict$empty,
+		A2(_elm_lang$core$Basics_ops['++'], topHalf, bottomHalf));
+};

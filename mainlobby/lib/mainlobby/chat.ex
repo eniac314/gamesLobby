@@ -1,11 +1,15 @@
 defmodule Mainlobby.Chat do 
 
+def get_whole_state(chat) do 
+  chat
+end 
+
 def get_chat_history(chat, channel) do 
   Map.get(chat, channel) 
 end
 
 def add_channel(chat, channel) do 
-  if not Map.has_key(chat, channel) do 
+  if not Map.has_key?(chat, channel) do 
   	Map.put(chat, channel, [])
   else chat 
   end 

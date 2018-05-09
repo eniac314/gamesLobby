@@ -1,0 +1,5 @@
+var _mdgriffith$stylish_elephants$Element_Lazy$lazy = F2(
+	function (fn, a) {
+		return _mdgriffith$stylish_elephants$Internal_Model$Unstyled(
+			A3(_elm_lang$virtual_dom$VirtualDom$lazy3, _mdgriffith$stylish_elephants$Internal_Model$embed, fn, a));
+	});

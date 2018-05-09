@@ -1,12 +1,5 @@
 var _user$project$Hexaboard_HexaboardTypes$dummyPiece = {value: 0, playerId: -1};
-var _user$project$Hexaboard_HexaboardTypes$defPlayer = {
-	onlineAt: '',
-	username: '',
-	choice: _elm_lang$core$Maybe$Nothing,
-	turn: _elm_lang$core$Maybe$Nothing,
-	score: 0,
-	deck: {ctor: '[]'}
-};
+var _user$project$Hexaboard_HexaboardTypes$defPlayer = {onlineAt: '', username: '', playerId: -1};
 var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
 	return function (b) {
 		return function (c) {
@@ -18,7 +11,21 @@ var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
 								return function (i) {
 									return function (j) {
 										return function (k) {
-											return {wsUrl: a, authToken: b, authSalt: c, phxSocket: d, playerInfo: e, presences: f, chatMessageInput: g, chatLog: h, chatMessageBoxFocused: i, board: j, gameState: k};
+											return function (l) {
+												return function (m) {
+													return function (n) {
+														return function (o) {
+															return function (p) {
+																return function (q) {
+																	return function (r) {
+																		return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, turn: m, score: n, deck: o, gameState: p, device: q, winSize: r};
+																	};
+																};
+															};
+														};
+													};
+												};
+											};
 										};
 									};
 								};
@@ -30,17 +37,21 @@ var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
 		};
 	};
 };
-var _user$project$Hexaboard_HexaboardTypes$Flags = F3(
-	function (a, b, c) {
-		return {authToken: a, authSalt: b, wsUrl: c};
+var _user$project$Hexaboard_HexaboardTypes$Flags = F4(
+	function (a, b, c, d) {
+		return {authToken: a, authSalt: b, wsUrl: c, gameId: d};
 	});
 var _user$project$Hexaboard_HexaboardTypes$ChatMessage = F3(
 	function (a, b, c) {
 		return {timeStamp: a, author: b, message: c};
 	});
-var _user$project$Hexaboard_HexaboardTypes$Player = F6(
-	function (a, b, c, d, e, f) {
-		return {onlineAt: a, username: b, choice: c, turn: d, score: e, deck: f};
+var _user$project$Hexaboard_HexaboardTypes$SystemMessage = F2(
+	function (a, b) {
+		return {timeStamp: a, message: b};
+	});
+var _user$project$Hexaboard_HexaboardTypes$Player = F3(
+	function (a, b, c) {
+		return {onlineAt: a, username: b, playerId: c};
 	});
 var _user$project$Hexaboard_HexaboardTypes$Cell = F3(
 	function (a, b, c) {
@@ -50,6 +61,18 @@ var _user$project$Hexaboard_HexaboardTypes$Piece = F2(
 	function (a, b) {
 		return {value: a, playerId: b};
 	});
+var _user$project$Hexaboard_HexaboardTypes$Resizes = function (a) {
+	return {ctor: 'Resizes', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$PutDownPiece = function (a) {
+	return {ctor: 'PutDownPiece', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$SelectTurn = function (a) {
+	return {ctor: 'SelectTurn', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$PickUpPiece = function (a) {
+	return {ctor: 'PickUpPiece', _0: a};
+};
 var _user$project$Hexaboard_HexaboardTypes$TimeUpdate = function (a) {
 	return {ctor: 'TimeUpdate', _0: a};
 };
@@ -70,11 +93,30 @@ var _user$project$Hexaboard_HexaboardTypes$SendChatMessage = function (a) {
 var _user$project$Hexaboard_HexaboardTypes$ChatMessageInput = function (a) {
 	return {ctor: 'ChatMessageInput', _0: a};
 };
+var _user$project$Hexaboard_HexaboardTypes$AddGameMsg = F2(
+	function (a, b) {
+		return {ctor: 'AddGameMsg', _0: a, _1: b};
+	});
+var _user$project$Hexaboard_HexaboardTypes$AddServerError = F2(
+	function (a, b) {
+		return {ctor: 'AddServerError', _0: a, _1: b};
+	});
+var _user$project$Hexaboard_HexaboardTypes$AddServerMsg = F2(
+	function (a, b) {
+		return {ctor: 'AddServerMsg', _0: a, _1: b};
+	});
+var _user$project$Hexaboard_HexaboardTypes$DebugJson = F2(
+	function (a, b) {
+		return {ctor: 'DebugJson', _0: a, _1: b};
+	});
 var _user$project$Hexaboard_HexaboardTypes$ServerError = function (a) {
 	return {ctor: 'ServerError', _0: a};
 };
 var _user$project$Hexaboard_HexaboardTypes$ServerMsg = function (a) {
 	return {ctor: 'ServerMsg', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$UpdateGameState = function (a) {
+	return {ctor: 'UpdateGameState', _0: a};
 };
 var _user$project$Hexaboard_HexaboardTypes$UpdateChatLog = function (a) {
 	return {ctor: 'UpdateChatLog', _0: a};
@@ -85,16 +127,38 @@ var _user$project$Hexaboard_HexaboardTypes$ReceivePresenceDiff = function (a) {
 var _user$project$Hexaboard_HexaboardTypes$ReceivePresenceState = function (a) {
 	return {ctor: 'ReceivePresenceState', _0: a};
 };
+var _user$project$Hexaboard_HexaboardTypes$RequestGameState = function (a) {
+	return {ctor: 'RequestGameState', _0: a};
+};
 var _user$project$Hexaboard_HexaboardTypes$ReceivePlayerInfo = function (a) {
 	return {ctor: 'ReceivePlayerInfo', _0: a};
 };
 var _user$project$Hexaboard_HexaboardTypes$PhoenixMsg = function (a) {
 	return {ctor: 'PhoenixMsg', _0: a};
 };
+var _user$project$Hexaboard_HexaboardTypes$DropRes = function (a) {
+	return {ctor: 'DropRes', _0: a};
+};
 var _user$project$Hexaboard_HexaboardTypes$Default = {ctor: 'Default'};
+var _user$project$Hexaboard_HexaboardTypes$GameMsg = function (a) {
+	return {ctor: 'GameMsg', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$ServerErrorMsg = function (a) {
+	return {ctor: 'ServerErrorMsg', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$ServerComMsg = function (a) {
+	return {ctor: 'ServerComMsg', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$ChatMsg = function (a) {
+	return {ctor: 'ChatMsg', _0: a};
+};
 var _user$project$Hexaboard_HexaboardTypes$EndGame = {ctor: 'EndGame'};
+var _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfRound = {ctor: 'WaitingForEndOfRound'};
 var _user$project$Hexaboard_HexaboardTypes$Playing = {ctor: 'Playing'};
+var _user$project$Hexaboard_HexaboardTypes$WaitingForOwnTurn = {ctor: 'WaitingForOwnTurn'};
+var _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfTurnSelection = {ctor: 'WaitingForEndOfTurnSelection'};
 var _user$project$Hexaboard_HexaboardTypes$TurnSelection = {ctor: 'TurnSelection'};
+var _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfPieceSelection = {ctor: 'WaitingForEndOfPieceSelection'};
 var _user$project$Hexaboard_HexaboardTypes$PieceSelection = {ctor: 'PieceSelection'};
 var _user$project$Hexaboard_HexaboardTypes$Empty = {ctor: 'Empty'};
 var _user$project$Hexaboard_HexaboardTypes$Contain = function (a) {
