@@ -11,6 +11,8 @@ defmodule Hexaboard.Game do
                 |> Enum.map(fn({id, n}) -> {id, %Player{id: id, name: n, deck: Range.new(0,14) |> MapSet.new}} end)
                 |> Map.new,
        turn_selection_order: [],
+       playing_order_buffer: [],
+       playing_order: [],
        available_turns: MapSet.new(Range.new(1,nbr_players)),
        board_size: n,
        game_name: name
@@ -54,12 +56,20 @@ defmodule Hexaboard.Game do
                              Map.put(acc, p.name, p) end)
 
     %{game | board: encodable_board,
-             players: encodable_players
+             players: encodable_players,
+             available_turns: MapSet.to_list(game.available_turns)
+
      }
+  end 
+  
+  def pieces_all_set?(game) do 
+    not Enum.any?(game[:players], fn({_id, %Player{piece: piece}}) -> piece == nil end)
   end 
 
   def compute_turns(game) do
   	players = game[:players]
+
+    nbr_players = Enum.count(players)
     
   	player_turn_score = 
   	  fn({id,player}) -> 
@@ -87,7 +97,9 @@ defmodule Hexaboard.Game do
                                 |> Enum.map(fn(p) -> Map.get(p, :id) end) 
 
   		   new_game = %{game | players: new_players, 
-  		                       turn_selection_order: turn_selection_order
+  		                       turn_selection_order: turn_selection_order,
+                             available_turns: MapSet.new(Range.new(1,nbr_players)),
+                             playing_order_buffer: []
   		                }
   		 
   		 {:ok, new_game}
@@ -112,20 +124,25 @@ defmodule Hexaboard.Game do
       
       [x | xs] ->
 		    player_id = x
-		    player = Map.get(game[:players], player_id)
-		    new_player = %{ player | turn: turn, score: 0}
-		    new_players = Map.put(game[:players], player_id, new_player)
 		    new_available_turns = MapSet.delete(game[:available_turns], turn) 
 		    new_turn_selection_order = xs
+        new_playing_order_buffer = [ %{id: player_id, turn: turn} | game.playing_order_buffer ]
+        playing_order = Enum.sort_by(new_playing_order_buffer, fn(x) -> Map.get(x, :turn) end)
+                        |> Enum.map(fn(p) -> Map.get(p, :id) end)
 
 		    new_game = %{ game | available_turns: new_available_turns,
-		                         players: new_players,
+		                         playing_order_buffer: new_playing_order_buffer,
+                             playing_order: playing_order,
 		                         turn_selection_order: new_turn_selection_order
 		                 }
 		    
 		    {:ok, new_game}
     end
-  end  
+  end
+
+  def turns_all_set?(game) do 
+    Enum.count(game.players) == length(game.playing_order)
+  end   
 
   def put_down_piece(player_id, position, game) do
     case Map.get((game[:players])[player_id], :piece) do 
@@ -140,7 +157,13 @@ defmodule Hexaboard.Game do
         	  new_board = Map.put(game[:board], position, new_cell)
         	              |> Board.update_board(new_cell, game[:board_size])
 
-            new_game = %{ game | board: new_board}
+            new_playing_order = 
+              case game.playing_order do 
+                [] -> []
+                [_x | xs] -> xs
+              end 
+
+            new_game = %{ game | board: new_board, playing_order: new_playing_order }
                        |> Kernel.put_in([:players, player_id, :piece], nil)
                        |> compute_scores 
 
@@ -150,7 +173,7 @@ defmodule Hexaboard.Game do
         end
       end 
   end  
-
+  
   defp compute_scores(game) do
 
     compute_score = 
@@ -173,5 +196,12 @@ defmodule Hexaboard.Game do
     %{ game | players: new_players }
   end
 
+  def round_over?(game) do 
+    game.playing_order == []
+  end 
+
+  def game_over?(game) do 
+    Enum.reduce(game.players, true, fn({_id,p}, acc) -> acc and MapSet.size(p.deck) == 0 end)
+  end 
 
 end

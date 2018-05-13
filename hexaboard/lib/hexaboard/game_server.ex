@@ -55,6 +55,10 @@ defmodule Hexaboard.GameServer do
   def set_player_piece(name, player_id, piece) do 
   	GenServer.call via_tuple(name), {:set_player_piece, player_id, piece}
   end 
+  
+  def pieces_all_set?(name) do 
+    GenServer.call via_tuple(name), :pieces_all_set?
+  end 
 
   def compute_turns(name) do 
   	GenServer.call via_tuple(name), :compute_turns
@@ -64,9 +68,22 @@ defmodule Hexaboard.GameServer do
     GenServer.call via_tuple(name), {:select_turn, turn}
   end
 
+  def turns_all_set?(name) do 
+    GenServer.call via_tuple(name), :turns_all_set?
+  end
+
   def put_down_piece(name, player_id, position) do 
   	GenServer.call via_tuple(name), {:put_down_piece, player_id, position}
   end
+
+  def round_over?(name) do
+    GenServer.call via_tuple(name), :round_over?
+  end
+
+  def game_over?(name) do
+    GenServer.call via_tuple(name), :game_over?
+  end 
+
 
   @doc """
   Returns a tuple used to register and lookup a game server process by name.
@@ -114,6 +131,11 @@ defmodule Hexaboard.GameServer do
        	{:reply, state, state}
     end 
   end
+  
+  def handle_call(:pieces_all_set?, _from, state) do 
+    bool = Game.pieces_all_set?(state)
+    {:reply, bool, state}
+  end 
 
   def handle_call(:compute_turns, _from, state) do
     case Game.compute_turns(state) do 
@@ -132,6 +154,11 @@ defmodule Hexaboard.GameServer do
         {:reply, state, state}
     end
   end 
+  
+  def handle_call(:turns_all_set?, _from, state) do 
+    bool = Game.turns_all_set?(state)
+    {:reply, bool, state}
+  end
 
   def handle_call({:put_down_piece, player_id, position}, _from, state) do
     case Game.put_down_piece(player_id, position, state) do 
@@ -142,8 +169,14 @@ defmodule Hexaboard.GameServer do
     end
   end
 
-  
+ def handle_call(:round_over?, _from, state) do 
+    bool = Game.round_over?(state)
+    {:reply, bool, state}
+ end
 
-
+ def handle_call(:game_over?, _from, state) do 
+    bool = Game.game_over?(state)
+    {:reply, bool, state}
+ end
 
 end

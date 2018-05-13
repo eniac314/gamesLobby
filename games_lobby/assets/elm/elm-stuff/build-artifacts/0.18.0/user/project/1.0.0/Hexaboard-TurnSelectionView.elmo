@@ -1,0 +1,204 @@
+var _user$project$Hexaboard_TurnSelectionView$nChunks = F2(
+	function (n, xs) {
+		var go = F4(
+			function (acc1, acc2, m, xs) {
+				go:
+				while (true) {
+					var _p0 = xs;
+					if (_p0.ctor === '[]') {
+						return A2(
+							_elm_lang$core$List$filter,
+							function (l) {
+								return !_elm_lang$core$Native_Utils.eq(
+									l,
+									{ctor: '[]'});
+							},
+							_elm_lang$core$List$reverse(
+								{
+									ctor: '::',
+									_0: _elm_lang$core$List$reverse(acc2),
+									_1: acc1
+								}));
+					} else {
+						var _p2 = _p0._1;
+						var _p1 = _p0._0;
+						if (_elm_lang$core$Native_Utils.eq(m, 1)) {
+							var _v1 = {
+								ctor: '::',
+								_0: _elm_lang$core$List$reverse(
+									{ctor: '::', _0: _p1, _1: acc2}),
+								_1: acc1
+							},
+								_v2 = {ctor: '[]'},
+								_v3 = n,
+								_v4 = _p2;
+							acc1 = _v1;
+							acc2 = _v2;
+							m = _v3;
+							xs = _v4;
+							continue go;
+						} else {
+							var _v5 = acc1,
+								_v6 = {ctor: '::', _0: _p1, _1: acc2},
+								_v7 = m - 1,
+								_v8 = _p2;
+							acc1 = _v5;
+							acc2 = _v6;
+							m = _v7;
+							xs = _v8;
+							continue go;
+						}
+					}
+				}
+			});
+		return A4(
+			go,
+			{ctor: '[]'},
+			{ctor: '[]'},
+			n,
+			xs);
+	});
+var _user$project$Hexaboard_TurnSelectionView$turnSelectionView = function (model) {
+	var turnView = function (turn) {
+		return A2(
+			_mdgriffith$stylish_elephants$Element$el,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$padding(10),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$center,
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				},
+				model.canChooseTurn ? {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+						{
+							ctor: '::',
+							_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$pointer,
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Events$onClick(
+								_user$project$Hexaboard_HexaboardTypes$SelectTurn(turn)),
+							_1: {ctor: '[]'}
+						}
+					}
+				} : {ctor: '[]'}),
+			_mdgriffith$stylish_elephants$Element$text(
+				_elm_lang$core$Basics$toString(turn)));
+	};
+	var chunkView = function (chunk) {
+		return A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$padding(5),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			A2(_elm_lang$core$List$map, turnView, chunk));
+	};
+	var size = _elm_lang$core$List$length(model.availableTurns);
+	var chunks = (_elm_lang$core$Native_Utils.cmp(size, 3) < 0) ? A2(_user$project$Hexaboard_TurnSelectionView$nChunks, 1, model.availableTurns) : ((_elm_lang$core$Native_Utils.cmp(size, 5) < 0) ? A2(_user$project$Hexaboard_TurnSelectionView$nChunks, 2, model.availableTurns) : A2(_user$project$Hexaboard_TurnSelectionView$nChunks, 3, model.availableTurns));
+	return A2(
+		_mdgriffith$stylish_elephants$Element$column,
+		{
+			ctor: '::',
+			_0: model.device.tablet ? _mdgriffith$stylish_elephants$Element$width(
+				A2(_mdgriffith$stylish_elephants$Element$maximum, 350, _mdgriffith$stylish_elephants$Element$fill)) : (model.device.desktop ? _mdgriffith$stylish_elephants$Element$width(
+				A2(_mdgriffith$stylish_elephants$Element$maximum, 450, _mdgriffith$stylish_elephants$Element$fill)) : _mdgriffith$stylish_elephants$Element$width(
+				A2(_mdgriffith$stylish_elephants$Element$maximum, 600, _mdgriffith$stylish_elephants$Element$fill))),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$spacing(10),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_mdgriffith$stylish_elephants$Element$row,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$padding(10),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$el,
+						{ctor: '[]'},
+						_mdgriffith$stylish_elephants$Element$text('Turn selection - available turns: ')),
+					_1: {
+						ctor: '::',
+						_0: model.canChooseTurn ? A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$alignRight,
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$green),
+									_1: {ctor: '[]'}
+								}
+							},
+							_mdgriffith$stylish_elephants$Element$text('Ok')) : A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$alignRight,
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$color(_elm_lang$core$Color$red),
+									_1: {ctor: '[]'}
+								}
+							},
+							_mdgriffith$stylish_elephants$Element$text('Please wait...')),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$row,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$padding(5),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$fill),
+							_1: {ctor: '[]'}
+						}
+					},
+					A2(_elm_lang$core$List$map, chunkView, chunks)),
+				_1: {ctor: '[]'}
+			}
+		});
+};

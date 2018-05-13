@@ -18,7 +18,13 @@ var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
 															return function (p) {
 																return function (q) {
 																	return function (r) {
-																		return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, turn: m, score: n, deck: o, gameState: p, device: q, winSize: r};
+																		return function (s) {
+																			return function (t) {
+																				return function (u) {
+																					return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, canChooseTurn: m, choosenTurn: n, availableTurns: o, playingOrder: p, score: q, deck: r, gameState: s, device: t, winSize: u};
+																				};
+																			};
+																		};
 																	};
 																};
 															};
@@ -64,17 +70,35 @@ var _user$project$Hexaboard_HexaboardTypes$Piece = F2(
 var _user$project$Hexaboard_HexaboardTypes$Resizes = function (a) {
 	return {ctor: 'Resizes', _0: a};
 };
+var _user$project$Hexaboard_HexaboardTypes$GameOver = function (a) {
+	return {ctor: 'GameOver', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$RoundOver = function (a) {
+	return {ctor: 'RoundOver', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$PieceDown = function (a) {
+	return {ctor: 'PieceDown', _0: a};
+};
 var _user$project$Hexaboard_HexaboardTypes$PutDownPiece = function (a) {
 	return {ctor: 'PutDownPiece', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$TurnsAllSet = function (a) {
+	return {ctor: 'TurnsAllSet', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$TurnSelected = function (a) {
+	return {ctor: 'TurnSelected', _0: a};
 };
 var _user$project$Hexaboard_HexaboardTypes$SelectTurn = function (a) {
 	return {ctor: 'SelectTurn', _0: a};
 };
+var _user$project$Hexaboard_HexaboardTypes$PiecesAllSet = function (a) {
+	return {ctor: 'PiecesAllSet', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$PiecePickedUp = function (a) {
+	return {ctor: 'PiecePickedUp', _0: a};
+};
 var _user$project$Hexaboard_HexaboardTypes$PickUpPiece = function (a) {
 	return {ctor: 'PickUpPiece', _0: a};
-};
-var _user$project$Hexaboard_HexaboardTypes$TimeUpdate = function (a) {
-	return {ctor: 'TimeUpdate', _0: a};
 };
 var _user$project$Hexaboard_HexaboardTypes$RequestDate = function (a) {
 	return {ctor: 'RequestDate', _0: a};
@@ -138,6 +162,9 @@ var _user$project$Hexaboard_HexaboardTypes$PhoenixMsg = function (a) {
 };
 var _user$project$Hexaboard_HexaboardTypes$DropRes = function (a) {
 	return {ctor: 'DropRes', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$DropJson = function (a) {
+	return {ctor: 'DropJson', _0: a};
 };
 var _user$project$Hexaboard_HexaboardTypes$Default = {ctor: 'Default'};
 var _user$project$Hexaboard_HexaboardTypes$GameMsg = function (a) {

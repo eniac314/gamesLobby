@@ -73,7 +73,10 @@ init flags =
     , chatMessageBoxFocused = False
     , board = boardWithEdge n (hexaBoard n)
     , choice = Nothing
-    , turn = Nothing
+    , canChooseTurn = False
+    , choosenTurn = Nothing
+    , availableTurns = []
+    , playingOrder = []
     , score = 0
     , deck = []
     , gameState = PieceSelection
@@ -115,6 +118,13 @@ initialSocket flags =
         |> Phoenix.Socket.on "new_chat_message" chatChannel ReceiveChatMessage
         |> Phoenix.Socket.on "chat_history" chatChannel UpdateChatLog
         |> Phoenix.Socket.on "game_state" gameChannel UpdateGameState
+        |> Phoenix.Socket.on "piece_picked_up" gameChannel PiecePickedUp
+        |> Phoenix.Socket.on "pieces_all_set" gameChannel PiecesAllSet
+        |> Phoenix.Socket.on "turn_selected" gameChannel TurnSelected
+        |> Phoenix.Socket.on "turns_all_set" gameChannel TurnsAllSet
+        |> Phoenix.Socket.on "piece_down" gameChannel PieceDown
+        |> Phoenix.Socket.on "round_over" gameChannel RoundOver
+        |> Phoenix.Socket.on "game_over" gameChannel GameOver
         |> Phoenix.Socket.withDebug
 
 
@@ -157,6 +167,36 @@ update msg model =
         ChatMessageInput message ->
             { model | chatMessageInput = message } ! []
 
+        ReceivePresenceState jsonVal ->
+            let
+                presences =
+                    decodePresenceState jsonVal
+                        |> Result.map (\state -> Presence.syncState state model.presences)
+            in
+            case presences of
+                Ok ps ->
+                    { model | presences = ps } ! []
+
+                Err e ->
+                    update
+                        (RequestDate <| AddServerError ("receive presence_state: " ++ e))
+                        model
+
+        ReceivePresenceDiff jsonVal ->
+            let
+                presences =
+                    decodePresenceDiff jsonVal
+                        |> Result.map (\diff -> Presence.syncDiff diff model.presences)
+            in
+            case presences of
+                Ok ps ->
+                    { model | presences = ps } ! []
+
+                Err e ->
+                    update
+                        (RequestDate <| AddServerError ("receive presence_diff: " ++ e))
+                        model
+
         SendChatMessage date ->
             let
                 payload =
@@ -190,20 +230,11 @@ update msg model =
                         newPlInf =
                             { currPlInf | username = plInf.username }
 
-                        pushMsg =
-                            Phoenix.Push.init "requesting_gamestate" ("hexaboard:game:" ++ model.gameId)
-                                |> Phoenix.Push.onError ServerError
-
-                        ( newSocket, phxCmd ) =
-                            Phoenix.Socket.push pushMsg model.phxSocket
-
-                        newModel =
-                            { model
-                                | playerInfo = newPlInf
-                                , phxSocket = newSocket
-                            }
+                        ( newModel, phxCmd ) =
+                            pushGameMsg model "requesting_gamestate" Nothing Nothing
                     in
-                    newModel ! [ Cmd.map PhoenixMsg phxCmd ]
+                    { newModel | playerInfo = newPlInf }
+                        ! [ Cmd.map PhoenixMsg phxCmd ]
 
                 Err s ->
                     model ! []
@@ -234,16 +265,28 @@ update msg model =
 
         UpdateGameState jsonVal ->
             case decodeGameState model.playerInfo.username jsonVal of
-                Ok { board, deck, score, id, availableTurns } ->
+                Ok { board, deck, score, id, availableTurns, playingOrder, piece } ->
                     let
                         plInf =
                             model.playerInfo
+
+                        choice =
+                            Maybe.map
+                                (\v ->
+                                    { playerId = id
+                                    , value = v
+                                    }
+                                )
+                                piece
 
                         newModel =
                             { model
                                 | board = board
                                 , deck = deck
                                 , score = score
+                                , choice = choice
+                                , availableTurns = availableTurns
+                                , playingOrder = playingOrder
                                 , playerInfo = { plInf | playerId = id }
                             }
                     in
@@ -256,8 +299,189 @@ update msg model =
                         (RequestDate <| AddServerError ("update game state - json error: " ++ e))
                         model
 
-        PickUpPiece { value, playerId } ->
-            model ! []
+        PickUpPiece ({ value, playerId } as piece) ->
+            case model.gameState of
+                PieceSelection ->
+                    let
+                        payload =
+                            Just <| encodePickedUpPiece piece
+
+                        ( newModel, phxCmd ) =
+                            pushGameMsg
+                                model
+                                "set_player_piece"
+                                payload
+                                Nothing
+                    in
+                    newModel ! [ Cmd.map PhoenixMsg phxCmd ]
+
+                _ ->
+                    model ! []
+
+        PiecePickedUp jsonVal ->
+            case decodePlayer model.playerInfo.username jsonVal of
+                Ok ( d, s, id, p ) ->
+                    { model
+                        | gameState =
+                            if model.gameState == PieceSelection then
+                                WaitingForEndOfPieceSelection
+                            else
+                                model.gameState
+                        , deck = List.map (\v -> { value = v, playerId = id }) d
+                        , score = s
+                        , choice = Maybe.map (\v -> { value = v, playerId = id }) p
+                    }
+                        ! []
+
+                Err e ->
+                    update
+                        (RequestDate <| AddServerError ("pieces all set - json error: " ++ e))
+                        model
+
+        PiecesAllSet jsonVal ->
+            case decodeTurnsInfo jsonVal of
+                Ok { availableTurns, turnSelectionOrder } ->
+                    { model
+                        | gameState = TurnSelection
+                        , availableTurns = availableTurns
+                        , canChooseTurn =
+                            List.head turnSelectionOrder
+                                |> Maybe.map (\id -> id == model.playerInfo.playerId)
+                                |> Maybe.withDefault False
+                    }
+                        ! []
+
+                Err e ->
+                    update
+                        (RequestDate <| AddServerError ("pieces all set - json error: " ++ e))
+                        model
+
+        SelectTurn turn ->
+            let
+                payload =
+                    Just <| Encode.object [ ( "turn", Encode.int turn ) ]
+
+                ( newModel, phxCmd ) =
+                    pushGameMsg
+                        model
+                        "turn_selected"
+                        payload
+                        Nothing
+            in
+            { newModel | choosenTurn = Nothing }
+                ! [ Cmd.map PhoenixMsg phxCmd ]
+
+        TurnSelected jsonVal ->
+            case decodeTurnsInfo jsonVal of
+                Ok { availableTurns, turnSelectionOrder } ->
+                    { model
+                        | gameState = TurnSelection
+                        , availableTurns = availableTurns
+                        , canChooseTurn =
+                            List.head turnSelectionOrder
+                                |> Maybe.map (\id -> id == model.playerInfo.playerId)
+                                |> Maybe.withDefault False
+                    }
+                        ! []
+
+                Err e ->
+                    update
+                        (RequestDate <| AddServerError ("turn selected - json error: " ++ e))
+                        model
+
+        TurnsAllSet jsonVal ->
+            case decodeTurnsInfo jsonVal of
+                Ok { playingOrder } ->
+                    let
+                        canPlay =
+                            List.head playingOrder
+                                |> Maybe.map (\id -> id == model.playerInfo.playerId)
+                                |> Maybe.withDefault False
+                    in
+                    { model
+                        | gameState =
+                            if canPlay then
+                                Playing
+                            else
+                                WaitingForOwnTurn
+                        , availableTurns = []
+                        , playingOrder = playingOrder
+                        , canChooseTurn = False
+                    }
+                        ! []
+
+                Err e ->
+                    update
+                        (RequestDate <| AddServerError ("turns all set - json error: " ++ e))
+                        model
+
+        PutDownPiece ( x, y ) ->
+            case model.gameState of
+                Playing ->
+                    let
+                        payload =
+                            Just <|
+                                Encode.object
+                                    [ ( "player_id", Encode.int model.playerInfo.playerId )
+                                    , ( "pos_x", Encode.int x )
+                                    , ( "pos_y", Encode.int y )
+                                    ]
+
+                        ( newModel, phxCmd ) =
+                            pushGameMsg
+                                model
+                                "put_down_piece"
+                                payload
+                                Nothing
+                    in
+                    { newModel
+                        | choice = Nothing
+                        , gameState = WaitingForEndOfRound
+                    }
+                        ! [ Cmd.map PhoenixMsg phxCmd ]
+
+                _ ->
+                    model ! []
+
+        PieceDown jsonVal ->
+            case decodePieceDown model.playerInfo.username jsonVal of
+                Ok { board, playingOrder, score } ->
+                    let
+                        canPlay =
+                            List.head playingOrder
+                                |> Maybe.map (\id -> id == model.playerInfo.playerId)
+                                |> Maybe.withDefault False
+                    in
+                    { model
+                        | board = board
+                        , score = score
+                        , playingOrder = playingOrder
+                        , gameState =
+                            if canPlay then
+                                Playing
+                            else
+                                WaitingForOwnTurn
+                    }
+                        ! []
+
+                Err e ->
+                    update
+                        (RequestDate <| AddServerError ("piece down - json error: " ++ e))
+                        model
+
+        RoundOver _ ->
+            { model
+                | gameState = PieceSelection
+                , choice = Nothing
+                , canChooseTurn = False
+                , choosenTurn = Nothing
+                , availableTurns = []
+                , playingOrder = []
+            }
+                ! []
+
+        GameOver _ ->
+            { model | gameState = EndGame } ! []
 
         RequestDate callback ->
             model ! [ perform callback Date.now ]
@@ -293,6 +517,30 @@ update msg model =
             in
             { model | consoleLog = newConsoleLog } ! []
 
+        ServerMsg jsonVal ->
+            case Decode.decodeValue Decode.string jsonVal of
+                Ok msg ->
+                    update
+                        (RequestDate <| AddServerMsg ("ServerMsg: " ++ msg))
+                        model
+
+                Err e ->
+                    update
+                        (RequestDate <| AddServerError ("ServerMsg: json decoding error: " ++ e))
+                        model
+
+        ServerError jsonVal ->
+            case Decode.decodeValue Decode.string jsonVal of
+                Ok e ->
+                    update
+                        (RequestDate <| AddServerError ("ServerError: " ++ e))
+                        model
+
+                Err e ->
+                    update
+                        (RequestDate <| AddServerError ("ServerErr: json decoding error: " ++ e))
+                        model
+
         AddGameMsg msg date ->
             let
                 sysMsg =
@@ -317,10 +565,13 @@ update msg model =
                         (RequestDate <| AddServerError ("Debug json error: " ++ s))
                         model
 
-        Default ->
+        DropRes _ ->
             model ! []
 
-        _ ->
+        DropJson _ ->
+            model ! []
+
+        Default ->
             model ! []
 
 
@@ -330,3 +581,23 @@ subscriptions model =
         , Phoenix.Socket.listen model.phxSocket PhoenixMsg
         , downs KeyDown
         ]
+
+
+pushGameMsg model topic mbPayload mbOkHandler =
+    let
+        payload =
+            Maybe.withDefault (Encode.object []) mbPayload
+
+        okHandler =
+            Maybe.withDefault DropJson mbOkHandler
+
+        msg =
+            Phoenix.Push.init topic ("hexaboard:game:" ++ model.gameId)
+                |> Phoenix.Push.withPayload payload
+                |> Phoenix.Push.onError ServerError
+                |> Phoenix.Push.onOk okHandler
+
+        ( newSocket, phxCmd ) =
+            Phoenix.Socket.push msg model.phxSocket
+    in
+    ( { model | phxSocket = newSocket }, phxCmd )

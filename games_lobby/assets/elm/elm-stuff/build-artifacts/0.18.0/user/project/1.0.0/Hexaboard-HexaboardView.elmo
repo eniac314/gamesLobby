@@ -647,6 +647,57 @@ var _user$project$Hexaboard_HexaboardView$consoleView = function (model) {
 			}
 		});
 };
+var _user$project$Hexaboard_HexaboardView$viewSelection = function (model) {
+	var _p9 = model.gameState;
+	switch (_p9.ctor) {
+		case 'PieceSelection':
+			return A2(
+				_mdgriffith$stylish_elephants$Element$el,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$alignTop,
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$alignRight,
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				_user$project$Hexaboard_DeckView$deckSvg(model));
+		case 'WaitingForEndOfPieceSelection':
+			return A2(
+				_mdgriffith$stylish_elephants$Element$el,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$alignTop,
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$alignRight,
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				_user$project$Hexaboard_DeckView$deckSvg(model));
+		case 'TurnSelection':
+			return _user$project$Hexaboard_TurnSelectionView$turnSelectionView(model);
+		case 'WaitingForEndOfTurnSelection':
+			return _user$project$Hexaboard_TurnSelectionView$turnSelectionView(model);
+		case 'WaitingForOwnTurn':
+			return _user$project$Hexaboard_WinLoseView$winLoseView(model);
+		case 'Playing':
+			return _user$project$Hexaboard_WinLoseView$winLoseView(model);
+		case 'WaitingForEndOfRound':
+			return _user$project$Hexaboard_WinLoseView$winLoseView(model);
+		default:
+			return _mdgriffith$stylish_elephants$Element$none;
+	}
+};
 var _user$project$Hexaboard_HexaboardView$view = function (model) {
 	return A2(
 		_mdgriffith$stylish_elephants$Element$layout,
@@ -713,30 +764,42 @@ var _user$project$Hexaboard_HexaboardView$view = function (model) {
 								A3(_user$project$Hexaboard_BoardView$hexaBoardSvg, 6, 35, model.board)),
 							_1: {
 								ctor: '::',
-								_0: A2(
-									_mdgriffith$stylish_elephants$Element$row,
-									{
-										ctor: '::',
-										_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
-										_1: {
-											ctor: '::',
-											_0: _mdgriffith$stylish_elephants$Element$alignTop,
-											_1: {
-												ctor: '::',
-												_0: _mdgriffith$stylish_elephants$Element$alignRight,
-												_1: {ctor: '[]'}
-											}
-										}
-									},
-									{
-										ctor: '::',
-										_0: _user$project$Hexaboard_DeckView$deckSvg(model),
-										_1: {ctor: '[]'}
-									}),
+								_0: _user$project$Hexaboard_HexaboardView$viewSelection(model),
 								_1: {ctor: '[]'}
 							}
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$column,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$spacing(20),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _user$project$Hexaboard_DeckView$selectedSvg(model),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_mdgriffith$stylish_elephants$Element$el,
+										{ctor: '[]'},
+										_mdgriffith$stylish_elephants$Element$text(
+											_elm_lang$core$Basics$toString(model.gameState))),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_mdgriffith$stylish_elephants$Element$el,
+											{ctor: '[]'},
+											_mdgriffith$stylish_elephants$Element$text(
+												_elm_lang$core$Basics$toString(model.canChooseTurn))),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
 			}));
 };

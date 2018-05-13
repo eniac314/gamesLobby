@@ -12,6 +12,18 @@ import Phoenix.Push
 import Phoenix.Socket
 
 
+decodePresenceState jsonVal =
+    Decode.decodeValue
+        (Presence.presenceStateDecoder playerDecoder)
+        jsonVal
+
+
+decodePresenceDiff jsonVal =
+    Decode.decodeValue
+        (Presence.presenceDiffDecoder playerDecoder)
+        jsonVal
+
+
 encodeChatMessage : ChatMessage -> Encode.Value
 encodeChatMessage { timeStamp, author, message } =
     Encode.object
@@ -26,6 +38,18 @@ encodePlayer { username, onlineAt } =
     Encode.object
         [ ( "username", Encode.string username )
         , ( "joined_at", Encode.string onlineAt )
+        ]
+
+
+encodePickedUpPiece { value, playerId } =
+    Encode.object
+        [ ( "piece"
+          , Encode.object
+                [ ( "value", Encode.int value )
+                , ( "player_id", Encode.int playerId )
+                ]
+          )
+        , ( "player_id", Encode.int playerId )
         ]
 
 
@@ -77,22 +101,29 @@ decodeDate =
 
 decodeGameState player jsonVal =
     let
-        gameState b ( d, s, id ) at =
+        gameState b ( d, s, id, p ) at po =
             { board = b
             , deck = List.map (\v -> { value = v, playerId = id }) d
             , score = s
             , id = id
             , availableTurns = at
+            , piece = p
+            , playingOrder = po
             }
 
         gameStateDecoder =
             Decode.field "game_state" <|
-                Decode.map3 gameState
+                Decode.map4 gameState
                     (Decode.field "board" decodeBoard)
-                    (Decode.field "players" (decodePlayer player))
+                    (Decode.field "players" (playerDecoder2 player))
                     (Decode.field "available_turns" decodeAvlTurns)
+                    (Decode.field "playing_order" decodePlayingOrder)
     in
     Decode.decodeValue gameStateDecoder jsonVal
+
+
+decodePieceDown =
+    decodeGameState
 
 
 decodeBoard : Decode.Decoder Board
@@ -154,12 +185,26 @@ decodeAvlTurns =
     Decode.list Decode.int
 
 
+decodeTurnSelOrd =
+    Decode.list Decode.int
+
+
+decodePlayingOrder =
+    Decode.list Decode.int
+
+
 decodePlayer player =
+    Decode.decodeValue <|
+        Decode.field "players" (playerDecoder2 player)
+
+
+playerDecoder2 player =
     Decode.field player
-        (Decode.map3 (,,)
+        (Decode.map4 (,,,)
             (Decode.field "deck" decodeDeck)
             (Decode.field "score" decodeScore)
             (Decode.field "id" Decode.int)
+            (Decode.field "piece" (Decode.nullable Decode.int))
         )
 
 
@@ -169,6 +214,23 @@ decodeDeck =
 
 decodeScore =
     Decode.int
+
+
+decodeTurnsInfo jsonVal =
+    let
+        turnsInfo avt tso po =
+            { availableTurns = avt
+            , turnSelectionOrder = tso
+            , playingOrder = po
+            }
+    in
+    Decode.decodeValue
+        (Decode.map3 turnsInfo
+            (Decode.field "available_turns" decodeAvlTurns)
+            (Decode.field "turn_selection_order" decodeTurnSelOrd)
+            (Decode.field "playing_order" decodePlayingOrder)
+        )
+        jsonVal
 
 
 debugJson getter =

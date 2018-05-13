@@ -28,7 +28,10 @@ type alias Model =
     , chatMessageBoxFocused : Bool
     , board : Board
     , choice : Maybe Piece
-    , turn : Maybe Int
+    , canChooseTurn : Bool
+    , choosenTurn : Maybe Int
+    , availableTurns : List Int
+    , playingOrder : List Int
     , score : Int
     , deck : List Piece
     , gameState : GameState
@@ -39,6 +42,7 @@ type alias Model =
 
 type Msg
     = Default
+    | DropJson Decode.Value
     | DropRes (Result Error ())
     | PhoenixMsg (Phoenix.Socket.Msg Msg)
     | ReceivePlayerInfo Decode.Value
@@ -60,10 +64,17 @@ type Msg
     | UnfocusChatMessageBox
     | KeyDown KeyCode
     | RequestDate (Date -> Msg)
-    | TimeUpdate Time
+      --| TimeUpdate Time
     | PickUpPiece Piece
+    | PiecePickedUp Decode.Value
+    | PiecesAllSet Decode.Value
     | SelectTurn Int
+    | TurnSelected Decode.Value
+    | TurnsAllSet Decode.Value
     | PutDownPiece ( Int, Int )
+    | PieceDown Decode.Value
+    | RoundOver Decode.Value
+    | GameOver Decode.Value
     | Resizes Size
 
 

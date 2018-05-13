@@ -1,0 +1,178 @@
+var _user$project$Hexaboard_WinLoseView$winLoseView = function (model) {
+	var _p0 = model.choice;
+	if (_p0.ctor === 'Just') {
+		var makeCell = function (_p1) {
+			var _p2 = _p1;
+			var _p3 = _p2._1;
+			var color = _elm_lang$core$Native_Utils.eq(_p3, 1) ? _elm_lang$core$Color$blue : (_elm_lang$core$Native_Utils.eq(_p3, 2) ? _elm_lang$core$Color$green : (_elm_lang$core$Native_Utils.eq(_p3, -1) ? _elm_lang$core$Color$darkYellow : (_elm_lang$core$Native_Utils.eq(_p3, -2) ? _elm_lang$core$Color$darkOrange : _elm_lang$core$Color$white)));
+			return A2(
+				_mdgriffith$stylish_elephants$Element$el,
+				{
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element_Background$color(color),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$width(
+							_mdgriffith$stylish_elephants$Element$fillPortion(1)),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$height(
+								_mdgriffith$stylish_elephants$Element$fillPortion(1)),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				A2(
+					_mdgriffith$stylish_elephants$Element$el,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Background$uncropped(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'/images/hexaboard/pieces/piece',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(_p2._0),
+									'.png'))),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$fill),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$height(
+									_mdgriffith$stylish_elephants$Element$px(55)),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					_mdgriffith$stylish_elephants$Element$none));
+		};
+		var _p4 = A3(
+			_elm_lang$core$Dict$foldr,
+			F3(
+				function (_p6, res, _p5) {
+					var _p7 = _p6;
+					var _p12 = _p7._1;
+					var _p11 = _p7._0;
+					var _p8 = _p5;
+					var _p10 = _p8._1;
+					var _p9 = _p8._0;
+					return ((!_elm_lang$core$Native_Utils.eq(_p11, _p0._0.value)) || _elm_lang$core$Native_Utils.eq(_p11, _p12)) ? {ctor: '_Tuple2', _0: _p9, _1: _p10} : ((_elm_lang$core$Native_Utils.cmp(res, 0) > 0) ? {
+						ctor: '_Tuple2',
+						_0: _p9,
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: _p12, _1: res},
+							_1: _p10
+						}
+					} : {
+						ctor: '_Tuple2',
+						_0: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: _p12, _1: res},
+							_1: _p9
+						},
+						_1: _p10
+					});
+				}),
+			{
+				ctor: '_Tuple2',
+				_0: {ctor: '[]'},
+				_1: {ctor: '[]'}
+			},
+			_user$project$Hexaboard_Data$shifumiTable);
+		var losers = _p4._0;
+		var winners = _p4._1;
+		var losersCells = A2(_elm_lang$core$List$map, makeCell, losers);
+		var winnersCells = A2(_elm_lang$core$List$map, makeCell, winners);
+		return A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$spacing(3),
+				_1: {
+					ctor: '::',
+					_0: model.device.tablet ? _mdgriffith$stylish_elephants$Element$width(
+						A2(_mdgriffith$stylish_elephants$Element$maximum, 350, _mdgriffith$stylish_elephants$Element$fill)) : (model.device.desktop ? _mdgriffith$stylish_elephants$Element$width(
+						A2(_mdgriffith$stylish_elephants$Element$maximum, 450, _mdgriffith$stylish_elephants$Element$fill)) : _mdgriffith$stylish_elephants$Element$width(
+						A2(_mdgriffith$stylish_elephants$Element$maximum, 600, _mdgriffith$stylish_elephants$Element$fill))),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Border$solid,
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Border$width(2),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$padding(5),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$alignTop,
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$row,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$spacing(3),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element$el,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$width(
+									A2(
+										_mdgriffith$stylish_elephants$Element$minimum,
+										110,
+										_mdgriffith$stylish_elephants$Element$fillPortion(2))),
+								_1: {ctor: '[]'}
+							},
+							_mdgriffith$stylish_elephants$Element$text('loses to: ')),
+						_1: losersCells
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$row,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$spacing(3),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$stylish_elephants$Element$el,
+								{
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$width(
+										A2(
+											_mdgriffith$stylish_elephants$Element$minimum,
+											110,
+											_mdgriffith$stylish_elephants$Element$fillPortion(2))),
+									_1: {ctor: '[]'}
+								},
+								_mdgriffith$stylish_elephants$Element$text('wins against: ')),
+							_1: winnersCells
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	} else {
+		return _mdgriffith$stylish_elephants$Element$none;
+	}
+};

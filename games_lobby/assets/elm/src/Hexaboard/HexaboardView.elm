@@ -12,6 +12,8 @@ import Element.Input as Input
 import Hexaboard.BoardView exposing (..)
 import Hexaboard.DeckView exposing (..)
 import Hexaboard.HexaboardTypes exposing (..)
+import Hexaboard.TurnSelectionView exposing (..)
+import Hexaboard.WinLoseView exposing (..)
 import Html exposing (Html)
 import Html.Attributes as Attr exposing (attribute, id)
 import Phoenix.Channel exposing (State(..))
@@ -57,18 +59,55 @@ view model =
                     , alignTop
                     ]
                     (hexaBoardSvg 6 35 model.board)
-                , row
-                    [ width fill
-                    , alignTop
-                    , alignRight
-
-                    --, padding (px 25)
-                    --, centerX
-                    --, Background.color Color.red
-                    ]
-                    [ deckSvg model ]
+                , viewSelection model
+                ]
+            , column [ spacing 20 ]
+                [ selectedSvg model
+                , el [] (text <| toString model.gameState)
+                , el [] (text <| toString model.canChooseTurn)
                 ]
             ]
+
+
+viewSelection model =
+    case model.gameState of
+        PieceSelection ->
+            el
+                [ width fill
+                , alignTop
+                , alignRight
+
+                --, Background.color Color.red
+                ]
+                (deckSvg model)
+
+        WaitingForEndOfPieceSelection ->
+            el
+                [ width fill
+                , alignTop
+                , alignRight
+
+                --, Background.color Color.red
+                ]
+                (deckSvg model)
+
+        TurnSelection ->
+            turnSelectionView model
+
+        WaitingForEndOfTurnSelection ->
+            turnSelectionView model
+
+        WaitingForOwnTurn ->
+            winLoseView model
+
+        Playing ->
+            winLoseView model
+
+        WaitingForEndOfRound ->
+            winLoseView model
+
+        EndGame ->
+            none
 
 
 consoleView model =

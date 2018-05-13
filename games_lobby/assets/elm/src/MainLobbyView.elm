@@ -38,7 +38,8 @@ view model =
                 [ chatView model
                 , gamesSetupView model
                 ]
-            , debugView model
+
+            --, debugView model
             ]
 
 

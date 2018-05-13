@@ -68,8 +68,17 @@ deckSvg { deck, playerInfo, device } =
                     in
                     coords (y - 1) (acc ++ newRow)
 
+        isInDeck ( i, _ ) =
+            List.any (\p -> p.value == i) deck
+
+        deckCoords =
+            coords i []
+                |> List.indexedMap (,)
+                |> List.filter isInDeck
+                |> List.map Tuple.second
+
         pieces =
-            List.map2 (,) (coords i []) deck
+            List.map2 (,) deckCoords deck
                 |> List.concatMap (\( ( x, y ), piece ) -> deckHexaSvg x y l piece)
 
         def =
@@ -127,6 +136,64 @@ deckHexaSvg x y radius { value, playerId } =
         , SvgAttr.points points
         , SvgEvents.onClick (PickUpPiece (Piece value playerId))
         , SvgAttr.cursor "pointer"
+        ]
+        []
+    ]
+
+
+selectedSvg model =
+    let
+        box =
+            el
+                [ Border.solid
+                , Border.width 2
+                , width (px 100)
+                , height (px 100)
+
+                --, Background.color Color.blue
+                ]
+    in
+    case model.choice of
+        Nothing ->
+            box none
+
+        Just piece ->
+            box <|
+                (html <|
+                    svg
+                        [ SvgAttr.viewBox <| "0 0 100 100"
+                        , SvgAttr.width "100%"
+                        , SvgAttr.height "100%"
+                        ]
+                        (selectedHexaSvg 35 piece)
+                )
+
+
+selectedHexaSvg radius { value, playerId } =
+    let
+        points =
+            [ ( radius, 0 )
+            , ( radius, pi / 3 )
+            , ( radius, 2 * pi / 3 )
+            , ( radius, pi )
+            , ( radius, 4 * pi / 3 )
+            , ( radius, 5 * pi / 3 )
+            ]
+                |> List.map (\( l, a ) -> ( l, a + pi / 6 ))
+                |> List.map fromPolar
+                |> List.map (\( u, v ) -> ( u + 50, v + 50 ))
+                |> List.foldr (\( u, v ) acc -> acc ++ (toString u ++ ", " ++ toString v ++ " ")) ""
+    in
+    [ polygon
+        [ SvgAttr.fill <| playerColor playerId
+        , SvgAttr.points points
+        ]
+        []
+    , polygon
+        [ SvgAttr.fill <| "url(#piece" ++ toString value ++ ")"
+        , SvgAttr.stroke "black"
+        , SvgAttr.strokeWidth "2px"
+        , SvgAttr.points points
         ]
         []
     ]
