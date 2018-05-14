@@ -58,8 +58,8 @@ defmodule Hexaboard.Game do
     %{game | board: encodable_board,
              players: encodable_players,
              available_turns: MapSet.to_list(game.available_turns)
-
-     }
+     } 
+     |> Map.put(:game_over, game_over?(game))
   end 
   
   def pieces_all_set?(game) do 
@@ -201,7 +201,7 @@ defmodule Hexaboard.Game do
   end 
 
   def game_over?(game) do 
-    Enum.reduce(game.players, true, fn({_id,p}, acc) -> acc and MapSet.size(p.deck) == 0 end)
+    Enum.reduce(game.players, true, fn({_id,p}, acc) -> acc and MapSet.size(p.deck) == 0 and p.piece == nil end)
   end 
 
 end

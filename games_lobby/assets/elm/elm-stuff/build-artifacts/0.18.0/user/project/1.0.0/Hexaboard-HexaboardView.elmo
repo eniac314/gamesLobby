@@ -20,54 +20,6 @@ var _user$project$Hexaboard_HexaboardView$prettyDate = function (timeStamp) {
 				_elm_lang$core$Native_Utils.chr('0'),
 				_elm_lang$core$Basics$toString(minute))));
 };
-var _user$project$Hexaboard_HexaboardView$presencesView = function (model) {
-	var players = _elm_lang$core$Dict$keys(model.presences);
-	var playerView = function (player) {
-		return A2(
-			_mdgriffith$stylish_elephants$Element$el,
-			{
-				ctor: '::',
-				_0: _mdgriffith$stylish_elephants$Element$padding(5),
-				_1: {
-					ctor: '::',
-					_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
-					_1: {
-						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$grey),
-						_1: {ctor: '[]'}
-					}
-				}
-			},
-			_mdgriffith$stylish_elephants$Element$text(player));
-	};
-	return A2(
-		_mdgriffith$stylish_elephants$Element$column,
-		{
-			ctor: '::',
-			_0: _mdgriffith$stylish_elephants$Element$spacing(15),
-			_1: {
-				ctor: '::',
-				_0: _mdgriffith$stylish_elephants$Element$width(_mdgriffith$stylish_elephants$Element$shrink),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _mdgriffith$stylish_elephants$Element$text('players online:'),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_mdgriffith$stylish_elephants$Element$paragraph,
-					{
-						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$spacing(5),
-						_1: {ctor: '[]'}
-					},
-					A2(_elm_lang$core$List$map, playerView, players)),
-				_1: {ctor: '[]'}
-			}
-		});
-};
 var _user$project$Hexaboard_HexaboardView$gameMsgView = function (_p0) {
 	var _p1 = _p0;
 	return A2(
@@ -528,7 +480,11 @@ var _user$project$Hexaboard_HexaboardView$consoleLogView = function (model) {
 											ctor: '::',
 											_0: _mdgriffith$stylish_elephants$Element$htmlAttribute(
 												_elm_lang$html$Html_Attributes$id('chatLogContainer')),
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$white),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								}
@@ -686,8 +642,6 @@ var _user$project$Hexaboard_HexaboardView$viewSelection = function (model) {
 				_user$project$Hexaboard_DeckView$deckSvg(model));
 		case 'TurnSelection':
 			return _user$project$Hexaboard_TurnSelectionView$turnSelectionView(model);
-		case 'WaitingForEndOfTurnSelection':
-			return _user$project$Hexaboard_TurnSelectionView$turnSelectionView(model);
 		case 'WaitingForOwnTurn':
 			return _user$project$Hexaboard_WinLoseView$winLoseView(model);
 		case 'Playing':
@@ -710,7 +664,11 @@ var _user$project$Hexaboard_HexaboardView$view = function (model) {
 				_1: {
 					ctor: '::',
 					_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$fill),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Background$tiled('/images/hexaboard/tiles/ep_naturalwhite.png'),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		},
@@ -774,26 +732,57 @@ var _user$project$Hexaboard_HexaboardView$view = function (model) {
 							_mdgriffith$stylish_elephants$Element$column,
 							{
 								ctor: '::',
-								_0: _mdgriffith$stylish_elephants$Element$spacing(20),
-								_1: {ctor: '[]'}
+								_0: _mdgriffith$stylish_elephants$Element$spacing(70),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$height(
+										_mdgriffith$stylish_elephants$Element$px(model.winSize.height - 160)),
+									_1: {ctor: '[]'}
+								}
 							},
 							{
 								ctor: '::',
-								_0: _user$project$Hexaboard_DeckView$selectedSvg(model),
+								_0: A2(
+									_mdgriffith$stylish_elephants$Element$el,
+									{
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Region$heading(1),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$paddingEach(
+												{bottom: 0, left: 0, right: 0, top: 30}),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$centerX,
+												_1: {
+													ctor: '::',
+													_0: model.device.tablet ? _mdgriffith$stylish_elephants$Element_Font$size(36) : (model.device.desktop ? _mdgriffith$stylish_elephants$Element_Font$size(48) : _mdgriffith$stylish_elephants$Element_Font$size(60)),
+													_1: {
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element_Font$family(
+															{
+																ctor: '::',
+																_0: _mdgriffith$stylish_elephants$Element_Font$external(
+																	{name: 'Anurati', url: '/css/fonts.css'}),
+																_1: {
+																	ctor: '::',
+																	_0: _mdgriffith$stylish_elephants$Element_Font$typeface('Anurati'),
+																	_1: {ctor: '[]'}
+																}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									},
+									_mdgriffith$stylish_elephants$Element$text('HEXABOARD')),
 								_1: {
 									ctor: '::',
-									_0: A2(
-										_mdgriffith$stylish_elephants$Element$el,
-										{ctor: '[]'},
-										_mdgriffith$stylish_elephants$Element$text(
-											_elm_lang$core$Basics$toString(model.gameState))),
+									_0: _user$project$Hexaboard_DeckView$selectedSvg(model),
 									_1: {
 										ctor: '::',
-										_0: A2(
-											_mdgriffith$stylish_elephants$Element$el,
-											{ctor: '[]'},
-											_mdgriffith$stylish_elephants$Element$text(
-												_elm_lang$core$Basics$toString(model.canChooseTurn))),
+										_0: _user$project$Hexaboard_ScoresView$scoresView(model),
 										_1: {ctor: '[]'}
 									}
 								}

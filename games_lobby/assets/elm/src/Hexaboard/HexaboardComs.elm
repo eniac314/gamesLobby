@@ -101,23 +101,28 @@ decodeDate =
 
 decodeGameState player jsonVal =
     let
-        gameState b ( d, s, id, p ) at po =
+        gameState b ( d, id, p ) at tso po go s =
             { board = b
             , deck = List.map (\v -> { value = v, playerId = id }) d
-            , score = s
             , id = id
             , availableTurns = at
+            , turnSelectionOrder = tso
             , piece = p
             , playingOrder = po
+            , gameOver = go
+            , scores = s
             }
 
         gameStateDecoder =
             Decode.field "game_state" <|
-                Decode.map4 gameState
+                Decode.map7 gameState
                     (Decode.field "board" decodeBoard)
                     (Decode.field "players" (playerDecoder2 player))
                     (Decode.field "available_turns" decodeAvlTurns)
+                    (Decode.field "turn_selection_order" decodeTurnSelOrd)
                     (Decode.field "playing_order" decodePlayingOrder)
+                    (Decode.field "game_over" Decode.bool)
+                    (Decode.field "players" decodeScores)
     in
     Decode.decodeValue gameStateDecoder jsonVal
 
@@ -200,9 +205,8 @@ decodePlayer player =
 
 playerDecoder2 player =
     Decode.field player
-        (Decode.map4 (,,,)
+        (Decode.map3 (,,)
             (Decode.field "deck" decodeDeck)
-            (Decode.field "score" decodeScore)
             (Decode.field "id" Decode.int)
             (Decode.field "piece" (Decode.nullable Decode.int))
         )
@@ -210,6 +214,16 @@ playerDecoder2 player =
 
 decodeDeck =
     Decode.list Decode.int
+
+
+decodeScores =
+    Decode.dict
+        (Decode.map3 (,,)
+            (Decode.field "name" Decode.string)
+            (Decode.field "id" Decode.int)
+            (Decode.field "score" Decode.int)
+        )
+        |> Decode.map Dict.values
 
 
 decodeScore =

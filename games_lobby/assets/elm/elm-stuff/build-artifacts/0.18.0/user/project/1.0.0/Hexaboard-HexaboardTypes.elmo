@@ -21,7 +21,7 @@ var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
 																		return function (s) {
 																			return function (t) {
 																				return function (u) {
-																					return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, canChooseTurn: m, choosenTurn: n, availableTurns: o, playingOrder: p, score: q, deck: r, gameState: s, device: t, winSize: u};
+																					return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, canChooseTurn: m, choosenTurn: n, availableTurns: o, playingOrder: p, scores: q, deck: r, gameState: s, device: t, winSize: u};
 																				};
 																			};
 																		};
@@ -183,7 +183,6 @@ var _user$project$Hexaboard_HexaboardTypes$EndGame = {ctor: 'EndGame'};
 var _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfRound = {ctor: 'WaitingForEndOfRound'};
 var _user$project$Hexaboard_HexaboardTypes$Playing = {ctor: 'Playing'};
 var _user$project$Hexaboard_HexaboardTypes$WaitingForOwnTurn = {ctor: 'WaitingForOwnTurn'};
-var _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfTurnSelection = {ctor: 'WaitingForEndOfTurnSelection'};
 var _user$project$Hexaboard_HexaboardTypes$TurnSelection = {ctor: 'TurnSelection'};
 var _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfPieceSelection = {ctor: 'WaitingForEndOfPieceSelection'};
 var _user$project$Hexaboard_HexaboardTypes$PieceSelection = {ctor: 'PieceSelection'};

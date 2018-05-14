@@ -77,7 +77,7 @@ init flags =
     , choosenTurn = Nothing
     , availableTurns = []
     , playingOrder = []
-    , score = 0
+    , scores = []
     , deck = []
     , gameState = PieceSelection
     , device = classifyDevice defWinSize
@@ -265,7 +265,7 @@ update msg model =
 
         UpdateGameState jsonVal ->
             case decodeGameState model.playerInfo.username jsonVal of
-                Ok { board, deck, score, id, availableTurns, playingOrder, piece } ->
+                Ok { board, deck, id, availableTurns, turnSelectionOrder, playingOrder, piece, gameOver, scores } ->
                     let
                         plInf =
                             model.playerInfo
@@ -279,19 +279,49 @@ update msg model =
                                 )
                                 piece
 
+                        canChooseTurn =
+                            List.head turnSelectionOrder
+                                |> Maybe.map (\pid -> pid == id)
+                                |> Maybe.withDefault False
+
+                        canPlay =
+                            List.head playingOrder
+                                |> Maybe.map (\pid -> pid == id)
+                                |> Maybe.withDefault False
+
+                        gameState =
+                            if gameOver then
+                                EndGame
+                            else if turnSelectionOrder == [] && playingOrder == [] && choice == Nothing then
+                                PieceSelection
+                            else if turnSelectionOrder == [] && playingOrder == [] then
+                                WaitingForEndOfPieceSelection
+                            else if availableTurns /= [] then
+                                TurnSelection
+                            else if not canPlay && playingOrder /= [] && choice /= Nothing then
+                                WaitingForOwnTurn
+                            else if canPlay && playingOrder /= [] then
+                                Playing
+                            else if playingOrder /= [] && choice == Nothing then
+                                WaitingForEndOfRound
+                            else
+                                EndGame
+
                         newModel =
                             { model
                                 | board = board
                                 , deck = deck
-                                , score = score
                                 , choice = choice
                                 , availableTurns = availableTurns
                                 , playingOrder = playingOrder
                                 , playerInfo = { plInf | playerId = id }
+                                , canChooseTurn = canChooseTurn
+                                , gameState = gameState
+                                , scores = scores
                             }
                     in
                     update
-                        (RequestDate <| AddGameMsg "game state updated")
+                        (RequestDate <| AddGameMsg "initial game state loaded")
                         newModel
 
                 Err e ->
@@ -320,7 +350,7 @@ update msg model =
 
         PiecePickedUp jsonVal ->
             case decodePlayer model.playerInfo.username jsonVal of
-                Ok ( d, s, id, p ) ->
+                Ok ( d, id, p ) ->
                     { model
                         | gameState =
                             if model.gameState == PieceSelection then
@@ -328,7 +358,6 @@ update msg model =
                             else
                                 model.gameState
                         , deck = List.map (\v -> { value = v, playerId = id }) d
-                        , score = s
                         , choice = Maybe.map (\v -> { value = v, playerId = id }) p
                     }
                         ! []
@@ -445,7 +474,7 @@ update msg model =
 
         PieceDown jsonVal ->
             case decodePieceDown model.playerInfo.username jsonVal of
-                Ok { board, playingOrder, score } ->
+                Ok { board, playingOrder, scores } ->
                     let
                         canPlay =
                             List.head playingOrder
@@ -454,13 +483,13 @@ update msg model =
                     in
                     { model
                         | board = board
-                        , score = score
                         , playingOrder = playingOrder
+                        , scores = scores
                         , gameState =
                             if canPlay then
                                 Playing
                             else
-                                WaitingForOwnTurn
+                                WaitingForEndOfRound
                     }
                         ! []
 

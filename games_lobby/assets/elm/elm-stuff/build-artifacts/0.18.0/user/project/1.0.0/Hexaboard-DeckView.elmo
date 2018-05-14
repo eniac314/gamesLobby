@@ -199,7 +199,15 @@ var _user$project$Hexaboard_DeckView$selectedSvg = function (model) {
 						ctor: '::',
 						_0: _mdgriffith$stylish_elephants$Element$height(
 							_mdgriffith$stylish_elephants$Element$px(100)),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$centerX,
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$white),
+								_1: {ctor: '[]'}
+							}
+						}
 					}
 				}
 			}
@@ -444,7 +452,7 @@ var _user$project$Hexaboard_DeckView$deckSvg = function (_p19) {
 			_p30));
 	var id = _p20.playerInfo.playerId;
 	return A2(
-		_mdgriffith$stylish_elephants$Element$el,
+		_mdgriffith$stylish_elephants$Element$column,
 		{
 			ctor: '::',
 			_0: _mdgriffith$stylish_elephants$Element$centerX,
@@ -461,31 +469,35 @@ var _user$project$Hexaboard_DeckView$deckSvg = function (_p19) {
 				}
 			}
 		},
-		_mdgriffith$stylish_elephants$Element$html(
-			A2(
-				_elm_lang$svg$Svg$svg,
-				{
-					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$viewBox(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'0 0 ',
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$html(
+				A2(
+					_elm_lang$svg$Svg$svg,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$viewBox(
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								_elm_lang$core$Basics$toString(sizeX),
+								'0 0 ',
 								A2(
 									_elm_lang$core$Basics_ops['++'],
-									' ',
-									_elm_lang$core$Basics$toString(sizeY))))),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$width('100%'),
+									_elm_lang$core$Basics$toString(sizeX),
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										' ',
+										_elm_lang$core$Basics$toString(sizeY))))),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$height('100%'),
-							_1: {ctor: '[]'}
+							_0: _elm_lang$svg$Svg_Attributes$width('100%'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$height('100%'),
+								_1: {ctor: '[]'}
+							}
 						}
-					}
-				},
-				{ctor: '::', _0: def, _1: pieces})));
+					},
+					{ctor: '::', _0: def, _1: pieces})),
+			_1: {ctor: '[]'}
+		});
 };

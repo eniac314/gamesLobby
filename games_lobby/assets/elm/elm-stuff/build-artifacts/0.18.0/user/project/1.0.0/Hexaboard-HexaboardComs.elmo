@@ -6,19 +6,31 @@ var _user$project$Hexaboard_HexaboardComs$debugJson = function (getter) {
 			getter(_elm_lang$core$Json_Decode$value)));
 };
 var _user$project$Hexaboard_HexaboardComs$decodeScore = _elm_lang$core$Json_Decode$int;
+var _user$project$Hexaboard_HexaboardComs$decodeScores = A2(
+	_elm_lang$core$Json_Decode$map,
+	_elm_lang$core$Dict$values,
+	_elm_lang$core$Json_Decode$dict(
+		A4(
+			_elm_lang$core$Json_Decode$map3,
+			F3(
+				function (v0, v1, v2) {
+					return {ctor: '_Tuple3', _0: v0, _1: v1, _2: v2};
+				}),
+			A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
+			A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int),
+			A2(_elm_lang$core$Json_Decode$field, 'score', _elm_lang$core$Json_Decode$int))));
 var _user$project$Hexaboard_HexaboardComs$decodeDeck = _elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$int);
 var _user$project$Hexaboard_HexaboardComs$playerDecoder2 = function (player) {
 	return A2(
 		_elm_lang$core$Json_Decode$field,
 		player,
-		A5(
-			_elm_lang$core$Json_Decode$map4,
-			F4(
-				function (v0, v1, v2, v3) {
-					return {ctor: '_Tuple4', _0: v0, _1: v1, _2: v2, _3: v3};
+		A4(
+			_elm_lang$core$Json_Decode$map3,
+			F3(
+				function (v0, v1, v2) {
+					return {ctor: '_Tuple3', _0: v0, _1: v1, _2: v2};
 				}),
 			A2(_elm_lang$core$Json_Decode$field, 'deck', _user$project$Hexaboard_HexaboardComs$decodeDeck),
-			A2(_elm_lang$core$Json_Decode$field, 'score', _user$project$Hexaboard_HexaboardComs$decodeScore),
 			A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int),
 			A2(
 				_elm_lang$core$Json_Decode$field,
@@ -113,10 +125,10 @@ var _user$project$Hexaboard_HexaboardComs$decodeBoard = A2(
 	_elm_lang$core$Json_Decode$list(_user$project$Hexaboard_HexaboardComs$decodeCell));
 var _user$project$Hexaboard_HexaboardComs$decodeGameState = F2(
 	function (player, jsonVal) {
-		var gameState = F4(
-			function (b, _p1, at, po) {
+		var gameState = F7(
+			function (b, _p1, at, tso, po, go, s) {
 				var _p2 = _p1;
-				var _p3 = _p2._2;
+				var _p3 = _p2._1;
 				return {
 					board: b,
 					deck: A2(
@@ -125,18 +137,20 @@ var _user$project$Hexaboard_HexaboardComs$decodeGameState = F2(
 							return {value: v, playerId: _p3};
 						},
 						_p2._0),
-					score: _p2._1,
 					id: _p3,
 					availableTurns: at,
-					piece: _p2._3,
-					playingOrder: po
+					turnSelectionOrder: tso,
+					piece: _p2._2,
+					playingOrder: po,
+					gameOver: go,
+					scores: s
 				};
 			});
 		var gameStateDecoder = A2(
 			_elm_lang$core$Json_Decode$field,
 			'game_state',
-			A5(
-				_elm_lang$core$Json_Decode$map4,
+			A8(
+				_elm_lang$core$Json_Decode$map7,
 				gameState,
 				A2(_elm_lang$core$Json_Decode$field, 'board', _user$project$Hexaboard_HexaboardComs$decodeBoard),
 				A2(
@@ -144,7 +158,10 @@ var _user$project$Hexaboard_HexaboardComs$decodeGameState = F2(
 					'players',
 					_user$project$Hexaboard_HexaboardComs$playerDecoder2(player)),
 				A2(_elm_lang$core$Json_Decode$field, 'available_turns', _user$project$Hexaboard_HexaboardComs$decodeAvlTurns),
-				A2(_elm_lang$core$Json_Decode$field, 'playing_order', _user$project$Hexaboard_HexaboardComs$decodePlayingOrder)));
+				A2(_elm_lang$core$Json_Decode$field, 'turn_selection_order', _user$project$Hexaboard_HexaboardComs$decodeTurnSelOrd),
+				A2(_elm_lang$core$Json_Decode$field, 'playing_order', _user$project$Hexaboard_HexaboardComs$decodePlayingOrder),
+				A2(_elm_lang$core$Json_Decode$field, 'game_over', _elm_lang$core$Json_Decode$bool),
+				A2(_elm_lang$core$Json_Decode$field, 'players', _user$project$Hexaboard_HexaboardComs$decodeScores)));
 		return A2(_elm_lang$core$Json_Decode$decodeValue, gameStateDecoder, jsonVal);
 	});
 var _user$project$Hexaboard_HexaboardComs$decodePieceDown = _user$project$Hexaboard_HexaboardComs$decodeGameState;

@@ -1,0 +1,120 @@
+var _user$project$Hexaboard_ScoresView$playerColorRgb = function (playerId) {
+	return _elm_lang$core$Native_Utils.eq(playerId, 1) ? A4(_elm_lang$core$Color$rgba, 255, 0, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 2) ? A4(_elm_lang$core$Color$rgba, 255, 127, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 3) ? A4(_elm_lang$core$Color$rgba, 255, 255, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 4) ? A4(_elm_lang$core$Color$rgba, 0, 255, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 5) ? A4(_elm_lang$core$Color$rgba, 0, 0, 255, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 6) ? A4(_elm_lang$core$Color$rgba, 180, 0, 255, 0.7) : _elm_lang$core$Color$white)))));
+};
+var _user$project$Hexaboard_ScoresView$capitalize = function (s) {
+	return _elm_lang$core$String$fromList(
+		A2(
+			_elm_lang$core$List$map,
+			_elm_lang$core$Char$toUpper,
+			_elm_lang$core$String$toList(s)));
+};
+var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
+	var playerView = function (_p0) {
+		var _p1 = _p0;
+		return A2(
+			_mdgriffith$stylish_elephants$Element$row,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$spacing(15),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element$el,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$padding(5),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element_Background$color(
+								_user$project$Hexaboard_ScoresView$playerColorRgb(_p1._1)),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$width(
+									_mdgriffith$stylish_elephants$Element$fillPortion(4)),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element_Font$center,
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Border$rounded(3),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element_Font$family(
+												{
+													ctor: '::',
+													_0: _mdgriffith$stylish_elephants$Element_Font$typeface('monospace'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					},
+					_mdgriffith$stylish_elephants$Element$text(_p1._0)),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$stylish_elephants$Element$el,
+						{
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$padding(5),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightGrey),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$width(
+										_mdgriffith$stylish_elephants$Element$fillPortion(1)),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Font$center,
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element_Border$rounded(3),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						},
+						_mdgriffith$stylish_elephants$Element$text(
+							_elm_lang$core$Basics$toString(_p1._2))),
+					_1: {ctor: '[]'}
+				}
+			});
+	};
+	var _p2 = model.scores;
+	if (_p2.ctor === '[]') {
+		return _mdgriffith$stylish_elephants$Element$none;
+	} else {
+		return A2(
+			_mdgriffith$stylish_elephants$Element$column,
+			{
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$width(
+					_mdgriffith$stylish_elephants$Element$px(200)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$centerX,
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$shrink),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element$padding(2),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			},
+			A2(_elm_lang$core$List$map, playerView, _p2));
+	}
+};

@@ -32,7 +32,7 @@ type alias Model =
     , choosenTurn : Maybe Int
     , availableTurns : List Int
     , playingOrder : List Int
-    , score : Int
+    , scores : List ( String, Int, Int )
     , deck : List Piece
     , gameState : GameState
     , device : Device
@@ -128,7 +128,6 @@ type GameState
     = PieceSelection
     | WaitingForEndOfPieceSelection
     | TurnSelection
-    | WaitingForEndOfTurnSelection
     | WaitingForOwnTurn
     | Playing
     | WaitingForEndOfRound

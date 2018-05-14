@@ -127,7 +127,12 @@ hexaSvg x y state l u v =
                 , SvgAttr.stroke "black"
                 , SvgAttr.strokeWidth "2px"
                 , SvgAttr.points points
-                , SvgEvents.onClick (PutDownPiece ( round u, round v ))
+                , case state of
+                    Empty ->
+                        SvgEvents.onClick (PutDownPiece ( round u, round v ))
+
+                    _ ->
+                        SvgEvents.onClick Default
                 , case state of
                     Empty ->
                         SvgAttr.cursor "pointer"

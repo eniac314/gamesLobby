@@ -269,29 +269,69 @@ var _user$project$Hexaboard$update = F2(
 				case 'UpdateGameState':
 					var _p11 = A2(_user$project$Hexaboard_HexaboardComs$decodeGameState, model.playerInfo.username, _p1._0);
 					if (_p11.ctor === 'Ok') {
-						var _p12 = _p11._0.id;
+						var _p15 = _p11._0.turnSelectionOrder;
+						var _p14 = _p11._0.playingOrder;
+						var _p13 = _p11._0.id;
+						var _p12 = _p11._0.availableTurns;
+						var canPlay = A2(
+							_elm_lang$core$Maybe$withDefault,
+							false,
+							A2(
+								_elm_lang$core$Maybe$map,
+								function (pid) {
+									return _elm_lang$core$Native_Utils.eq(pid, _p13);
+								},
+								_elm_lang$core$List$head(_p14)));
+						var canChooseTurn = A2(
+							_elm_lang$core$Maybe$withDefault,
+							false,
+							A2(
+								_elm_lang$core$Maybe$map,
+								function (pid) {
+									return _elm_lang$core$Native_Utils.eq(pid, _p13);
+								},
+								_elm_lang$core$List$head(_p15)));
 						var choice = A2(
 							_elm_lang$core$Maybe$map,
 							function (v) {
-								return {playerId: _p12, value: v};
+								return {playerId: _p13, value: v};
 							},
 							_p11._0.piece);
+						var gameState = _p11._0.gameOver ? _user$project$Hexaboard_HexaboardTypes$EndGame : ((_elm_lang$core$Native_Utils.eq(
+							_p15,
+							{ctor: '[]'}) && (_elm_lang$core$Native_Utils.eq(
+							_p14,
+							{ctor: '[]'}) && _elm_lang$core$Native_Utils.eq(choice, _elm_lang$core$Maybe$Nothing))) ? _user$project$Hexaboard_HexaboardTypes$PieceSelection : ((_elm_lang$core$Native_Utils.eq(
+							_p15,
+							{ctor: '[]'}) && _elm_lang$core$Native_Utils.eq(
+							_p14,
+							{ctor: '[]'})) ? _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfPieceSelection : ((!_elm_lang$core$Native_Utils.eq(
+							_p12,
+							{ctor: '[]'})) ? _user$project$Hexaboard_HexaboardTypes$TurnSelection : (((!canPlay) && ((!_elm_lang$core$Native_Utils.eq(
+							_p14,
+							{ctor: '[]'})) && (!_elm_lang$core$Native_Utils.eq(choice, _elm_lang$core$Maybe$Nothing)))) ? _user$project$Hexaboard_HexaboardTypes$WaitingForOwnTurn : ((canPlay && (!_elm_lang$core$Native_Utils.eq(
+							_p14,
+							{ctor: '[]'}))) ? _user$project$Hexaboard_HexaboardTypes$Playing : (((!_elm_lang$core$Native_Utils.eq(
+							_p14,
+							{ctor: '[]'})) && _elm_lang$core$Native_Utils.eq(choice, _elm_lang$core$Maybe$Nothing)) ? _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfRound : _user$project$Hexaboard_HexaboardTypes$EndGame))))));
 						var plInf = model.playerInfo;
 						var newModel = _elm_lang$core$Native_Utils.update(
 							model,
 							{
 								board: _p11._0.board,
 								deck: _p11._0.deck,
-								score: _p11._0.score,
 								choice: choice,
-								availableTurns: _p11._0.availableTurns,
-								playingOrder: _p11._0.playingOrder,
+								availableTurns: _p12,
+								playingOrder: _p14,
 								playerInfo: _elm_lang$core$Native_Utils.update(
 									plInf,
-									{playerId: _p12})
+									{playerId: _p13}),
+								canChooseTurn: canChooseTurn,
+								gameState: gameState,
+								scores: _p11._0.scores
 							});
 						var _v16 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
-							_user$project$Hexaboard_HexaboardTypes$AddGameMsg('game state updated')),
+							_user$project$Hexaboard_HexaboardTypes$AddGameMsg('initial game state loaded')),
 							_v17 = newModel;
 						msg = _v16;
 						model = _v17;
@@ -306,13 +346,13 @@ var _user$project$Hexaboard$update = F2(
 						continue update;
 					}
 				case 'PickUpPiece':
-					var _p13 = model.gameState;
-					if (_p13.ctor === 'PieceSelection') {
+					var _p16 = model.gameState;
+					if (_p16.ctor === 'PieceSelection') {
 						var payload = _elm_lang$core$Maybe$Just(
 							_user$project$Hexaboard_HexaboardComs$encodePickedUpPiece(_p1._0));
-						var _p14 = A4(_user$project$Hexaboard$pushGameMsg, model, 'set_player_piece', payload, _elm_lang$core$Maybe$Nothing);
-						var newModel = _p14._0;
-						var phxCmd = _p14._1;
+						var _p17 = A4(_user$project$Hexaboard$pushGameMsg, model, 'set_player_piece', payload, _elm_lang$core$Maybe$Nothing);
+						var newModel = _p17._0;
+						var phxCmd = _p17._1;
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							newModel,
@@ -328,9 +368,9 @@ var _user$project$Hexaboard$update = F2(
 							{ctor: '[]'});
 					}
 				case 'PiecePickedUp':
-					var _p15 = A2(_user$project$Hexaboard_HexaboardComs$decodePlayer, model.playerInfo.username, _p1._0);
-					if (_p15.ctor === 'Ok') {
-						var _p16 = _p15._0._2;
+					var _p18 = A2(_user$project$Hexaboard_HexaboardComs$decodePlayer, model.playerInfo.username, _p1._0);
+					if (_p18.ctor === 'Ok') {
+						var _p19 = _p18._0._1;
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
@@ -340,37 +380,36 @@ var _user$project$Hexaboard$update = F2(
 									deck: A2(
 										_elm_lang$core$List$map,
 										function (v) {
-											return {value: v, playerId: _p16};
+											return {value: v, playerId: _p19};
 										},
-										_p15._0._0),
-									score: _p15._0._1,
+										_p18._0._0),
 									choice: A2(
 										_elm_lang$core$Maybe$map,
 										function (v) {
-											return {value: v, playerId: _p16};
+											return {value: v, playerId: _p19};
 										},
-										_p15._0._3)
+										_p18._0._2)
 								}),
 							{ctor: '[]'});
 					} else {
 						var _v22 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'pieces all set - json error: ', _p15._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'pieces all set - json error: ', _p18._0))),
 							_v23 = model;
 						msg = _v22;
 						model = _v23;
 						continue update;
 					}
 				case 'PiecesAllSet':
-					var _p17 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
-					if (_p17.ctor === 'Ok') {
+					var _p20 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
+					if (_p20.ctor === 'Ok') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
 								{
 									gameState: _user$project$Hexaboard_HexaboardTypes$TurnSelection,
-									availableTurns: _p17._0.availableTurns,
+									availableTurns: _p20._0.availableTurns,
 									canChooseTurn: A2(
 										_elm_lang$core$Maybe$withDefault,
 										false,
@@ -379,13 +418,13 @@ var _user$project$Hexaboard$update = F2(
 											function (id) {
 												return _elm_lang$core$Native_Utils.eq(id, model.playerInfo.playerId);
 											},
-											_elm_lang$core$List$head(_p17._0.turnSelectionOrder)))
+											_elm_lang$core$List$head(_p20._0.turnSelectionOrder)))
 								}),
 							{ctor: '[]'});
 					} else {
 						var _v25 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'pieces all set - json error: ', _p17._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'pieces all set - json error: ', _p20._0))),
 							_v26 = model;
 						msg = _v25;
 						model = _v26;
@@ -403,9 +442,9 @@ var _user$project$Hexaboard$update = F2(
 								},
 								_1: {ctor: '[]'}
 							}));
-					var _p18 = A4(_user$project$Hexaboard$pushGameMsg, model, 'turn_selected', payload, _elm_lang$core$Maybe$Nothing);
-					var newModel = _p18._0;
-					var phxCmd = _p18._1;
+					var _p21 = A4(_user$project$Hexaboard$pushGameMsg, model, 'turn_selected', payload, _elm_lang$core$Maybe$Nothing);
+					var newModel = _p21._0;
+					var phxCmd = _p21._1;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
@@ -417,15 +456,15 @@ var _user$project$Hexaboard$update = F2(
 							_1: {ctor: '[]'}
 						});
 				case 'TurnSelected':
-					var _p19 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
-					if (_p19.ctor === 'Ok') {
+					var _p22 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
+					if (_p22.ctor === 'Ok') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
 								{
 									gameState: _user$project$Hexaboard_HexaboardTypes$TurnSelection,
-									availableTurns: _p19._0.availableTurns,
+									availableTurns: _p22._0.availableTurns,
 									canChooseTurn: A2(
 										_elm_lang$core$Maybe$withDefault,
 										false,
@@ -434,22 +473,22 @@ var _user$project$Hexaboard$update = F2(
 											function (id) {
 												return _elm_lang$core$Native_Utils.eq(id, model.playerInfo.playerId);
 											},
-											_elm_lang$core$List$head(_p19._0.turnSelectionOrder)))
+											_elm_lang$core$List$head(_p22._0.turnSelectionOrder)))
 								}),
 							{ctor: '[]'});
 					} else {
 						var _v28 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'turn selected - json error: ', _p19._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'turn selected - json error: ', _p22._0))),
 							_v29 = model;
 						msg = _v28;
 						model = _v29;
 						continue update;
 					}
 				case 'TurnsAllSet':
-					var _p20 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
-					if (_p20.ctor === 'Ok') {
-						var _p21 = _p20._0.playingOrder;
+					var _p23 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
+					if (_p23.ctor === 'Ok') {
+						var _p24 = _p23._0.playingOrder;
 						var canPlay = A2(
 							_elm_lang$core$Maybe$withDefault,
 							false,
@@ -458,7 +497,7 @@ var _user$project$Hexaboard$update = F2(
 								function (id) {
 									return _elm_lang$core$Native_Utils.eq(id, model.playerInfo.playerId);
 								},
-								_elm_lang$core$List$head(_p21)));
+								_elm_lang$core$List$head(_p24)));
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
@@ -466,22 +505,22 @@ var _user$project$Hexaboard$update = F2(
 								{
 									gameState: canPlay ? _user$project$Hexaboard_HexaboardTypes$Playing : _user$project$Hexaboard_HexaboardTypes$WaitingForOwnTurn,
 									availableTurns: {ctor: '[]'},
-									playingOrder: _p21,
+									playingOrder: _p24,
 									canChooseTurn: false
 								}),
 							{ctor: '[]'});
 					} else {
 						var _v31 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'turns all set - json error: ', _p20._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'turns all set - json error: ', _p23._0))),
 							_v32 = model;
 						msg = _v31;
 						model = _v32;
 						continue update;
 					}
 				case 'PutDownPiece':
-					var _p22 = model.gameState;
-					if (_p22.ctor === 'Playing') {
+					var _p25 = model.gameState;
+					if (_p25.ctor === 'Playing') {
 						var payload = _elm_lang$core$Maybe$Just(
 							_elm_lang$core$Json_Encode$object(
 								{
@@ -509,9 +548,9 @@ var _user$project$Hexaboard$update = F2(
 										}
 									}
 								}));
-						var _p23 = A4(_user$project$Hexaboard$pushGameMsg, model, 'put_down_piece', payload, _elm_lang$core$Maybe$Nothing);
-						var newModel = _p23._0;
-						var phxCmd = _p23._1;
+						var _p26 = A4(_user$project$Hexaboard$pushGameMsg, model, 'put_down_piece', payload, _elm_lang$core$Maybe$Nothing);
+						var newModel = _p26._0;
+						var phxCmd = _p26._1;
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
@@ -529,9 +568,9 @@ var _user$project$Hexaboard$update = F2(
 							{ctor: '[]'});
 					}
 				case 'PieceDown':
-					var _p24 = A2(_user$project$Hexaboard_HexaboardComs$decodePieceDown, model.playerInfo.username, _p1._0);
-					if (_p24.ctor === 'Ok') {
-						var _p25 = _p24._0.playingOrder;
+					var _p27 = A2(_user$project$Hexaboard_HexaboardComs$decodePieceDown, model.playerInfo.username, _p1._0);
+					if (_p27.ctor === 'Ok') {
+						var _p28 = _p27._0.playingOrder;
 						var canPlay = A2(
 							_elm_lang$core$Maybe$withDefault,
 							false,
@@ -540,22 +579,22 @@ var _user$project$Hexaboard$update = F2(
 								function (id) {
 									return _elm_lang$core$Native_Utils.eq(id, model.playerInfo.playerId);
 								},
-								_elm_lang$core$List$head(_p25)));
+								_elm_lang$core$List$head(_p28)));
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
 								{
-									board: _p24._0.board,
-									score: _p24._0.score,
-									playingOrder: _p25,
-									gameState: canPlay ? _user$project$Hexaboard_HexaboardTypes$Playing : _user$project$Hexaboard_HexaboardTypes$WaitingForOwnTurn
+									board: _p27._0.board,
+									playingOrder: _p28,
+									scores: _p27._0.scores,
+									gameState: canPlay ? _user$project$Hexaboard_HexaboardTypes$Playing : _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfRound
 								}),
 							{ctor: '[]'});
 					} else {
 						var _v35 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'piece down - json error: ', _p24._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'piece down - json error: ', _p27._0))),
 							_v36 = model;
 						msg = _v35;
 						model = _v36;
@@ -592,14 +631,14 @@ var _user$project$Hexaboard$update = F2(
 							_1: {ctor: '[]'}
 						});
 				case 'Resizes':
-					var _p26 = _p1._0;
+					var _p29 = _p1._0;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							model,
 							{
-								device: _mdgriffith$stylish_elephants$Element$classifyDevice(_p26),
-								winSize: _p26
+								device: _mdgriffith$stylish_elephants$Element$classifyDevice(_p29),
+								winSize: _p29
 							}),
 						{ctor: '[]'});
 				case 'AddServerMsg':
@@ -629,11 +668,11 @@ var _user$project$Hexaboard$update = F2(
 							{consoleLog: newConsoleLog}),
 						{ctor: '[]'});
 				case 'ServerMsg':
-					var _p27 = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$string, _p1._0);
-					if (_p27.ctor === 'Ok') {
+					var _p30 = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$string, _p1._0);
+					if (_p30.ctor === 'Ok') {
 						var _v38 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerMsg(
-								A2(_elm_lang$core$Basics_ops['++'], 'ServerMsg: ', _p27._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'ServerMsg: ', _p30._0))),
 							_v39 = model;
 						msg = _v38;
 						model = _v39;
@@ -641,18 +680,18 @@ var _user$project$Hexaboard$update = F2(
 					} else {
 						var _v40 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'ServerMsg: json decoding error: ', _p27._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'ServerMsg: json decoding error: ', _p30._0))),
 							_v41 = model;
 						msg = _v40;
 						model = _v41;
 						continue update;
 					}
 				case 'ServerError':
-					var _p28 = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$string, _p1._0);
-					if (_p28.ctor === 'Ok') {
+					var _p31 = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$string, _p1._0);
+					if (_p31.ctor === 'Ok') {
 						var _v43 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'ServerError: ', _p28._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'ServerError: ', _p31._0))),
 							_v44 = model;
 						msg = _v43;
 						model = _v44;
@@ -660,7 +699,7 @@ var _user$project$Hexaboard$update = F2(
 					} else {
 						var _v45 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'ServerErr: json decoding error: ', _p28._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'ServerErr: json decoding error: ', _p31._0))),
 							_v46 = model;
 						msg = _v45;
 						model = _v46;
@@ -680,11 +719,11 @@ var _user$project$Hexaboard$update = F2(
 							{consoleLog: newConsoleLog}),
 						{ctor: '[]'});
 				case 'DebugJson':
-					var _p29 = A2(_user$project$Hexaboard_HexaboardComs$debugJson, _p1._0, _p1._1);
-					if (_p29.ctor === 'Ok') {
+					var _p32 = A2(_user$project$Hexaboard_HexaboardComs$debugJson, _p1._0, _p1._1);
+					if (_p32.ctor === 'Ok') {
 						var _v48 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerMsg(
-								A2(_elm_lang$core$Basics_ops['++'], 'Json value: ', _p29._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'Json value: ', _p32._0))),
 							_v49 = model;
 						msg = _v48;
 						model = _v49;
@@ -692,7 +731,7 @@ var _user$project$Hexaboard$update = F2(
 					} else {
 						var _v50 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'Debug json error: ', _p29._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'Debug json error: ', _p32._0))),
 							_v51 = model;
 						msg = _v50;
 						model = _v51;
@@ -826,19 +865,19 @@ var _user$project$Hexaboard$init = function (flags) {
 		_user$project$Hexaboard$initPhoenixChannel,
 		A2(_elm_lang$core$Basics_ops['++'], 'hexaboard:chat:', flags.gameId),
 		payload);
-	var _p30 = A2(
+	var _p33 = A2(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
 		hexaboardChat,
 		_user$project$Hexaboard$initialSocket(flags));
-	var newSocket1 = _p30._0;
-	var phxCmd1 = _p30._1;
+	var newSocket1 = _p33._0;
+	var phxCmd1 = _p33._1;
 	var hexaboardGame = A2(
 		_user$project$Hexaboard$initPhoenixChannel,
 		A2(_elm_lang$core$Basics_ops['++'], 'hexaboard:game:', flags.gameId),
 		payload);
-	var _p31 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, hexaboardGame, newSocket1);
-	var newSocket2 = _p31._0;
-	var phxCmd2 = _p31._1;
+	var _p34 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, hexaboardGame, newSocket1);
+	var newSocket2 = _p34._0;
+	var phxCmd2 = _p34._1;
 	var phxCmd = _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',
@@ -871,7 +910,7 @@ var _user$project$Hexaboard$init = function (flags) {
 			choosenTurn: _elm_lang$core$Maybe$Nothing,
 			availableTurns: {ctor: '[]'},
 			playingOrder: {ctor: '[]'},
-			score: 0,
+			scores: {ctor: '[]'},
 			deck: {ctor: '[]'},
 			gameState: _user$project$Hexaboard_HexaboardTypes$PieceSelection,
 			device: _mdgriffith$stylish_elephants$Element$classifyDevice(defWinSize),

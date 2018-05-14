@@ -206,18 +206,25 @@ var _user$project$Hexaboard_BoardView$hexaSvg = F6(
 									_0: _elm_lang$svg$Svg_Attributes$points(points),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$svg$Svg_Events$onClick(
-											_user$project$Hexaboard_HexaboardTypes$PutDownPiece(
-												{
-													ctor: '_Tuple2',
-													_0: _elm_lang$core$Basics$round(u),
-													_1: _elm_lang$core$Basics$round(v)
-												})),
+										_0: function () {
+											var _p10 = state;
+											if (_p10.ctor === 'Empty') {
+												return _elm_lang$svg$Svg_Events$onClick(
+													_user$project$Hexaboard_HexaboardTypes$PutDownPiece(
+														{
+															ctor: '_Tuple2',
+															_0: _elm_lang$core$Basics$round(u),
+															_1: _elm_lang$core$Basics$round(v)
+														}));
+											} else {
+												return _elm_lang$svg$Svg_Events$onClick(_user$project$Hexaboard_HexaboardTypes$Default);
+											}
+										}(),
 										_1: {
 											ctor: '::',
 											_0: function () {
-												var _p10 = state;
-												if (_p10.ctor === 'Empty') {
+												var _p11 = state;
+												if (_p11.ctor === 'Empty') {
 													return _elm_lang$svg$Svg_Attributes$cursor('pointer');
 												} else {
 													return _elm_lang$svg$Svg_Attributes$cursor('default');
@@ -243,9 +250,9 @@ var _user$project$Hexaboard_BoardView$hexaBoardSvg = F3(
 		var size = _elm_lang$core$Basics$toString(((l * 4) * n) + (2 * l));
 		var yOffset = F2(
 			function (x, y) {
-				return function (_p11) {
-					var _p12 = _p11;
-					return l - _p12._1;
+				return function (_p12) {
+					var _p13 = _p12;
+					return l - _p13._1;
 				}(
 					_elm_lang$core$Basics$fromPolar(
 						{ctor: '_Tuple2', _0: l, _1: _elm_lang$core$Basics$pi / 3}));
@@ -265,36 +272,36 @@ var _user$project$Hexaboard_BoardView$hexaBoardSvg = F3(
 		};
 		var coords = A2(
 			_elm_lang$core$List$map,
-			function (_p13) {
-				var _p14 = _p13;
+			function (_p14) {
+				var _p15 = _p14;
 				return {
 					ctor: '_Tuple3',
-					_0: _elm_lang$core$Basics$toFloat(_p14._0),
-					_1: _elm_lang$core$Basics$toFloat(_p14._1),
-					_2: _p14._2
+					_0: _elm_lang$core$Basics$toFloat(_p15._0),
+					_1: _elm_lang$core$Basics$toFloat(_p15._1),
+					_2: _p15._2
 				};
 			},
 			A2(
 				_elm_lang$core$List$map,
-				function (_p15) {
-					var _p16 = _p15;
-					return {ctor: '_Tuple3', _0: _p16.xPos, _1: _p16.yPos, _2: _p16.state};
+				function (_p16) {
+					var _p17 = _p16;
+					return {ctor: '_Tuple3', _0: _p17.xPos, _1: _p17.yPos, _2: _p17.state};
 				},
 				_elm_lang$core$Dict$values(board)));
 		var cells = A2(
 			_elm_lang$core$List$concatMap,
-			function (_p17) {
-				var _p18 = _p17;
-				var _p20 = _p18._1;
-				var _p19 = _p18._0;
+			function (_p18) {
+				var _p19 = _p18;
+				var _p21 = _p19._1;
+				var _p20 = _p19._0;
 				return A6(
 					_user$project$Hexaboard_BoardView$hexaSvg,
-					(l + ((_p19 * l) * 2)) + (offset(_p20) * l),
-					(((_p20 * 2) * l) + (2 * l)) - ((_p20 * 2) * A2(yOffset, _p19, _p20)),
-					_p18._2,
+					(l + ((_p20 * l) * 2)) + (offset(_p21) * l),
+					(((_p21 * 2) * l) + (2 * l)) - ((_p21 * 2) * A2(yOffset, _p20, _p21)),
+					_p19._2,
 					l,
-					_p19,
-					_p20);
+					_p20,
+					_p21);
 			},
 			coords);
 		return _mdgriffith$stylish_elephants$Element$html(

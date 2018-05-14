@@ -18,7 +18,7 @@ import Svg.Attributes as SvgAttr
 import Svg.Events as SvgEvents
 
 
-deckSvg { deck, playerInfo, device } =
+deckSvg { deck, playerInfo, device, gameState } =
     let
         id =
             playerInfo.playerId
@@ -85,7 +85,7 @@ deckSvg { deck, playerInfo, device } =
             defs []
                 piecesPatterns
     in
-    el
+    column
         [ centerX
         , alignTop
         , if device.tablet then
@@ -97,7 +97,24 @@ deckSvg { deck, playerInfo, device } =
 
         --, Background.color Color.blue
         ]
-        (html <|
+        [ --row [ padding 10 ]
+          --    [ el []
+          --        (Element.text "Piece Selection - pieces in deck: ")
+          --    , if gameState == PieceSelection then
+          --        el
+          --            [ alignRight
+          --            , Font.color Color.green
+          --            ]
+          --            (Element.text "Please choose")
+          --      else
+          --        el
+          --            [ alignRight
+          --            , Font.color Color.red
+          --            ]
+          --            (Element.text "Please wait...")
+          --    ]
+          --,
+          html <|
             svg
                 [ SvgAttr.viewBox <| "0 0 " ++ toString sizeX ++ " " ++ toString sizeY
                 , SvgAttr.width "100%"
@@ -106,7 +123,7 @@ deckSvg { deck, playerInfo, device } =
                 (def
                     :: pieces
                 )
-        )
+        ]
 
 
 deckHexaSvg x y radius { value, playerId } =
@@ -149,8 +166,8 @@ selectedSvg model =
                 , Border.width 2
                 , width (px 100)
                 , height (px 100)
-
-                --, Background.color Color.blue
+                , centerX
+                , Background.color Color.white
                 ]
     in
     case model.choice of

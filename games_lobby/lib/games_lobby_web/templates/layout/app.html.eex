@@ -15,6 +15,10 @@
           float: right;
           padding: 15px;
         }
+        /*body {
+          background-image: url("images/hexaboard/tiles/dark_wood.png");
+          background-repeat: repeat;
+        } */
       </style>
     <% else %>
       <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">

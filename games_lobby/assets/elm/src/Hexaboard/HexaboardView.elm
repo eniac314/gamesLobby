@@ -9,9 +9,11 @@ import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
 import Element.Input as Input
+import Element.Region as Region
 import Hexaboard.BoardView exposing (..)
 import Hexaboard.DeckView exposing (..)
 import Hexaboard.HexaboardTypes exposing (..)
+import Hexaboard.ScoresView exposing (..)
 import Hexaboard.TurnSelectionView exposing (..)
 import Hexaboard.WinLoseView exposing (..)
 import Html exposing (Html)
@@ -26,6 +28,7 @@ view model =
 
         --, Background.color Color.blue
         , height fill
+        , Background.tiled "/images/hexaboard/tiles/ep_naturalwhite.png"
         ]
     <|
         row
@@ -61,10 +64,44 @@ view model =
                     (hexaBoardSvg 6 35 model.board)
                 , viewSelection model
                 ]
-            , column [ spacing 20 ]
-                [ selectedSvg model
-                , el [] (text <| toString model.gameState)
-                , el [] (text <| toString model.canChooseTurn)
+            , column
+                [ spacing 70
+                , height (px <| model.winSize.height - 160)
+
+                --, Background.color Color.red
+                ]
+                [ el
+                    [ Region.heading 1
+                    , paddingEach
+                        { bottom = 0
+                        , left = 0
+                        , right = 0
+                        , top = 30
+                        }
+                    , centerX
+                    , if model.device.tablet then
+                        Font.size 36
+                      else if model.device.desktop then
+                        Font.size 48
+                      else
+                        Font.size 60
+                    , Font.family
+                        [ Font.external
+                            { name = "Anurati"
+                            , url = "/css/fonts.css"
+                            }
+                        , Font.typeface "Anurati"
+                        ]
+                    ]
+                    (text "HEXABOARD")
+                , selectedSvg model
+                , scoresView model
+
+                --, el [] (text <| toString model.gameState)
+                --, el [] (text <| toString model.playingOrder)
+                --, el [] (text <| toString model.availableTurns)
+                --, el [] (text <| toString model.scores)
+                --, paragraph [] [ text <| toString model ]
                 ]
             ]
 
@@ -94,9 +131,6 @@ viewSelection model =
         TurnSelection ->
             turnSelectionView model
 
-        WaitingForEndOfTurnSelection ->
-            turnSelectionView model
-
         WaitingForOwnTurn ->
             winLoseView model
 
@@ -113,8 +147,6 @@ viewSelection model =
 consoleView model =
     column
         [ spacing 10
-
-        --, Background.color Color.blue
         , height (px <| model.winSize.height - 160)
         , width (maximum 350 fill)
         , alignLeft
@@ -172,6 +204,7 @@ consoleLogView model =
         , width fill
         , scrollbarY
         , htmlAttribute (Attr.id "chatLogContainer")
+        , Background.color Color.white
         ]
         (List.map messageView model.consoleLog |> List.reverse)
 
@@ -307,26 +340,26 @@ gameMsgView { timeStamp, message } =
         ]
 
 
-presencesView model =
-    let
-        playerView player =
-            el
-                [ padding 5
-                , Border.rounded 5
-                , Background.color Color.grey
-                ]
-                (text player)
 
-        players =
-            Dict.keys model.presences
-    in
-    column
-        [ spacing 15
-        , width shrink
-        ]
-        [ text "players online:"
-        , paragraph [ spacing 5 ] (List.map playerView players)
-        ]
+--presencesView model =
+--    let
+--        playerView player =
+--            el
+--                [ padding 5
+--                , Border.rounded 5
+--                , Background.color Color.grey
+--                ]
+--                (text player)
+--        players =
+--            Dict.keys model.presences
+--    in
+--    column
+--        [ spacing 15
+--        , width shrink
+--        ]
+--        [ text "players online:"
+--        , paragraph [ spacing 5 ] (List.map playerView players)
+--        ]
 
 
 prettyDate timeStamp =
