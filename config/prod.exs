@@ -71,4 +71,4 @@ config :logger, level: :info
 # import_config "prod.secret.exs"
 
 config :games_lobby, GamesLobbyWeb.Endpoint,
-  ws_url: "ws://game-lobby.herokuapp.com/socket/websocket"
+  ws_url: "wss://game-lobby.herokuapp.com/socket/websocket"
