@@ -21,7 +21,7 @@ defmodule GamesLobbyWeb.Router do
     get "/game", GamesController, :index
     resources "/players", PlayerController
     resources "/sessions", PlayerSessionController, only: [:new, :create, :delete]
-    get "sessions/sign-out", PlayerSessionController, :delete
+    get "/sessions/sign-out", PlayerSessionController, :delete
   end
 
   # Other scopes may use custom stacks.
