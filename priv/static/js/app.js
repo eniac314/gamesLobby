@@ -1,1 +1,1785 @@
-!function(){"use strict";var e="undefined"==typeof global?self:global;if("function"!=typeof e.require){var t={},n={},i={},r={}.hasOwnProperty,o=/^\.\.?(\/|$)/,s=function(e,t){for(var n,i=[],r=(o.test(t)?e+"/"+t:t).split("/"),s=0,a=r.length;s<a;s++)".."===(n=r[s])?i.pop():"."!==n&&""!==n&&i.push(n);return i.join("/")},a=function(e){return e.split("/").slice(0,-1).join("/")},u=function(t){return function(n){var i=s(a(t),n);return e.require(i,t)}},c=function(e,t){var i={id:e,exports:{},hot:m&&m.createHot(e)};return n[e]=i,t(i.exports,u(e),i),i.exports},l=function(e){return i[e]?l(i[e]):e},h=function(e,t){return l(s(a(e),t))},f=function(e,i){null==i&&(i="/");var o=l(e);if(r.call(n,o))return n[o].exports;if(r.call(t,o))return c(o,t[o]);throw new Error("Cannot find module '"+e+"' from '"+i+"'")};f.alias=function(e,t){i[t]=e};var d=/\.[^.\/]+$/,p=/\/index(\.[^\/]+)?$/,v=function(e){if(d.test(e)){var t=e.replace(d,"");r.call(i,t)&&i[t].replace(d,"")!==t+"/index"||(i[t]=e)}if(p.test(e)){var n=e.replace(p,"");r.call(i,n)||(i[n]=e)}};f.register=f.define=function(e,i){if(e&&"object"==typeof e)for(var o in e)r.call(e,o)&&f.register(o,e[o]);else t[e]=i,delete n[e],v(e)},f.list=function(){var e=[];for(var n in t)r.call(t,n)&&e.push(n);return e};var m=e._hmr&&new e._hmr(h,f,t,n);f._cache=n,f.hmr=m&&m.wrap,f.brunch=!0,e.require=f}}(),function(){"undefined"==typeof window||window;var e=function(e,t,n){var i={},r=function(t,n){try{return e(n+"/node_modules/"+t)}catch(e){if(-1===e.toString().indexOf("Cannot find module"))throw e;if(-1!==n.indexOf("node_modules")){var o=n.split("/"),s=o.lastIndexOf("node_modules"),a=o.slice(0,s).join("/");return r(t,a)}}return i};return function(o){if(o in t&&(o=t[o]),o){if("."!==o[0]&&n){var s=r(o,n);if(s!==i)return s}return e(o)}}};require.register("phoenix/priv/static/phoenix.js",function(t,n,i){n=e(n,{},"phoenix"),function(){!function(e,n){"object"==typeof t?n(t):"function"==typeof define&&define.amd?define(["exports"],n):n(e.Phoenix=e.Phoenix||{})}(this,function(e){"use strict";function t(e){if(Array.isArray(e)){for(var t=0,n=Array(e.length);t<e.length;t++)n[t]=e[t];return n}return Array.from(e)}function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(e,"__esModule",{value:!0});var i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},r=function(){function e(e,t){var n=[],i=!0,r=!1,o=void 0;try{for(var s,a=e[Symbol.iterator]();!(i=(s=a.next()).done)&&(n.push(s.value),!t||n.length!==t);i=!0);}catch(e){r=!0,o=e}finally{try{!i&&a.return&&a.return()}finally{if(r)throw o}}return n}return function(t,n){if(Array.isArray(t))return t;if(Symbol.iterator in Object(t))return e(t,n);throw new TypeError("Invalid attempt to destructure non-iterable instance")}}(),o=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),s={connecting:0,open:1,closing:2,closed:3},a=1e4,u={closed:"closed",errored:"errored",joined:"joined",joining:"joining",leaving:"leaving"},c={close:"phx_close",error:"phx_error",join:"phx_join",reply:"phx_reply",leave:"phx_leave"},l=[c.close,c.error,c.join,c.reply,c.leave],h={longpoll:"longpoll",websocket:"websocket"},f=function(){function e(t,i,r,o){n(this,e),this.channel=t,this.event=i,this.payload=r||{},this.receivedResp=null,this.timeout=o,this.timeoutTimer=null,this.recHooks=[],this.sent=!1}return o(e,[{key:"resend",value:function(e){this.timeout=e,this.reset(),this.send()}},{key:"send",value:function(){this.hasReceived("timeout")||(this.startTimeout(),this.sent=!0,this.channel.socket.push({topic:this.channel.topic,event:this.event,payload:this.payload,ref:this.ref,join_ref:this.channel.joinRef()}))}},{key:"receive",value:function(e,t){return this.hasReceived(e)&&t(this.receivedResp.response),this.recHooks.push({status:e,callback:t}),this}},{key:"reset",value:function(){this.cancelRefEvent(),this.ref=null,this.refEvent=null,this.receivedResp=null,this.sent=!1}},{key:"matchReceive",value:function(e){var t=e.status,n=e.response;e.ref;this.recHooks.filter(function(e){return e.status===t}).forEach(function(e){return e.callback(n)})}},{key:"cancelRefEvent",value:function(){this.refEvent&&this.channel.off(this.refEvent)}},{key:"cancelTimeout",value:function(){clearTimeout(this.timeoutTimer),this.timeoutTimer=null}},{key:"startTimeout",value:function(){var e=this;this.timeoutTimer&&this.cancelTimeout(),this.ref=this.channel.socket.makeRef(),this.refEvent=this.channel.replyEventName(this.ref),this.channel.on(this.refEvent,function(t){e.cancelRefEvent(),e.cancelTimeout(),e.receivedResp=t,e.matchReceive(t)}),this.timeoutTimer=setTimeout(function(){e.trigger("timeout",{})},this.timeout)}},{key:"hasReceived",value:function(e){return this.receivedResp&&this.receivedResp.status===e}},{key:"trigger",value:function(e,t){this.channel.trigger(this.refEvent,{status:e,response:t})}}]),e}(),d=e.Channel=function(){function e(t,i,r){var o=this;n(this,e),this.state=u.closed,this.topic=t,this.params=i||{},this.socket=r,this.bindings=[],this.timeout=this.socket.timeout,this.joinedOnce=!1,this.joinPush=new f(this,c.join,this.params,this.timeout),this.pushBuffer=[],this.rejoinTimer=new g(function(){return o.rejoinUntilConnected()},this.socket.reconnectAfterMs),this.joinPush.receive("ok",function(){o.state=u.joined,o.rejoinTimer.reset(),o.pushBuffer.forEach(function(e){return e.send()}),o.pushBuffer=[]}),this.onClose(function(){o.rejoinTimer.reset(),o.socket.log("channel","close "+o.topic+" "+o.joinRef()),o.state=u.closed,o.socket.remove(o)}),this.onError(function(e){o.isLeaving()||o.isClosed()||(o.socket.log("channel","error "+o.topic,e),o.state=u.errored,o.rejoinTimer.scheduleTimeout())}),this.joinPush.receive("timeout",function(){o.isJoining()&&(o.socket.log("channel","timeout "+o.topic+" ("+o.joinRef()+")",o.joinPush.timeout),new f(o,c.leave,{},o.timeout).send(),o.state=u.errored,o.joinPush.reset(),o.rejoinTimer.scheduleTimeout())}),this.on(c.reply,function(e,t){o.trigger(o.replyEventName(t),e)})}return o(e,[{key:"rejoinUntilConnected",value:function(){this.rejoinTimer.scheduleTimeout(),this.socket.isConnected()&&this.rejoin()}},{key:"join",value:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:this.timeout;if(this.joinedOnce)throw"tried to join multiple times. 'join' can only be called a single time per channel instance";return this.joinedOnce=!0,this.rejoin(e),this.joinPush}},{key:"onClose",value:function(e){this.on(c.close,e)}},{key:"onError",value:function(e){this.on(c.error,function(t){return e(t)})}},{key:"on",value:function(e,t){this.bindings.push({event:e,callback:t})}},{key:"off",value:function(e){this.bindings=this.bindings.filter(function(t){return t.event!==e})}},{key:"canPush",value:function(){return this.socket.isConnected()&&this.isJoined()}},{key:"push",value:function(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:this.timeout;if(!this.joinedOnce)throw"tried to push '"+e+"' to '"+this.topic+"' before joining. Use channel.join() before pushing events";var i=new f(this,e,t,n);return this.canPush()?i.send():(i.startTimeout(),this.pushBuffer.push(i)),i}},{key:"leave",value:function(){var e=this,t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:this.timeout;this.state=u.leaving;var n=function(){e.socket.log("channel","leave "+e.topic),e.trigger(c.close,"leave")},i=new f(this,c.leave,{},t);return i.receive("ok",function(){return n()}).receive("timeout",function(){return n()}),i.send(),this.canPush()||i.trigger("ok",{}),i}},{key:"onMessage",value:function(e,t,n){return t}},{key:"isMember",value:function(e,t,n,i){if(this.topic!==e)return!1;var r=l.indexOf(t)>=0;return!i||!r||i===this.joinRef()||(this.socket.log("channel","dropping outdated message",{topic:e,event:t,payload:n,joinRef:i}),!1)}},{key:"joinRef",value:function(){return this.joinPush.ref}},{key:"sendJoin",value:function(e){this.state=u.joining,this.joinPush.resend(e)}},{key:"rejoin",value:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:this.timeout;this.isLeaving()||this.sendJoin(e)}},{key:"trigger",value:function(e,t,n,i){var r=this,o=this.onMessage(e,t,n,i);if(t&&!o)throw"channel onMessage callbacks must return the payload, modified or unmodified";this.bindings.filter(function(t){return t.event===e}).map(function(e){return e.callback(o,n,i||r.joinRef())})}},{key:"replyEventName",value:function(e){return"chan_reply_"+e}},{key:"isClosed",value:function(){return this.state===u.closed}},{key:"isErrored",value:function(){return this.state===u.errored}},{key:"isJoined",value:function(){return this.state===u.joined}},{key:"isJoining",value:function(){return this.state===u.joining}},{key:"isLeaving",value:function(){return this.state===u.leaving}}]),e}(),p={encode:function(e,t){var n=[e.join_ref,e.ref,e.topic,e.event,e.payload];return t(JSON.stringify(n))},decode:function(e,t){var n=JSON.parse(e),i=r(n,5);return t({join_ref:i[0],ref:i[1],topic:i[2],event:i[3],payload:i[4]})}},v=(e.Socket=function(){function e(t){var i=this,r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};n(this,e),this.stateChangeCallbacks={open:[],close:[],error:[],message:[]},this.channels=[],this.sendBuffer=[],this.ref=0,this.timeout=r.timeout||a,this.transport=r.transport||window.WebSocket||v,this.defaultEncoder=p.encode,this.defaultDecoder=p.decode,this.transport!==v?(this.encode=r.encode||this.defaultEncoder,this.decode=r.decode||this.defaultDecoder):(this.encode=this.defaultEncoder,this.decode=this.defaultDecoder),this.heartbeatIntervalMs=r.heartbeatIntervalMs||3e4,this.reconnectAfterMs=r.reconnectAfterMs||function(e){return[1e3,2e3,5e3,1e4][e-1]||1e4},this.logger=r.logger||function(){},this.longpollerTimeout=r.longpollerTimeout||2e4,this.params=r.params||{},this.endPoint=t+"/"+h.websocket,this.heartbeatTimer=null,this.pendingHeartbeatRef=null,this.reconnectTimer=new g(function(){i.disconnect(function(){return i.connect()})},this.reconnectAfterMs)}return o(e,[{key:"protocol",value:function(){return location.protocol.match(/^https/)?"wss":"ws"}},{key:"endPointURL",value:function(){var e=m.appendParams(m.appendParams(this.endPoint,this.params),{vsn:"2.0.0"});return"/"!==e.charAt(0)?e:"/"===e.charAt(1)?this.protocol()+":"+e:this.protocol()+"://"+location.host+e}},{key:"disconnect",value:function(e,t,n){this.conn&&(this.conn.onclose=function(){},t?this.conn.close(t,n||""):this.conn.close(),this.conn=null),e&&e()}},{key:"connect",value:function(e){var t=this;e&&(console&&console.log("passing params to connect is deprecated. Instead pass :params to the Socket constructor"),this.params=e),this.conn||(this.conn=new this.transport(this.endPointURL()),this.conn.timeout=this.longpollerTimeout,this.conn.onopen=function(){return t.onConnOpen()},this.conn.onerror=function(e){return t.onConnError(e)},this.conn.onmessage=function(e){return t.onConnMessage(e)},this.conn.onclose=function(e){return t.onConnClose(e)})}},{key:"log",value:function(e,t,n){this.logger(e,t,n)}},{key:"onOpen",value:function(e){this.stateChangeCallbacks.open.push(e)}},{key:"onClose",value:function(e){this.stateChangeCallbacks.close.push(e)}},{key:"onError",value:function(e){this.stateChangeCallbacks.error.push(e)}},{key:"onMessage",value:function(e){this.stateChangeCallbacks.message.push(e)}},{key:"onConnOpen",value:function(){var e=this;this.log("transport","connected to "+this.endPointURL()),this.flushSendBuffer(),this.reconnectTimer.reset(),this.conn.skipHeartbeat||(clearInterval(this.heartbeatTimer),this.heartbeatTimer=setInterval(function(){return e.sendHeartbeat()},this.heartbeatIntervalMs)),this.stateChangeCallbacks.open.forEach(function(e){return e()})}},{key:"onConnClose",value:function(e){this.log("transport","close",e),this.triggerChanError(),clearInterval(this.heartbeatTimer),this.reconnectTimer.scheduleTimeout(),this.stateChangeCallbacks.close.forEach(function(t){return t(e)})}},{key:"onConnError",value:function(e){this.log("transport",e),this.triggerChanError(),this.stateChangeCallbacks.error.forEach(function(t){return t(e)})}},{key:"triggerChanError",value:function(){this.channels.forEach(function(e){return e.trigger(c.error)})}},{key:"connectionState",value:function(){switch(this.conn&&this.conn.readyState){case s.connecting:return"connecting";case s.open:return"open";case s.closing:return"closing";default:return"closed"}}},{key:"isConnected",value:function(){return"open"===this.connectionState()}},{key:"remove",value:function(e){this.channels=this.channels.filter(function(t){return t.joinRef()!==e.joinRef()})}},{key:"channel",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},n=new d(e,t,this);return this.channels.push(n),n}},{key:"push",value:function(e){var t=this,n=e.topic,i=e.event,r=e.payload,o=e.ref,s=e.join_ref,a=function(){t.encode(e,function(e){t.conn.send(e)})};this.log("push",n+" "+i+" ("+s+", "+o+")",r),this.isConnected()?a():this.sendBuffer.push(a)}},{key:"makeRef",value:function(){var e=this.ref+1;return e===this.ref?this.ref=0:this.ref=e,this.ref.toString()}},{key:"sendHeartbeat",value:function(){if(this.isConnected()){if(this.pendingHeartbeatRef)return this.pendingHeartbeatRef=null,this.log("transport","heartbeat timeout. Attempting to re-establish connection"),void this.conn.close(1e3,"hearbeat timeout");this.pendingHeartbeatRef=this.makeRef(),this.push({topic:"phoenix",event:"heartbeat",payload:{},ref:this.pendingHeartbeatRef})}}},{key:"flushSendBuffer",value:function(){this.isConnected()&&this.sendBuffer.length>0&&(this.sendBuffer.forEach(function(e){return e()}),this.sendBuffer=[])}},{key:"onConnMessage",value:function(e){var t=this;this.decode(e.data,function(e){var n=e.topic,i=e.event,r=e.payload,o=e.ref,s=e.join_ref;o&&o===t.pendingHeartbeatRef&&(t.pendingHeartbeatRef=null),t.log("receive",(r.status||"")+" "+n+" "+i+" "+(o&&"("+o+")"||""),r),t.channels.filter(function(e){return e.isMember(n,i,r,s)}).forEach(function(e){return e.trigger(i,r,o,s)}),t.stateChangeCallbacks.message.forEach(function(t){return t(e)})})}}]),e}(),e.LongPoll=function(){function e(t){n(this,e),this.endPoint=null,this.token=null,this.skipHeartbeat=!0,this.onopen=function(){},this.onerror=function(){},this.onmessage=function(){},this.onclose=function(){},this.pollEndpoint=this.normalizeEndpoint(t),this.readyState=s.connecting,this.poll()}return o(e,[{key:"normalizeEndpoint",value:function(e){return e.replace("ws://","http://").replace("wss://","https://").replace(new RegExp("(.*)/"+h.websocket),"$1/"+h.longpoll)}},{key:"endpointURL",value:function(){return m.appendParams(this.pollEndpoint,{token:this.token})}},{key:"closeAndRetry",value:function(){this.close(),this.readyState=s.connecting}},{key:"ontimeout",value:function(){this.onerror("timeout"),this.closeAndRetry()}},{key:"poll",value:function(){var e=this;this.readyState!==s.open&&this.readyState!==s.connecting||m.request("GET",this.endpointURL(),"application/json",null,this.timeout,this.ontimeout.bind(this),function(t){if(t){var n=t.status,i=t.token,r=t.messages;e.token=i}else n=0;switch(n){case 200:r.forEach(function(t){return e.onmessage({data:t})}),e.poll();break;case 204:e.poll();break;case 410:e.readyState=s.open,e.onopen(),e.poll();break;case 0:case 500:e.onerror(),e.closeAndRetry();break;default:throw"unhandled poll status "+n}})}},{key:"send",value:function(e){var t=this;m.request("POST",this.endpointURL(),"application/json",e,this.timeout,this.onerror.bind(this,"timeout"),function(e){e&&200===e.status||(t.onerror(e&&e.status),t.closeAndRetry())})}},{key:"close",value:function(e,t){this.readyState=s.closed,this.onclose()}}]),e}()),m=e.Ajax=function(){function e(){n(this,e)}return o(e,null,[{key:"request",value:function(e,t,n,i,r,o,s){if(window.XDomainRequest){var a=new XDomainRequest;this.xdomainRequest(a,e,t,i,r,o,s)}else{var u=window.XMLHttpRequest?new window.XMLHttpRequest:new ActiveXObject("Microsoft.XMLHTTP");this.xhrRequest(u,e,t,n,i,r,o,s)}}},{key:"xdomainRequest",value:function(e,t,n,i,r,o,s){var a=this;e.timeout=r,e.open(t,n),e.onload=function(){var t=a.parseJSON(e.responseText);s&&s(t)},o&&(e.ontimeout=o),e.onprogress=function(){},e.send(i)}},{key:"xhrRequest",value:function(e,t,n,i,r,o,s,a){var u=this;e.open(t,n,!0),e.timeout=o,e.setRequestHeader("Content-Type",i),e.onerror=function(){a&&a(null)},e.onreadystatechange=function(){if(e.readyState===u.states.complete&&a){var t=u.parseJSON(e.responseText);a(t)}},s&&(e.ontimeout=s),e.send(r)}},{key:"parseJSON",value:function(e){if(!e||""===e)return null;try{return JSON.parse(e)}catch(t){return console&&console.log("failed to parse JSON response",e),null}}},{key:"serialize",value:function(e,t){var n=[];for(var r in e)if(e.hasOwnProperty(r)){var o=t?t+"["+r+"]":r,s=e[r];"object"===(void 0===s?"undefined":i(s))?n.push(this.serialize(s,o)):n.push(encodeURIComponent(o)+"="+encodeURIComponent(s))}return n.join("&")}},{key:"appendParams",value:function(e,t){return 0===Object.keys(t).length?e:""+e+(e.match(/\?/)?"&":"?")+this.serialize(t)}}]),e}();m.states={complete:4};e.Presence={syncState:function(e,t,n,i){var r=this,o=this.clone(e),s={},a={};return this.map(o,function(e,n){t[e]||(a[e]=n)}),this.map(t,function(e,t){var n=o[e];if(n){var i=t.metas.map(function(e){return e.phx_ref}),u=n.metas.map(function(e){return e.phx_ref}),c=t.metas.filter(function(e){return u.indexOf(e.phx_ref)<0}),l=n.metas.filter(function(e){return i.indexOf(e.phx_ref)<0});c.length>0&&(s[e]=t,s[e].metas=c),l.length>0&&(a[e]=r.clone(n),a[e].metas=l)}else s[e]=t}),this.syncDiff(o,{joins:s,leaves:a},n,i)},syncDiff:function(e,n,i,r){var o=n.joins,s=n.leaves,a=this.clone(e);return i||(i=function(){}),r||(r=function(){}),this.map(o,function(e,n){var r=a[e];if(a[e]=n,r){var o;(o=a[e].metas).unshift.apply(o,t(r.metas))}i(e,r,n)}),this.map(s,function(e,t){var n=a[e];if(n){var i=t.metas.map(function(e){return e.phx_ref});n.metas=n.metas.filter(function(e){return i.indexOf(e.phx_ref)<0}),r(e,n,t),0===n.metas.length&&delete a[e]}}),a},list:function(e,t){return t||(t=function(e,t){return t}),this.map(e,function(e,n){return t(e,n)})},map:function(e,t){return Object.getOwnPropertyNames(e).map(function(n){return t(n,e[n])})},clone:function(e){return JSON.parse(JSON.stringify(e))}};var g=function(){function e(t,i){n(this,e),this.callback=t,this.timerCalc=i,this.timer=null,this.tries=0}return o(e,[{key:"reset",value:function(){this.tries=0,clearTimeout(this.timer)}},{key:"scheduleTimeout",value:function(){var e=this;clearTimeout(this.timer),this.timer=setTimeout(function(){e.tries=e.tries+1,e.callback()},this.timerCalc(this.tries+1))}}]),e}()})}()}),require.register("phoenix_html/priv/static/phoenix_html.js",function(t,n,i){n=e(n,{},"phoenix_html"),function(){"use strict";!function(){function e(e,t){var n=document.createElement("input");return n.type="hidden",n.name=e,n.value=t,n}function t(t){var n=t.getAttribute("data-confirm");if(!n||window.confirm(n)){var i=t.getAttribute("data-to"),r=e("_method",t.getAttribute("data-method")),o=e("_csrf_token",t.getAttribute("data-csrf")),s=document.createElement("form"),a=t.getAttribute("target");s.method="get"===t.getAttribute("data-method")?"get":"post",s.action=i,s.style.display="hidden",a&&(s.target=a),s.appendChild(o),s.appendChild(r),document.body.appendChild(s),s.submit()}}window.addEventListener("click",function(e){for(var n=e.target;n&&n.getAttribute;){if(n.getAttribute("data-method"))return t(n),e.preventDefault(),!1;n=n.parentNode}},!1)}()}()}),require.register("elm/src/Hexaboard/Board.elm",function(e,t,n){}),require.register("elm/src/Hexaboard/BoardView.elm",function(e,t,n){}),require.register("elm/src/Hexaboard/Data.elm",function(e,t,n){}),require.register("elm/src/Hexaboard/DeckView.elm",function(e,t,n){}),require.register("elm/src/Hexaboard/Hexaboard.elm",function(e,t,n){}),require.register("elm/src/Hexaboard/HexaboardComs.elm",function(e,t,n){}),require.register("elm/src/Hexaboard/HexaboardTypes.elm",function(e,t,n){}),require.register("elm/src/Hexaboard/HexaboardView.elm",function(e,t,n){}),require.register("elm/src/Hexaboard/ScoresView.elm",function(e,t,n){}),require.register("elm/src/Hexaboard/TurnSelectionView.elm",function(e,t,n){}),require.register("elm/src/Hexaboard/WinLoseView.elm",function(e,t,n){}),require.register("elm/src/MainLobby.elm",function(e,t,n){}),require.register("elm/src/MainLobbyComs.elm",function(e,t,n){}),require.register("elm/src/MainLobbyView.elm",function(e,t,n){}),require.register("js/app.js",function(e,t,n){"use strict";t("phoenix_html")}),require.register("js/socket.js",function(e,t,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var i=new(t("phoenix").Socket)("/socket",{params:{token:window.userToken}});i.connect(),i.channel("topic:subtopic",{}).join().receive("ok",function(e){console.log("Joined successfully",e)}).receive("error",function(e){console.log("Unable to join",e)}),e.default=i}),require.alias("phoenix/priv/static/phoenix.js","phoenix"),require.alias("phoenix_html/priv/static/phoenix_html.js","phoenix_html"),require.register("___globals___",function(e,t,n){})}(),require("___globals___"),require("js/app");
+(function() {
+  'use strict';
+
+  var globals = typeof global === 'undefined' ? self : global;
+  if (typeof globals.require === 'function') return;
+
+  var modules = {};
+  var cache = {};
+  var aliases = {};
+  var has = {}.hasOwnProperty;
+
+  var expRe = /^\.\.?(\/|$)/;
+  var expand = function(root, name) {
+    var results = [], part;
+    var parts = (expRe.test(name) ? root + '/' + name : name).split('/');
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
+      }
+    }
+    return results.join('/');
+  };
+
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function expanded(name) {
+      var absolute = expand(dirname(path), name);
+      return globals.require(absolute, path);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var hot = hmr && hmr.createHot(name);
+    var module = {id: name, exports: {}, hot: hot};
+    cache[name] = module;
+    definition(module.exports, localRequire(name), module);
+    return module.exports;
+  };
+
+  var expandAlias = function(name) {
+    return aliases[name] ? expandAlias(aliases[name]) : name;
+  };
+
+  var _resolve = function(name, dep) {
+    return expandAlias(expand(dirname(name), dep));
+  };
+
+  var require = function(name, loaderPath) {
+    if (loaderPath == null) loaderPath = '/';
+    var path = expandAlias(name);
+
+    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(modules, path)) return initModule(path, modules[path]);
+
+    throw new Error("Cannot find module '" + name + "' from '" + loaderPath + "'");
+  };
+
+  require.alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  var extRe = /\.[^.\/]+$/;
+  var indexRe = /\/index(\.[^\/]+)?$/;
+  var addExtensions = function(bundle) {
+    if (extRe.test(bundle)) {
+      var alias = bundle.replace(extRe, '');
+      if (!has.call(aliases, alias) || aliases[alias].replace(extRe, '') === alias + '/index') {
+        aliases[alias] = bundle;
+      }
+    }
+
+    if (indexRe.test(bundle)) {
+      var iAlias = bundle.replace(indexRe, '');
+      if (!has.call(aliases, iAlias)) {
+        aliases[iAlias] = bundle;
+      }
+    }
+  };
+
+  require.register = require.define = function(bundle, fn) {
+    if (bundle && typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has.call(bundle, key)) {
+          require.register(key, bundle[key]);
+        }
+      }
+    } else {
+      modules[bundle] = fn;
+      delete cache[bundle];
+      addExtensions(bundle);
+    }
+  };
+
+  require.list = function() {
+    var list = [];
+    for (var item in modules) {
+      if (has.call(modules, item)) {
+        list.push(item);
+      }
+    }
+    return list;
+  };
+
+  var hmr = globals._hmr && new globals._hmr(_resolve, require, modules, cache);
+  require._cache = cache;
+  require.hmr = hmr && hmr.wrap;
+  require.brunch = true;
+  globals.require = require;
+})();
+
+(function() {
+var global = typeof window === 'undefined' ? this : window;
+var __makeRelativeRequire = function(require, mappings, pref) {
+  var none = {};
+  var tryReq = function(name, pref) {
+    var val;
+    try {
+      val = require(pref + '/node_modules/' + name);
+      return val;
+    } catch (e) {
+      if (e.toString().indexOf('Cannot find module') === -1) {
+        throw e;
+      }
+
+      if (pref.indexOf('node_modules') !== -1) {
+        var s = pref.split('/');
+        var i = s.lastIndexOf('node_modules');
+        var newPref = s.slice(0, i).join('/');
+        return tryReq(name, newPref);
+      }
+    }
+    return none;
+  };
+  return function(name) {
+    if (name in mappings) name = mappings[name];
+    if (!name) return;
+    if (name[0] !== '.' && pref) {
+      var val = tryReq(name, pref);
+      if (val !== none) return val;
+    }
+    return require(name);
+  }
+};
+
+require.register("phoenix/priv/static/phoenix.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "phoenix");
+  (function() {
+    (function (global, factory) {
+typeof exports === 'object' ? factory(exports) :
+typeof define === 'function' && define.amd ? define(['exports'], factory) :
+factory(global.Phoenix = global.Phoenix || {});
+}(this, (function (exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Phoenix Channels JavaScript client
+ *
+ * ## Socket Connection
+ *
+ * A single connection is established to the server and
+ * channels are multiplexed over the connection.
+ * Connect to the server using the `Socket` class:
+ *
+ * ```javascript
+ *     let socket = new Socket("/socket", {params: {userToken: "123"}})
+ *     socket.connect()
+ * ```
+ *
+ * The `Socket` constructor takes the mount point of the socket,
+ * the authentication params, as well as options that can be found in
+ * the Socket docs, such as configuring the `LongPoll` transport, and
+ * heartbeat.
+ *
+ * ## Channels
+ *
+ * Channels are isolated, concurrent processes on the server that
+ * subscribe to topics and broker events between the client and server.
+ * To join a channel, you must provide the topic, and channel params for
+ * authorization. Here's an example chat room example where `"new_msg"`
+ * events are listened for, messages are pushed to the server, and
+ * the channel is joined with ok/error/timeout matches:
+ *
+ * ```javascript
+ *     let channel = socket.channel("room:123", {token: roomToken})
+ *     channel.on("new_msg", msg => console.log("Got message", msg) )
+ *     $input.onEnter( e => {
+ *       channel.push("new_msg", {body: e.target.val}, 10000)
+ *        .receive("ok", (msg) => console.log("created message", msg) )
+ *        .receive("error", (reasons) => console.log("create failed", reasons) )
+ *        .receive("timeout", () => console.log("Networking issue...") )
+ *     })
+ *     channel.join()
+ *       .receive("ok", ({messages}) => console.log("catching up", messages) )
+ *       .receive("error", ({reason}) => console.log("failed join", reason) )
+ *       .receive("timeout", () => console.log("Networking issue. Still waiting...") )
+ *```
+ *
+ * ## Joining
+ *
+ * Creating a channel with `socket.channel(topic, params)`, binds the params to
+ * `channel.params`, which are sent up on `channel.join()`.
+ * Subsequent rejoins will send up the modified params for
+ * updating authorization params, or passing up last_message_id information.
+ * Successful joins receive an "ok" status, while unsuccessful joins
+ * receive "error".
+ *
+ * ## Duplicate Join Subscriptions
+ *
+ * While the client may join any number of topics on any number of channels,
+ * the client may only hold a single subscription for each unique topic at any
+ * given time. When attempting to create a duplicate subscription,
+ * the server will close the existing channel, log a warning, and
+ * spawn a new channel for the topic. The client will have their
+ * `channel.onClose` callbacks fired for the existing channel, and the new
+ * channel join will have its receive hooks processed as normal.
+ *
+ * ## Pushing Messages
+ *
+ * From the previous example, we can see that pushing messages to the server
+ * can be done with `channel.push(eventName, payload)` and we can optionally
+ * receive responses from the push. Additionally, we can use
+ * `receive("timeout", callback)` to abort waiting for our other `receive` hooks
+ *  and take action after some period of waiting. The default timeout is 5000ms.
+ *
+ *
+ * ## Socket Hooks
+ *
+ * Lifecycle events of the multiplexed connection can be hooked into via
+ * `socket.onError()` and `socket.onClose()` events, ie:
+ *
+ * ```javascript
+ *     socket.onError( () => console.log("there was an error with the connection!") )
+ *     socket.onClose( () => console.log("the connection dropped") )
+ * ```
+ *
+ *
+ * ## Channel Hooks
+ *
+ * For each joined channel, you can bind to `onError` and `onClose` events
+ * to monitor the channel lifecycle, ie:
+ *
+ * ```javascript
+ *     channel.onError( () => console.log("there was an error!") )
+ *     channel.onClose( () => console.log("the channel has gone away gracefully") )
+ * ```
+ *
+ * ### onError hooks
+ *
+ * `onError` hooks are invoked if the socket connection drops, or the channel
+ * crashes on the server. In either case, a channel rejoin is attempted
+ * automatically in an exponential backoff manner.
+ *
+ * ### onClose hooks
+ *
+ * `onClose` hooks are invoked only in two cases. 1) the channel explicitly
+ * closed on the server, or 2). The client explicitly closed, by calling
+ * `channel.leave()`
+ *
+ *
+ * ## Presence
+ *
+ * The `Presence` object provides features for syncing presence information
+ * from the server with the client and handling presences joining and leaving.
+ *
+ * ### Syncing initial state from the server
+ *
+ * `Presence.syncState` is used to sync the list of presences on the server
+ * with the client's state. An optional `onJoin` and `onLeave` callback can
+ * be provided to react to changes in the client's local presences across
+ * disconnects and reconnects with the server.
+ *
+ * `Presence.syncDiff` is used to sync a diff of presence join and leave
+ * events from the server, as they happen. Like `syncState`, `syncDiff`
+ * accepts optional `onJoin` and `onLeave` callbacks to react to a user
+ * joining or leaving from a device.
+ *
+ * ### Listing Presences
+ *
+ * `Presence.list` is used to return a list of presence information
+ * based on the local state of metadata. By default, all presence
+ * metadata is returned, but a `listBy` function can be supplied to
+ * allow the client to select which metadata to use for a given presence.
+ * For example, you may have a user online from different devices with
+ * a metadata status of "online", but they have set themselves to "away"
+ * on another device. In this case, the app may choose to use the "away"
+ * status for what appears on the UI. The example below defines a `listBy`
+ * function which prioritizes the first metadata which was registered for
+ * each user. This could be the first tab they opened, or the first device
+ * they came online from:
+ *
+ * ```javascript
+ *     let state = {}
+ *     state = Presence.syncState(state, stateFromServer)
+ *     let listBy = (id, {metas: [first, ...rest]}) => {
+ *       first.count = rest.length + 1 // count of this user's presences
+ *       first.id = id
+ *       return first
+ *     }
+ *     let onlineUsers = Presence.list(state, listBy)
+ * ```
+ *
+ *
+ * ### Example Usage
+ *```javascript
+ *     // detect if user has joined for the 1st time or from another tab/device
+ *     let onJoin = (id, current, newPres) => {
+ *       if(!current){
+ *         console.log("user has entered for the first time", newPres)
+ *       } else {
+ *         console.log("user additional presence", newPres)
+ *       }
+ *     }
+ *     // detect if user has left from all tabs/devices, or is still present
+ *     let onLeave = (id, current, leftPres) => {
+ *       if(current.metas.length === 0){
+ *         console.log("user has left from all devices", leftPres)
+ *       } else {
+ *         console.log("user left from a device", leftPres)
+ *       }
+ *     }
+ *     let presences = {} // client's initial empty presence state
+ *     // receive initial presence data from server, sent after join
+ *     myChannel.on("presence_state", state => {
+ *       presences = Presence.syncState(presences, state, onJoin, onLeave)
+ *       displayUsers(Presence.list(presences))
+ *     })
+ *     // receive "presence_diff" from server, containing join/leave events
+ *     myChannel.on("presence_diff", diff => {
+ *       presences = Presence.syncDiff(presences, diff, onJoin, onLeave)
+ *       this.setState({users: Presence.list(room.presences, listBy)})
+ *     })
+ * ```
+ * @module phoenix
+ */
+
+var VSN = "2.0.0";
+var SOCKET_STATES = { connecting: 0, open: 1, closing: 2, closed: 3 };
+var DEFAULT_TIMEOUT = 10000;
+var WS_CLOSE_NORMAL = 1000;
+var CHANNEL_STATES = {
+  closed: "closed",
+  errored: "errored",
+  joined: "joined",
+  joining: "joining",
+  leaving: "leaving"
+};
+var CHANNEL_EVENTS = {
+  close: "phx_close",
+  error: "phx_error",
+  join: "phx_join",
+  reply: "phx_reply",
+  leave: "phx_leave"
+};
+var CHANNEL_LIFECYCLE_EVENTS = [CHANNEL_EVENTS.close, CHANNEL_EVENTS.error, CHANNEL_EVENTS.join, CHANNEL_EVENTS.reply, CHANNEL_EVENTS.leave];
+var TRANSPORTS = {
+  longpoll: "longpoll",
+  websocket: "websocket"
+};
+
+/**
+ * Initializes the Push
+ * @param {Channel} channel - The Channel
+ * @param {string} event - The event, for example `"phx_join"`
+ * @param {Object} payload - The payload, for example `{user_id: 123}`
+ * @param {number} timeout - The push timeout in milliseconds
+ */
+
+var Push = function () {
+  function Push(channel, event, payload, timeout) {
+    _classCallCheck(this, Push);
+
+    this.channel = channel;
+    this.event = event;
+    this.payload = payload || {};
+    this.receivedResp = null;
+    this.timeout = timeout;
+    this.timeoutTimer = null;
+    this.recHooks = [];
+    this.sent = false;
+  }
+
+  /**
+   *
+   * @param {number} timeout
+   */
+
+
+  _createClass(Push, [{
+    key: "resend",
+    value: function resend(timeout) {
+      this.timeout = timeout;
+      this.reset();
+      this.send();
+    }
+
+    /**
+     *
+     */
+
+  }, {
+    key: "send",
+    value: function send() {
+      if (this.hasReceived("timeout")) {
+        return;
+      }
+      this.startTimeout();
+      this.sent = true;
+      this.channel.socket.push({
+        topic: this.channel.topic,
+        event: this.event,
+        payload: this.payload,
+        ref: this.ref,
+        join_ref: this.channel.joinRef()
+      });
+    }
+
+    /**
+     *
+     * @param {*} status
+     * @param {*} callback
+     */
+
+  }, {
+    key: "receive",
+    value: function receive(status, callback) {
+      if (this.hasReceived(status)) {
+        callback(this.receivedResp.response);
+      }
+
+      this.recHooks.push({ status: status, callback: callback });
+      return this;
+    }
+
+    // private
+
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.cancelRefEvent();
+      this.ref = null;
+      this.refEvent = null;
+      this.receivedResp = null;
+      this.sent = false;
+    }
+  }, {
+    key: "matchReceive",
+    value: function matchReceive(_ref) {
+      var status = _ref.status,
+          response = _ref.response,
+          ref = _ref.ref;
+
+      this.recHooks.filter(function (h) {
+        return h.status === status;
+      }).forEach(function (h) {
+        return h.callback(response);
+      });
+    }
+  }, {
+    key: "cancelRefEvent",
+    value: function cancelRefEvent() {
+      if (!this.refEvent) {
+        return;
+      }
+      this.channel.off(this.refEvent);
+    }
+  }, {
+    key: "cancelTimeout",
+    value: function cancelTimeout() {
+      clearTimeout(this.timeoutTimer);
+      this.timeoutTimer = null;
+    }
+  }, {
+    key: "startTimeout",
+    value: function startTimeout() {
+      var _this = this;
+
+      if (this.timeoutTimer) {
+        this.cancelTimeout();
+      }
+      this.ref = this.channel.socket.makeRef();
+      this.refEvent = this.channel.replyEventName(this.ref);
+
+      this.channel.on(this.refEvent, function (payload) {
+        _this.cancelRefEvent();
+        _this.cancelTimeout();
+        _this.receivedResp = payload;
+        _this.matchReceive(payload);
+      });
+
+      this.timeoutTimer = setTimeout(function () {
+        _this.trigger("timeout", {});
+      }, this.timeout);
+    }
+  }, {
+    key: "hasReceived",
+    value: function hasReceived(status) {
+      return this.receivedResp && this.receivedResp.status === status;
+    }
+  }, {
+    key: "trigger",
+    value: function trigger(status, response) {
+      this.channel.trigger(this.refEvent, { status: status, response: response });
+    }
+  }]);
+
+  return Push;
+}();
+
+/**
+ *
+ * @param {string} topic
+ * @param {Object} params
+ * @param {Socket} socket
+ */
+
+
+var Channel = exports.Channel = function () {
+  function Channel(topic, params, socket) {
+    var _this2 = this;
+
+    _classCallCheck(this, Channel);
+
+    this.state = CHANNEL_STATES.closed;
+    this.topic = topic;
+    this.params = params || {};
+    this.socket = socket;
+    this.bindings = [];
+    this.timeout = this.socket.timeout;
+    this.joinedOnce = false;
+    this.joinPush = new Push(this, CHANNEL_EVENTS.join, this.params, this.timeout);
+    this.pushBuffer = [];
+    this.rejoinTimer = new Timer(function () {
+      return _this2.rejoinUntilConnected();
+    }, this.socket.reconnectAfterMs);
+    this.joinPush.receive("ok", function () {
+      _this2.state = CHANNEL_STATES.joined;
+      _this2.rejoinTimer.reset();
+      _this2.pushBuffer.forEach(function (pushEvent) {
+        return pushEvent.send();
+      });
+      _this2.pushBuffer = [];
+    });
+    this.onClose(function () {
+      _this2.rejoinTimer.reset();
+      _this2.socket.log("channel", "close " + _this2.topic + " " + _this2.joinRef());
+      _this2.state = CHANNEL_STATES.closed;
+      _this2.socket.remove(_this2);
+    });
+    this.onError(function (reason) {
+      if (_this2.isLeaving() || _this2.isClosed()) {
+        return;
+      }
+      _this2.socket.log("channel", "error " + _this2.topic, reason);
+      _this2.state = CHANNEL_STATES.errored;
+      _this2.rejoinTimer.scheduleTimeout();
+    });
+    this.joinPush.receive("timeout", function () {
+      if (!_this2.isJoining()) {
+        return;
+      }
+      _this2.socket.log("channel", "timeout " + _this2.topic + " (" + _this2.joinRef() + ")", _this2.joinPush.timeout);
+      var leavePush = new Push(_this2, CHANNEL_EVENTS.leave, {}, _this2.timeout);
+      leavePush.send();
+      _this2.state = CHANNEL_STATES.errored;
+      _this2.joinPush.reset();
+      _this2.rejoinTimer.scheduleTimeout();
+    });
+    this.on(CHANNEL_EVENTS.reply, function (payload, ref) {
+      _this2.trigger(_this2.replyEventName(ref), payload);
+    });
+  }
+
+  _createClass(Channel, [{
+    key: "rejoinUntilConnected",
+    value: function rejoinUntilConnected() {
+      this.rejoinTimer.scheduleTimeout();
+      if (this.socket.isConnected()) {
+        this.rejoin();
+      }
+    }
+  }, {
+    key: "join",
+    value: function join() {
+      var timeout = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.timeout;
+
+      if (this.joinedOnce) {
+        throw "tried to join multiple times. 'join' can only be called a single time per channel instance";
+      } else {
+        this.joinedOnce = true;
+        this.rejoin(timeout);
+        return this.joinPush;
+      }
+    }
+  }, {
+    key: "onClose",
+    value: function onClose(callback) {
+      this.on(CHANNEL_EVENTS.close, callback);
+    }
+  }, {
+    key: "onError",
+    value: function onError(callback) {
+      this.on(CHANNEL_EVENTS.error, function (reason) {
+        return callback(reason);
+      });
+    }
+  }, {
+    key: "on",
+    value: function on(event, callback) {
+      this.bindings.push({ event: event, callback: callback });
+    }
+  }, {
+    key: "off",
+    value: function off(event) {
+      this.bindings = this.bindings.filter(function (bind) {
+        return bind.event !== event;
+      });
+    }
+  }, {
+    key: "canPush",
+    value: function canPush() {
+      return this.socket.isConnected() && this.isJoined();
+    }
+  }, {
+    key: "push",
+    value: function push(event, payload) {
+      var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.timeout;
+
+      if (!this.joinedOnce) {
+        throw "tried to push '" + event + "' to '" + this.topic + "' before joining. Use channel.join() before pushing events";
+      }
+      var pushEvent = new Push(this, event, payload, timeout);
+      if (this.canPush()) {
+        pushEvent.send();
+      } else {
+        pushEvent.startTimeout();
+        this.pushBuffer.push(pushEvent);
+      }
+
+      return pushEvent;
+    }
+
+    /** Leaves the channel
+     *
+     * Unsubscribes from server events, and
+     * instructs channel to terminate on server
+     *
+     * Triggers onClose() hooks
+     *
+     * To receive leave acknowledgements, use the a `receive`
+     * hook to bind to the server ack, ie:
+     *
+     * ```javascript
+     *     channel.leave().receive("ok", () => alert("left!") )
+     * ```
+     */
+
+  }, {
+    key: "leave",
+    value: function leave() {
+      var _this3 = this;
+
+      var timeout = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.timeout;
+
+      this.state = CHANNEL_STATES.leaving;
+      var onClose = function onClose() {
+        _this3.socket.log("channel", "leave " + _this3.topic);
+        _this3.trigger(CHANNEL_EVENTS.close, "leave");
+      };
+      var leavePush = new Push(this, CHANNEL_EVENTS.leave, {}, timeout);
+      leavePush.receive("ok", function () {
+        return onClose();
+      }).receive("timeout", function () {
+        return onClose();
+      });
+      leavePush.send();
+      if (!this.canPush()) {
+        leavePush.trigger("ok", {});
+      }
+
+      return leavePush;
+    }
+
+    /**
+     * Overridable message hook
+     *
+     * Receives all events for specialized message handling
+     * before dispatching to the channel callbacks.
+     *
+     * Must return the payload, modified or unmodified
+     */
+
+  }, {
+    key: "onMessage",
+    value: function onMessage(event, payload, ref) {
+      return payload;
+    }
+
+    // private
+
+  }, {
+    key: "isMember",
+    value: function isMember(topic, event, payload, joinRef) {
+      if (this.topic !== topic) {
+        return false;
+      }
+      var isLifecycleEvent = CHANNEL_LIFECYCLE_EVENTS.indexOf(event) >= 0;
+
+      if (joinRef && isLifecycleEvent && joinRef !== this.joinRef()) {
+        this.socket.log("channel", "dropping outdated message", { topic: topic, event: event, payload: payload, joinRef: joinRef });
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }, {
+    key: "joinRef",
+    value: function joinRef() {
+      return this.joinPush.ref;
+    }
+  }, {
+    key: "sendJoin",
+    value: function sendJoin(timeout) {
+      this.state = CHANNEL_STATES.joining;
+      this.joinPush.resend(timeout);
+    }
+  }, {
+    key: "rejoin",
+    value: function rejoin() {
+      var timeout = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.timeout;
+      if (this.isLeaving()) {
+        return;
+      }
+      this.sendJoin(timeout);
+    }
+  }, {
+    key: "trigger",
+    value: function trigger(event, payload, ref, joinRef) {
+      var _this4 = this;
+
+      var handledPayload = this.onMessage(event, payload, ref, joinRef);
+      if (payload && !handledPayload) {
+        throw "channel onMessage callbacks must return the payload, modified or unmodified";
+      }
+
+      this.bindings.filter(function (bind) {
+        return bind.event === event;
+      }).map(function (bind) {
+        return bind.callback(handledPayload, ref, joinRef || _this4.joinRef());
+      });
+    }
+  }, {
+    key: "replyEventName",
+    value: function replyEventName(ref) {
+      return "chan_reply_" + ref;
+    }
+  }, {
+    key: "isClosed",
+    value: function isClosed() {
+      return this.state === CHANNEL_STATES.closed;
+    }
+  }, {
+    key: "isErrored",
+    value: function isErrored() {
+      return this.state === CHANNEL_STATES.errored;
+    }
+  }, {
+    key: "isJoined",
+    value: function isJoined() {
+      return this.state === CHANNEL_STATES.joined;
+    }
+  }, {
+    key: "isJoining",
+    value: function isJoining() {
+      return this.state === CHANNEL_STATES.joining;
+    }
+  }, {
+    key: "isLeaving",
+    value: function isLeaving() {
+      return this.state === CHANNEL_STATES.leaving;
+    }
+  }]);
+
+  return Channel;
+}();
+
+var Serializer = {
+  encode: function encode(msg, callback) {
+    var payload = [msg.join_ref, msg.ref, msg.topic, msg.event, msg.payload];
+    return callback(JSON.stringify(payload));
+  },
+  decode: function decode(rawPayload, callback) {
+    var _JSON$parse = JSON.parse(rawPayload),
+        _JSON$parse2 = _slicedToArray(_JSON$parse, 5),
+        join_ref = _JSON$parse2[0],
+        ref = _JSON$parse2[1],
+        topic = _JSON$parse2[2],
+        event = _JSON$parse2[3],
+        payload = _JSON$parse2[4];
+
+    return callback({ join_ref: join_ref, ref: ref, topic: topic, event: event, payload: payload });
+  }
+};
+
+/** Initializes the Socket
+ *
+ *
+ * For IE8 support use an ES5-shim (https://github.com/es-shims/es5-shim)
+ *
+ * @param {string} endPoint - The string WebSocket endpoint, ie, `"ws://example.com/socket"`,
+ *                                               `"wss://example.com"`
+ *                                               `"/socket"` (inherited host & protocol)
+ * @param {Object} opts - Optional configuration
+ * @param {string} opts.transport - The Websocket Transport, for example WebSocket or Phoenix.LongPoll.
+ *
+ * Defaults to WebSocket with automatic LongPoll fallback.
+ * @param {Function} opts.encode - The function to encode outgoing messages.
+ *
+ * Defaults to JSON:
+ *
+ * ```javascript
+ * (payload, callback) => callback(JSON.stringify(payload))
+ * ```
+ *
+ * @param {Function} opts.decode - The function to decode incoming messages.
+ *
+ * Defaults to JSON:
+ *
+ * ```javascript
+ * (payload, callback) => callback(JSON.parse(payload))
+ * ```
+ *
+ * @param {number} opts.timeout - The default timeout in milliseconds to trigger push timeouts.
+ *
+ * Defaults `DEFAULT_TIMEOUT`
+ * @param {number} opts.heartbeatIntervalMs - The millisec interval to send a heartbeat message
+ * @param {number} opts.reconnectAfterMs - The optional function that returns the millsec reconnect interval.
+ *
+ * Defaults to stepped backoff of:
+ *
+ * ```javascript
+ *  function(tries){
+ *    return [1000, 5000, 10000][tries - 1] || 10000
+ *  }
+ * ```
+ * @param {Function} opts.logger - The optional function for specialized logging, ie:
+ * ```javascript
+ * logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data) }
+ * ```
+ *
+ * @param {number}  opts.longpollerTimeout - The maximum timeout of a long poll AJAX request.
+ *
+ * Defaults to 20s (double the server long poll timer).
+ *
+ * @param {Object}  opts.params - The optional params to pass when connecting
+ *
+ *
+*/
+
+var Socket = exports.Socket = function () {
+  function Socket(endPoint) {
+    var _this5 = this;
+
+    var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    _classCallCheck(this, Socket);
+
+    this.stateChangeCallbacks = { open: [], close: [], error: [], message: [] };
+    this.channels = [];
+    this.sendBuffer = [];
+    this.ref = 0;
+    this.timeout = opts.timeout || DEFAULT_TIMEOUT;
+    this.transport = opts.transport || window.WebSocket || LongPoll;
+    this.defaultEncoder = Serializer.encode;
+    this.defaultDecoder = Serializer.decode;
+    if (this.transport !== LongPoll) {
+      this.encode = opts.encode || this.defaultEncoder;
+      this.decode = opts.decode || this.defaultDecoder;
+    } else {
+      this.encode = this.defaultEncoder;
+      this.decode = this.defaultDecoder;
+    }
+    this.heartbeatIntervalMs = opts.heartbeatIntervalMs || 30000;
+    this.reconnectAfterMs = opts.reconnectAfterMs || function (tries) {
+      return [1000, 2000, 5000, 10000][tries - 1] || 10000;
+    };
+    this.logger = opts.logger || function () {}; // noop
+    this.longpollerTimeout = opts.longpollerTimeout || 20000;
+    this.params = opts.params || {};
+    this.endPoint = endPoint + "/" + TRANSPORTS.websocket;
+    this.heartbeatTimer = null;
+    this.pendingHeartbeatRef = null;
+    this.reconnectTimer = new Timer(function () {
+      _this5.disconnect(function () {
+        return _this5.connect();
+      });
+    }, this.reconnectAfterMs);
+  }
+
+  _createClass(Socket, [{
+    key: "protocol",
+    value: function protocol() {
+      return location.protocol.match(/^https/) ? "wss" : "ws";
+    }
+  }, {
+    key: "endPointURL",
+    value: function endPointURL() {
+      var uri = Ajax.appendParams(Ajax.appendParams(this.endPoint, this.params), { vsn: VSN });
+      if (uri.charAt(0) !== "/") {
+        return uri;
+      }
+      if (uri.charAt(1) === "/") {
+        return this.protocol() + ":" + uri;
+      }
+
+      return this.protocol() + "://" + location.host + uri;
+    }
+  }, {
+    key: "disconnect",
+    value: function disconnect(callback, code, reason) {
+      if (this.conn) {
+        this.conn.onclose = function () {}; // noop
+        if (code) {
+          this.conn.close(code, reason || "");
+        } else {
+          this.conn.close();
+        }
+        this.conn = null;
+      }
+      callback && callback();
+    }
+
+    /**
+     *
+     * @param {Object} params - The params to send when connecting, for example `{user_id: userToken}`
+     */
+
+  }, {
+    key: "connect",
+    value: function connect(params) {
+      var _this6 = this;
+
+      if (params) {
+        console && console.log("passing params to connect is deprecated. Instead pass :params to the Socket constructor");
+        this.params = params;
+      }
+      if (this.conn) {
+        return;
+      }
+
+      this.conn = new this.transport(this.endPointURL());
+      this.conn.timeout = this.longpollerTimeout;
+      this.conn.onopen = function () {
+        return _this6.onConnOpen();
+      };
+      this.conn.onerror = function (error) {
+        return _this6.onConnError(error);
+      };
+      this.conn.onmessage = function (event) {
+        return _this6.onConnMessage(event);
+      };
+      this.conn.onclose = function (event) {
+        return _this6.onConnClose(event);
+      };
+    }
+
+    /**
+     * Logs the message. Override `this.logger` for specialized logging. noops by default
+     * @param {string} kind
+     * @param {string} msg
+     * @param {Object} data
+     */
+
+  }, {
+    key: "log",
+    value: function log(kind, msg, data) {
+      this.logger(kind, msg, data);
+    }
+
+    // Registers callbacks for connection state change events
+    //
+    // Examples
+    //
+    //    socket.onError(function(error){ alert("An error occurred") })
+    //
+
+  }, {
+    key: "onOpen",
+    value: function onOpen(callback) {
+      this.stateChangeCallbacks.open.push(callback);
+    }
+  }, {
+    key: "onClose",
+    value: function onClose(callback) {
+      this.stateChangeCallbacks.close.push(callback);
+    }
+  }, {
+    key: "onError",
+    value: function onError(callback) {
+      this.stateChangeCallbacks.error.push(callback);
+    }
+  }, {
+    key: "onMessage",
+    value: function onMessage(callback) {
+      this.stateChangeCallbacks.message.push(callback);
+    }
+  }, {
+    key: "onConnOpen",
+    value: function onConnOpen() {
+      var _this7 = this;
+
+      this.log("transport", "connected to " + this.endPointURL());
+      this.flushSendBuffer();
+      this.reconnectTimer.reset();
+      if (!this.conn.skipHeartbeat) {
+        clearInterval(this.heartbeatTimer);
+        this.heartbeatTimer = setInterval(function () {
+          return _this7.sendHeartbeat();
+        }, this.heartbeatIntervalMs);
+      }
+      this.stateChangeCallbacks.open.forEach(function (callback) {
+        return callback();
+      });
+    }
+  }, {
+    key: "onConnClose",
+    value: function onConnClose(event) {
+      this.log("transport", "close", event);
+      this.triggerChanError();
+      clearInterval(this.heartbeatTimer);
+      this.reconnectTimer.scheduleTimeout();
+      this.stateChangeCallbacks.close.forEach(function (callback) {
+        return callback(event);
+      });
+    }
+  }, {
+    key: "onConnError",
+    value: function onConnError(error) {
+      this.log("transport", error);
+      this.triggerChanError();
+      this.stateChangeCallbacks.error.forEach(function (callback) {
+        return callback(error);
+      });
+    }
+  }, {
+    key: "triggerChanError",
+    value: function triggerChanError() {
+      this.channels.forEach(function (channel) {
+        return channel.trigger(CHANNEL_EVENTS.error);
+      });
+    }
+  }, {
+    key: "connectionState",
+    value: function connectionState() {
+      switch (this.conn && this.conn.readyState) {
+        case SOCKET_STATES.connecting:
+          return "connecting";
+        case SOCKET_STATES.open:
+          return "open";
+        case SOCKET_STATES.closing:
+          return "closing";
+        default:
+          return "closed";
+      }
+    }
+  }, {
+    key: "isConnected",
+    value: function isConnected() {
+      return this.connectionState() === "open";
+    }
+  }, {
+    key: "remove",
+    value: function remove(channel) {
+      this.channels = this.channels.filter(function (c) {
+        return c.joinRef() !== channel.joinRef();
+      });
+    }
+  }, {
+    key: "channel",
+    value: function channel(topic) {
+      var chanParams = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var chan = new Channel(topic, chanParams, this);
+      this.channels.push(chan);
+      return chan;
+    }
+  }, {
+    key: "push",
+    value: function push(data) {
+      var _this8 = this;
+
+      var topic = data.topic,
+          event = data.event,
+          payload = data.payload,
+          ref = data.ref,
+          join_ref = data.join_ref;
+
+      var callback = function callback() {
+        _this8.encode(data, function (result) {
+          _this8.conn.send(result);
+        });
+      };
+      this.log("push", topic + " " + event + " (" + join_ref + ", " + ref + ")", payload);
+      if (this.isConnected()) {
+        callback();
+      } else {
+        this.sendBuffer.push(callback);
+      }
+    }
+
+    /**
+     * Return the next message ref, accounting for overflows
+     */
+
+  }, {
+    key: "makeRef",
+    value: function makeRef() {
+      var newRef = this.ref + 1;
+      if (newRef === this.ref) {
+        this.ref = 0;
+      } else {
+        this.ref = newRef;
+      }
+
+      return this.ref.toString();
+    }
+  }, {
+    key: "sendHeartbeat",
+    value: function sendHeartbeat() {
+      if (!this.isConnected()) {
+        return;
+      }
+      if (this.pendingHeartbeatRef) {
+        this.pendingHeartbeatRef = null;
+        this.log("transport", "heartbeat timeout. Attempting to re-establish connection");
+        this.conn.close(WS_CLOSE_NORMAL, "hearbeat timeout");
+        return;
+      }
+      this.pendingHeartbeatRef = this.makeRef();
+      this.push({ topic: "phoenix", event: "heartbeat", payload: {}, ref: this.pendingHeartbeatRef });
+    }
+  }, {
+    key: "flushSendBuffer",
+    value: function flushSendBuffer() {
+      if (this.isConnected() && this.sendBuffer.length > 0) {
+        this.sendBuffer.forEach(function (callback) {
+          return callback();
+        });
+        this.sendBuffer = [];
+      }
+    }
+  }, {
+    key: "onConnMessage",
+    value: function onConnMessage(rawMessage) {
+      var _this9 = this;
+
+      this.decode(rawMessage.data, function (msg) {
+        var topic = msg.topic,
+            event = msg.event,
+            payload = msg.payload,
+            ref = msg.ref,
+            join_ref = msg.join_ref;
+
+        if (ref && ref === _this9.pendingHeartbeatRef) {
+          _this9.pendingHeartbeatRef = null;
+        }
+
+        _this9.log("receive", (payload.status || "") + " " + topic + " " + event + " " + (ref && "(" + ref + ")" || ""), payload);
+        _this9.channels.filter(function (channel) {
+          return channel.isMember(topic, event, payload, join_ref);
+        }).forEach(function (channel) {
+          return channel.trigger(event, payload, ref, join_ref);
+        });
+        _this9.stateChangeCallbacks.message.forEach(function (callback) {
+          return callback(msg);
+        });
+      });
+    }
+  }]);
+
+  return Socket;
+}();
+
+var LongPoll = exports.LongPoll = function () {
+  function LongPoll(endPoint) {
+    _classCallCheck(this, LongPoll);
+
+    this.endPoint = null;
+    this.token = null;
+    this.skipHeartbeat = true;
+    this.onopen = function () {}; // noop
+    this.onerror = function () {}; // noop
+    this.onmessage = function () {}; // noop
+    this.onclose = function () {}; // noop
+    this.pollEndpoint = this.normalizeEndpoint(endPoint);
+    this.readyState = SOCKET_STATES.connecting;
+
+    this.poll();
+  }
+
+  _createClass(LongPoll, [{
+    key: "normalizeEndpoint",
+    value: function normalizeEndpoint(endPoint) {
+      return endPoint.replace("ws://", "http://").replace("wss://", "https://").replace(new RegExp("(.*)\/" + TRANSPORTS.websocket), "$1/" + TRANSPORTS.longpoll);
+    }
+  }, {
+    key: "endpointURL",
+    value: function endpointURL() {
+      return Ajax.appendParams(this.pollEndpoint, { token: this.token });
+    }
+  }, {
+    key: "closeAndRetry",
+    value: function closeAndRetry() {
+      this.close();
+      this.readyState = SOCKET_STATES.connecting;
+    }
+  }, {
+    key: "ontimeout",
+    value: function ontimeout() {
+      this.onerror("timeout");
+      this.closeAndRetry();
+    }
+  }, {
+    key: "poll",
+    value: function poll() {
+      var _this10 = this;
+
+      if (!(this.readyState === SOCKET_STATES.open || this.readyState === SOCKET_STATES.connecting)) {
+        return;
+      }
+
+      Ajax.request("GET", this.endpointURL(), "application/json", null, this.timeout, this.ontimeout.bind(this), function (resp) {
+        if (resp) {
+          var status = resp.status,
+              token = resp.token,
+              messages = resp.messages;
+
+          _this10.token = token;
+        } else {
+          var status = 0;
+        }
+
+        switch (status) {
+          case 200:
+            messages.forEach(function (msg) {
+              return _this10.onmessage({ data: msg });
+            });
+            _this10.poll();
+            break;
+          case 204:
+            _this10.poll();
+            break;
+          case 410:
+            _this10.readyState = SOCKET_STATES.open;
+            _this10.onopen();
+            _this10.poll();
+            break;
+          case 0:
+          case 500:
+            _this10.onerror();
+            _this10.closeAndRetry();
+            break;
+          default:
+            throw "unhandled poll status " + status;
+        }
+      });
+    }
+  }, {
+    key: "send",
+    value: function send(body) {
+      var _this11 = this;
+
+      Ajax.request("POST", this.endpointURL(), "application/json", body, this.timeout, this.onerror.bind(this, "timeout"), function (resp) {
+        if (!resp || resp.status !== 200) {
+          _this11.onerror(resp && resp.status);
+          _this11.closeAndRetry();
+        }
+      });
+    }
+  }, {
+    key: "close",
+    value: function close(code, reason) {
+      this.readyState = SOCKET_STATES.closed;
+      this.onclose();
+    }
+  }]);
+
+  return LongPoll;
+}();
+
+var Ajax = exports.Ajax = function () {
+  function Ajax() {
+    _classCallCheck(this, Ajax);
+  }
+
+  _createClass(Ajax, null, [{
+    key: "request",
+    value: function request(method, endPoint, accept, body, timeout, ontimeout, callback) {
+      if (window.XDomainRequest) {
+        var req = new XDomainRequest(); // IE8, IE9
+        this.xdomainRequest(req, method, endPoint, body, timeout, ontimeout, callback);
+      } else {
+        var _req = window.XMLHttpRequest ? new window.XMLHttpRequest() : // IE7+, Firefox, Chrome, Opera, Safari
+        new ActiveXObject("Microsoft.XMLHTTP"); // IE6, IE5
+        this.xhrRequest(_req, method, endPoint, accept, body, timeout, ontimeout, callback);
+      }
+    }
+  }, {
+    key: "xdomainRequest",
+    value: function xdomainRequest(req, method, endPoint, body, timeout, ontimeout, callback) {
+      var _this12 = this;
+
+      req.timeout = timeout;
+      req.open(method, endPoint);
+      req.onload = function () {
+        var response = _this12.parseJSON(req.responseText);
+        callback && callback(response);
+      };
+      if (ontimeout) {
+        req.ontimeout = ontimeout;
+      }
+
+      // Work around bug in IE9 that requires an attached onprogress handler
+      req.onprogress = function () {};
+
+      req.send(body);
+    }
+  }, {
+    key: "xhrRequest",
+    value: function xhrRequest(req, method, endPoint, accept, body, timeout, ontimeout, callback) {
+      var _this13 = this;
+
+      req.open(method, endPoint, true);
+      req.timeout = timeout;
+      req.setRequestHeader("Content-Type", accept);
+      req.onerror = function () {
+        callback && callback(null);
+      };
+      req.onreadystatechange = function () {
+        if (req.readyState === _this13.states.complete && callback) {
+          var response = _this13.parseJSON(req.responseText);
+          callback(response);
+        }
+      };
+      if (ontimeout) {
+        req.ontimeout = ontimeout;
+      }
+
+      req.send(body);
+    }
+  }, {
+    key: "parseJSON",
+    value: function parseJSON(resp) {
+      if (!resp || resp === "") {
+        return null;
+      }
+
+      try {
+        return JSON.parse(resp);
+      } catch (e) {
+        console && console.log("failed to parse JSON response", resp);
+        return null;
+      }
+    }
+  }, {
+    key: "serialize",
+    value: function serialize(obj, parentKey) {
+      var queryStr = [];
+      for (var key in obj) {
+        if (!obj.hasOwnProperty(key)) {
+          continue;
+        }
+        var paramKey = parentKey ? parentKey + "[" + key + "]" : key;
+        var paramVal = obj[key];
+        if ((typeof paramVal === "undefined" ? "undefined" : _typeof(paramVal)) === "object") {
+          queryStr.push(this.serialize(paramVal, paramKey));
+        } else {
+          queryStr.push(encodeURIComponent(paramKey) + "=" + encodeURIComponent(paramVal));
+        }
+      }
+      return queryStr.join("&");
+    }
+  }, {
+    key: "appendParams",
+    value: function appendParams(url, params) {
+      if (Object.keys(params).length === 0) {
+        return url;
+      }
+
+      var prefix = url.match(/\?/) ? "&" : "?";
+      return "" + url + prefix + this.serialize(params);
+    }
+  }]);
+
+  return Ajax;
+}();
+
+Ajax.states = { complete: 4 };
+
+var Presence = exports.Presence = {
+  syncState: function syncState(currentState, newState, onJoin, onLeave) {
+    var _this14 = this;
+
+    var state = this.clone(currentState);
+    var joins = {};
+    var leaves = {};
+
+    this.map(state, function (key, presence) {
+      if (!newState[key]) {
+        leaves[key] = presence;
+      }
+    });
+    this.map(newState, function (key, newPresence) {
+      var currentPresence = state[key];
+      if (currentPresence) {
+        var newRefs = newPresence.metas.map(function (m) {
+          return m.phx_ref;
+        });
+        var curRefs = currentPresence.metas.map(function (m) {
+          return m.phx_ref;
+        });
+        var joinedMetas = newPresence.metas.filter(function (m) {
+          return curRefs.indexOf(m.phx_ref) < 0;
+        });
+        var leftMetas = currentPresence.metas.filter(function (m) {
+          return newRefs.indexOf(m.phx_ref) < 0;
+        });
+        if (joinedMetas.length > 0) {
+          joins[key] = newPresence;
+          joins[key].metas = joinedMetas;
+        }
+        if (leftMetas.length > 0) {
+          leaves[key] = _this14.clone(currentPresence);
+          leaves[key].metas = leftMetas;
+        }
+      } else {
+        joins[key] = newPresence;
+      }
+    });
+    return this.syncDiff(state, { joins: joins, leaves: leaves }, onJoin, onLeave);
+  },
+  syncDiff: function syncDiff(currentState, _ref2, onJoin, onLeave) {
+    var joins = _ref2.joins,
+        leaves = _ref2.leaves;
+
+    var state = this.clone(currentState);
+    if (!onJoin) {
+      onJoin = function onJoin() {};
+    }
+    if (!onLeave) {
+      onLeave = function onLeave() {};
+    }
+
+    this.map(joins, function (key, newPresence) {
+      var currentPresence = state[key];
+      state[key] = newPresence;
+      if (currentPresence) {
+        var _state$key$metas;
+
+        (_state$key$metas = state[key].metas).unshift.apply(_state$key$metas, _toConsumableArray(currentPresence.metas));
+      }
+      onJoin(key, currentPresence, newPresence);
+    });
+    this.map(leaves, function (key, leftPresence) {
+      var currentPresence = state[key];
+      if (!currentPresence) {
+        return;
+      }
+      var refsToRemove = leftPresence.metas.map(function (m) {
+        return m.phx_ref;
+      });
+      currentPresence.metas = currentPresence.metas.filter(function (p) {
+        return refsToRemove.indexOf(p.phx_ref) < 0;
+      });
+      onLeave(key, currentPresence, leftPresence);
+      if (currentPresence.metas.length === 0) {
+        delete state[key];
+      }
+    });
+    return state;
+  },
+  list: function list(presences, chooser) {
+    if (!chooser) {
+      chooser = function chooser(key, pres) {
+        return pres;
+      };
+    }
+
+    return this.map(presences, function (key, presence) {
+      return chooser(key, presence);
+    });
+  },
+
+
+  // private
+
+  map: function map(obj, func) {
+    return Object.getOwnPropertyNames(obj).map(function (key) {
+      return func(key, obj[key]);
+    });
+  },
+  clone: function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+};
+
+/**
+ *
+ * Creates a timer that accepts a `timerCalc` function to perform
+ * calculated timeout retries, such as exponential backoff.
+ *
+ * ## Examples
+ *
+ * ```javascript
+ *    let reconnectTimer = new Timer(() => this.connect(), function(tries){
+ *      return [1000, 5000, 10000][tries - 1] || 10000
+ *    })
+ *    reconnectTimer.scheduleTimeout() // fires after 1000
+ *    reconnectTimer.scheduleTimeout() // fires after 5000
+ *    reconnectTimer.reset()
+ *    reconnectTimer.scheduleTimeout() // fires after 1000
+ * ```
+ * @param {Function} callback
+ * @param {Function} timerCalc
+ */
+
+var Timer = function () {
+  function Timer(callback, timerCalc) {
+    _classCallCheck(this, Timer);
+
+    this.callback = callback;
+    this.timerCalc = timerCalc;
+    this.timer = null;
+    this.tries = 0;
+  }
+
+  _createClass(Timer, [{
+    key: "reset",
+    value: function reset() {
+      this.tries = 0;
+      clearTimeout(this.timer);
+    }
+
+    /**
+     * Cancels any previous scheduleTimeout and schedules callback
+     */
+
+  }, {
+    key: "scheduleTimeout",
+    value: function scheduleTimeout() {
+      var _this15 = this;
+
+      clearTimeout(this.timer);
+
+      this.timer = setTimeout(function () {
+        _this15.tries = _this15.tries + 1;
+        _this15.callback();
+      }, this.timerCalc(this.tries + 1));
+    }
+  }]);
+
+  return Timer;
+}();
+
+})));
+  })();
+});
+
+require.register("phoenix_html/priv/static/phoenix_html.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "phoenix_html");
+  (function() {
+    "use strict";
+
+(function() {
+  function buildHiddenInput(name, value) {
+    var input = document.createElement("input");
+    input.type = "hidden";
+    input.name = name;
+    input.value = value;
+    return input;
+  }
+
+  function handleLinkClick(link) {
+    var message = link.getAttribute("data-confirm");
+    if(message && !window.confirm(message)) {
+        return;
+    }
+
+    var to = link.getAttribute("data-to"),
+        method = buildHiddenInput("_method", link.getAttribute("data-method")),
+        csrf = buildHiddenInput("_csrf_token", link.getAttribute("data-csrf")),
+        form = document.createElement("form"),
+        target = link.getAttribute("target");
+
+    form.method = (link.getAttribute("data-method") === "get") ? "get" : "post";
+    form.action = to;
+    form.style.display = "hidden";
+
+    if (target) form.target = target;
+
+    form.appendChild(csrf);
+    form.appendChild(method);
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  window.addEventListener("click", function(e) {
+    var element = e.target;
+
+    while (element && element.getAttribute) {
+      if(element.getAttribute("data-method")) {
+        handleLinkClick(element);
+        e.preventDefault();
+        return false;
+      } else {
+        element = element.parentNode;
+      }
+    }
+  }, false);
+})();
+  })();
+});
+require.register("elm/src/Hexaboard/Board.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/Hexaboard/BoardView.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/Hexaboard/Data.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/Hexaboard/DeckView.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/Hexaboard/Hexaboard.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/Hexaboard/HexaboardComs.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/Hexaboard/HexaboardTypes.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/Hexaboard/HexaboardView.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/Hexaboard/ScoresView.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/Hexaboard/TurnSelectionView.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/Hexaboard/WinLoseView.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/MainLobby.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/MainLobbyComs.elm", function(exports, require, module) {
+
+});
+
+;require.register("elm/src/MainLobbyView.elm", function(exports, require, module) {
+
+});
+
+;require.register("js/app.js", function(exports, require, module) {
+"use strict";
+
+require("phoenix_html");
+
+});
+
+require.register("js/socket.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _phoenix = require("phoenix");
+
+var socket = new _phoenix.Socket("/socket", { params: { token: window.userToken } });
+
+// When you connect, you'll often need to authenticate the client.
+// For example, imagine you have an authentication plug, `MyAuth`,
+// which authenticates the session and assigns a `:current_user`.
+// If the current user exists you can assign the user's token in
+// the connection for use in the layout.
+//
+// In your "lib/web/router.ex":
+//
+//     pipeline :browser do
+//       ...
+//       plug MyAuth
+//       plug :put_user_token
+//     end
+//
+//     defp put_user_token(conn, _) do
+//       if current_user = conn.assigns[:current_user] do
+//         token = Phoenix.Token.sign(conn, "user socket", current_user.id)
+//         assign(conn, :user_token, token)
+//       else
+//         conn
+//       end
+//     end
+//
+// Now you need to pass this token to JavaScript. You can do so
+// inside a script tag in "lib/web/templates/layout/app.html.eex":
+//
+//     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
+//
+// You will need to verify the user token in the "connect/2" function
+// in "lib/web/channels/user_socket.ex":
+//
+//     def connect(%{"token" => token}, socket) do
+//       # max_age: 1209600 is equivalent to two weeks in seconds
+//       case Phoenix.Token.verify(socket, "user socket", token, max_age: 1209600) do
+//         {:ok, user_id} ->
+//           {:ok, assign(socket, :user, user_id)}
+//         {:error, reason} ->
+//           :error
+//       end
+//     end
+//
+// Finally, pass the token on connect as below. Or remove it
+// from connect if you don't care about authentication.
+
+// NOTE: The contents of this file will only be executed if
+// you uncomment its entry in "assets/js/app.js".
+
+// To use Phoenix channels, the first step is to import Socket
+// and connect at the socket path in "lib/web/endpoint.ex":
+socket.connect();
+
+// Now that you are connected, you can join channels with a topic:
+var channel = socket.channel("topic:subtopic", {});
+channel.join().receive("ok", function (resp) {
+  console.log("Joined successfully", resp);
+}).receive("error", function (resp) {
+  console.log("Unable to join", resp);
+});
+
+exports.default = socket;
+
+});
+
+require.alias("phoenix/priv/static/phoenix.js", "phoenix");
+require.alias("phoenix_html/priv/static/phoenix_html.js", "phoenix_html");require.register("___globals___", function(exports, require, module) {
+  
+});})();require('___globals___');
+
+require('js/app');
+//# sourceMappingURL=app.js.map
