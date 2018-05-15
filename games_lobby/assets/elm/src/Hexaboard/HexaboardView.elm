@@ -27,7 +27,7 @@ view model =
         , Font.size 18
 
         --, Background.color Color.blue
-        , height fill
+        , height (px <| model.winSize.height)
         , Background.tiled "/images/hexaboard/tiles/ep_naturalwhite.png"
         ]
     <|
@@ -66,7 +66,6 @@ view model =
                 ]
             , column
                 [ spacing 70
-                , height (px <| model.winSize.height - 160)
 
                 --, Background.color Color.red
                 ]
@@ -147,7 +146,7 @@ viewSelection model =
 consoleView model =
     column
         [ spacing 10
-        , height (px <| model.winSize.height - 160)
+        , height (px <| model.winSize.height - 60)
         , width (maximum 350 fill)
         , alignLeft
         , alignTop

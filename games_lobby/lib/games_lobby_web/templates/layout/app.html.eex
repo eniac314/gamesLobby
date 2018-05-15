@@ -26,26 +26,35 @@
   </head>
 
   <body>
+    
     <%= if assigns[:elm_app_path] do %>
       <script src="<%= static_path(@conn, assigns[:elm_app_path]) %>"></script> 
     <% else %>
       <span></span>
     <%end %>
+    
     <div class="container">
-      <header class="header">
-        <nav role="navigation" id="authBlock">
-          <ul class="nav nav-pills pull-right">
-           <%= if @current_player do %> 
-             <p class="small">Signed in as <strong><%= @current_player.username %></strong></p>
-             <%= link "Sign Out", to: player_session_path(@conn, :delete, @current_player), method: "delete", class: "btn btn-sm btn-danger" %>
-           <% else %>  
-             <%= link "Sign Up", to: player_path(@conn, :new), class: "btn btn-sm btn-success" %>
-             <%= link "Sign In", to: player_session_path(@conn, :new), class: "btn btn-sm btn-primary" %>
-          <% end %>
-          </ul>
-        </nav>
-        <span class="logo"></span>
-      </header>
+      <%= if assigns[:elm_app_path] do %>
+        <span></span>
+      
+      <% else %>
+
+        <header class="header">
+          <nav role="navigation" id="authBlock">
+            <ul class="nav nav-pills pull-right">
+             <%= if @current_player do %> 
+               <p class="small">Signed in as <strong><%= @current_player.username %></strong></p>
+               <%= link "Sign Out", to: player_session_path(@conn, :delete, @current_player), method: "delete", class: "btn btn-sm btn-danger" %>
+             <% else %>  
+               <%= link "Sign Up", to: player_path(@conn, :new), class: "btn btn-sm btn-success" %>
+               <%= link "Sign In", to: player_session_path(@conn, :new), class: "btn btn-sm btn-primary" %>
+            <% end %>
+            </ul>
+          </nav>
+          <span class="logo"></span>
+        </header>
+
+      <%end %>
       
       <%= if assigns[:custom_css] && @current_player do %>
       

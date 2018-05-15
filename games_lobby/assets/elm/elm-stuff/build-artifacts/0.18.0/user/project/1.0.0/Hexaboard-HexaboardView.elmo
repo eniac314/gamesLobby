@@ -506,7 +506,7 @@ var _user$project$Hexaboard_HexaboardView$consoleView = function (model) {
 			_1: {
 				ctor: '::',
 				_0: _mdgriffith$stylish_elephants$Element$height(
-					_mdgriffith$stylish_elephants$Element$px(model.winSize.height - 160)),
+					_mdgriffith$stylish_elephants$Element$px(model.winSize.height - 60)),
 				_1: {
 					ctor: '::',
 					_0: _mdgriffith$stylish_elephants$Element$width(
@@ -663,7 +663,8 @@ var _user$project$Hexaboard_HexaboardView$view = function (model) {
 				_0: _mdgriffith$stylish_elephants$Element_Font$size(18),
 				_1: {
 					ctor: '::',
-					_0: _mdgriffith$stylish_elephants$Element$height(_mdgriffith$stylish_elephants$Element$fill),
+					_0: _mdgriffith$stylish_elephants$Element$height(
+						_mdgriffith$stylish_elephants$Element$px(model.winSize.height)),
 					_1: {
 						ctor: '::',
 						_0: _mdgriffith$stylish_elephants$Element_Background$tiled('/images/hexaboard/tiles/ep_naturalwhite.png'),
@@ -733,12 +734,7 @@ var _user$project$Hexaboard_HexaboardView$view = function (model) {
 							{
 								ctor: '::',
 								_0: _mdgriffith$stylish_elephants$Element$spacing(70),
-								_1: {
-									ctor: '::',
-									_0: _mdgriffith$stylish_elephants$Element$height(
-										_mdgriffith$stylish_elephants$Element$px(model.winSize.height - 160)),
-									_1: {ctor: '[]'}
-								}
+								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
