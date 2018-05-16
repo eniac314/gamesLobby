@@ -107,6 +107,10 @@ alias GamesLobbyWeb.Presence
     {:noreply, socket}
   end
 
+  def handle_in("game_launched", %{}, socket) do 
+    push(socket, "games_setup", %{games_setup: Mainlobby.GameSetupServer.get_games_setup})
+    {:noreply, socket}
+  end 
   
   defp safe_atomize(external) do 
     try do 

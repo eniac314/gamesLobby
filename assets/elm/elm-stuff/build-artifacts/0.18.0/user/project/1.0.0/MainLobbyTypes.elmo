@@ -37,9 +37,9 @@ var _user$project$MainLobbyTypes$GameMeta = F4(
 	function (a, b, c, d) {
 		return {name: a, minPlayers: b, maxPlayers: c, hasIA: d};
 	});
-var _user$project$MainLobbyTypes$GameSetup = F5(
-	function (a, b, c, d, e) {
-		return {gameMeta: a, joined: b, hasStarted: c, host: d, gameId: e};
+var _user$project$MainLobbyTypes$GameSetup = F6(
+	function (a, b, c, d, e, f) {
+		return {gameMeta: a, joined: b, hasStarted: c, host: d, gameId: e, launchUrl: f};
 	});
 var _user$project$MainLobbyTypes$ChatMessage = F3(
 	function (a, b, c) {
@@ -53,6 +53,7 @@ var _user$project$MainLobbyTypes$defPlayer = A2(_user$project$MainLobbyTypes$Pla
 var _user$project$MainLobbyTypes$StartGame = function (a) {
 	return {ctor: 'StartGame', _0: a};
 };
+var _user$project$MainLobbyTypes$Launched = {ctor: 'Launched'};
 var _user$project$MainLobbyTypes$Launch = function (a) {
 	return {ctor: 'Launch', _0: a};
 };

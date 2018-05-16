@@ -84,13 +84,13 @@ var _user$project$MainLobbyView$isHost = function (model) {
 var _user$project$MainLobbyView$gameSetupView = F2(
 	function (model, _p3) {
 		var _p4 = _p3;
-		var _p8 = _p4.joined;
-		var _p7 = _p4.gameId;
+		var _p9 = _p4.joined;
+		var _p8 = _p4.gameId;
 		var _p5 = _p4.host;
 		if (_p5.ctor === 'Nothing') {
 			return _mdgriffith$stylish_elephants$Element$none;
 		} else {
-			var _p6 = _p5._0;
+			var _p7 = _p5._0;
 			var usrView = function (usr) {
 				var usrHasStarted = A2(_elm_lang$core$List$member, usr, _p4.hasStarted) ? ' Ok' : '';
 				var usrStr = A2(_elm_lang$core$Basics_ops['++'], usr, usrHasStarted);
@@ -100,18 +100,18 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 					_mdgriffith$stylish_elephants$Element$text(usrStr));
 			};
 			var canStart = _elm_lang$core$Native_Utils.cmp(
-				_elm_lang$core$List$length(_p8) + 1,
+				_elm_lang$core$List$length(_p9) + 1,
 				_p4.gameMeta.minPlayers) > -1;
-			var hasJoinedGameSetup = A2(_elm_lang$core$List$member, model.playerInfo.username, _p8);
-			var isGameSetupHost = _elm_lang$core$Native_Utils.eq(model.playerInfo.username, _p6);
+			var hasJoinedGameSetup = A2(_elm_lang$core$List$member, model.playerInfo.username, _p9);
+			var isGameSetupHost = _elm_lang$core$Native_Utils.eq(model.playerInfo.username, _p7);
 			var gameTitle = A2(
 				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$Tuple$first(_p7).name,
+				_elm_lang$core$Tuple$first(_p8).name,
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					' ',
 					_elm_lang$core$Basics$toString(
-						_elm_lang$core$Tuple$second(_p7))));
+						_elm_lang$core$Tuple$second(_p8))));
 			return A2(
 				_mdgriffith$stylish_elephants$Element$column,
 				{
@@ -164,7 +164,7 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 							_mdgriffith$stylish_elephants$Element$el,
 							{ctor: '[]'},
 							_mdgriffith$stylish_elephants$Element$text(
-								A2(_elm_lang$core$Basics_ops['++'], 'Game hosted by: ', _p6))),
+								A2(_elm_lang$core$Basics_ops['++'], 'Game hosted by: ', _p7))),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -178,138 +178,178 @@ var _user$project$MainLobbyView$gameSetupView = F2(
 										_1: {ctor: '[]'}
 									}
 								},
-								A2(_elm_lang$core$List$map, usrView, _p8)),
+								A2(_elm_lang$core$List$map, usrView, _p9)),
 							_1: {
 								ctor: '::',
-								_0: isGameSetupHost ? A2(
-									_mdgriffith$stylish_elephants$Element_Input$button,
-									{
-										ctor: '::',
-										_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightRed),
-										_1: {
-											ctor: '::',
-											_0: _mdgriffith$stylish_elephants$Element$padding(10),
-											_1: {
+								_0: function () {
+									var _p6 = _p4.launchUrl;
+									if (_p6.ctor === 'Just') {
+										return A2(
+											_mdgriffith$stylish_elephants$Element$newTabLink,
+											{
 												ctor: '::',
-												_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+												_0: _mdgriffith$stylish_elephants$Element_Events$onClick(_user$project$MainLobbyTypes$Launched),
 												_1: {
 													ctor: '::',
-													_0: _mdgriffith$stylish_elephants$Element$mouseOver(
-														{
-															ctor: '::',
-															_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightRed, 7),
-															_1: {ctor: '[]'}
-														}),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									},
-									{
-										onPress: _elm_lang$core$Maybe$Just(
-											_user$project$MainLobbyTypes$DeleteGame(_p7)),
-										label: _mdgriffith$stylish_elephants$Element$text('Delete Game')
-									}) : (((!_user$project$MainLobbyView$hasJoined(model)) && (!_user$project$MainLobbyView$isHost(model))) ? A2(
-									_mdgriffith$stylish_elephants$Element_Input$button,
-									{
-										ctor: '::',
-										_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
-										_1: {
-											ctor: '::',
-											_0: _mdgriffith$stylish_elephants$Element$padding(10),
-											_1: {
-												ctor: '::',
-												_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
-												_1: {
-													ctor: '::',
-													_0: _mdgriffith$stylish_elephants$Element$mouseOver(
-														{
-															ctor: '::',
-															_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
-															_1: {ctor: '[]'}
-														}),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									},
-									{
-										onPress: _elm_lang$core$Maybe$Just(
-											_user$project$MainLobbyTypes$JoinGame(_p7)),
-										label: _mdgriffith$stylish_elephants$Element$text('Join game!')
-									}) : (hasJoinedGameSetup ? A2(
-									_mdgriffith$stylish_elephants$Element_Input$button,
-									{
-										ctor: '::',
-										_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
-										_1: {
-											ctor: '::',
-											_0: _mdgriffith$stylish_elephants$Element$padding(10),
-											_1: {
-												ctor: '::',
-												_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
-												_1: {
-													ctor: '::',
-													_0: _mdgriffith$stylish_elephants$Element$mouseOver(
-														{
-															ctor: '::',
-															_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
-															_1: {ctor: '[]'}
-														}),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									},
-									{
-										onPress: _elm_lang$core$Maybe$Just(
-											_user$project$MainLobbyTypes$LeaveGame(_p7)),
-										label: _mdgriffith$stylish_elephants$Element$text('Leave game')
-									}) : _mdgriffith$stylish_elephants$Element$none)),
-								_1: {
-									ctor: '::',
-									_0: (canStart && (!model.waitingForOthers)) ? A2(
-										_mdgriffith$stylish_elephants$Element_Input$button,
-										{
-											ctor: '::',
-											_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightGreen),
-											_1: {
-												ctor: '::',
-												_0: _mdgriffith$stylish_elephants$Element$padding(10),
-												_1: {
-													ctor: '::',
-													_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+													_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightGreen),
 													_1: {
 														ctor: '::',
-														_0: _mdgriffith$stylish_elephants$Element$mouseOver(
-															{
-																ctor: '::',
-																_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightGreen, 7),
-																_1: {ctor: '[]'}
-															}),
-														_1: {ctor: '[]'}
+														_0: _mdgriffith$stylish_elephants$Element$padding(10),
+														_1: {
+															ctor: '::',
+															_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+															_1: {ctor: '[]'}
+														}
 													}
 												}
-											}
-										},
-										{
-											onPress: _elm_lang$core$Maybe$Just(
-												_user$project$MainLobbyTypes$StartGame(_p7)),
-											label: _mdgriffith$stylish_elephants$Element$text('Start game')
-										}) : (model.waitingForOthers ? A2(
-										_mdgriffith$stylish_elephants$Element$el,
-										{ctor: '[]'},
-										_mdgriffith$stylish_elephants$Element$text('waiting to start...')) : _mdgriffith$stylish_elephants$Element$none),
-									_1: {ctor: '[]'}
-								}
+											},
+											{
+												url: _p6._0,
+												label: _mdgriffith$stylish_elephants$Element$text('Launch! ')
+											});
+									} else {
+										return A2(
+											_mdgriffith$stylish_elephants$Element$column,
+											{
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$spacing(5),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: isGameSetupHost ? A2(
+													_mdgriffith$stylish_elephants$Element_Input$button,
+													{
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightRed),
+														_1: {
+															ctor: '::',
+															_0: _mdgriffith$stylish_elephants$Element$padding(10),
+															_1: {
+																ctor: '::',
+																_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+																_1: {
+																	ctor: '::',
+																	_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+																		{
+																			ctor: '::',
+																			_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightRed, 7),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													},
+													{
+														onPress: _elm_lang$core$Maybe$Just(
+															_user$project$MainLobbyTypes$DeleteGame(_p8)),
+														label: _mdgriffith$stylish_elephants$Element$text('Delete Game')
+													}) : (((!_user$project$MainLobbyView$hasJoined(model)) && (!_user$project$MainLobbyView$isHost(model))) ? A2(
+													_mdgriffith$stylish_elephants$Element_Input$button,
+													{
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+														_1: {
+															ctor: '::',
+															_0: _mdgriffith$stylish_elephants$Element$padding(10),
+															_1: {
+																ctor: '::',
+																_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+																_1: {
+																	ctor: '::',
+																	_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+																		{
+																			ctor: '::',
+																			_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													},
+													{
+														onPress: _elm_lang$core$Maybe$Just(
+															_user$project$MainLobbyTypes$JoinGame(_p8)),
+														label: _mdgriffith$stylish_elephants$Element$text('Join game!')
+													}) : (hasJoinedGameSetup ? A2(
+													_mdgriffith$stylish_elephants$Element_Input$button,
+													{
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+														_1: {
+															ctor: '::',
+															_0: _mdgriffith$stylish_elephants$Element$padding(10),
+															_1: {
+																ctor: '::',
+																_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+																_1: {
+																	ctor: '::',
+																	_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+																		{
+																			ctor: '::',
+																			_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													},
+													{
+														onPress: _elm_lang$core$Maybe$Just(
+															_user$project$MainLobbyTypes$LeaveGame(_p8)),
+														label: _mdgriffith$stylish_elephants$Element$text('Leave game')
+													}) : _mdgriffith$stylish_elephants$Element$none)),
+												_1: {
+													ctor: '::',
+													_0: (canStart && (!model.waitingForOthers)) ? A2(
+														_mdgriffith$stylish_elephants$Element_Input$button,
+														{
+															ctor: '::',
+															_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightGreen),
+															_1: {
+																ctor: '::',
+																_0: _mdgriffith$stylish_elephants$Element$padding(10),
+																_1: {
+																	ctor: '::',
+																	_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+																	_1: {
+																		ctor: '::',
+																		_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+																			{
+																				ctor: '::',
+																				_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightGreen, 7),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}
+														},
+														{
+															onPress: _elm_lang$core$Maybe$Just(
+																_user$project$MainLobbyTypes$StartGame(_p8)),
+															label: _mdgriffith$stylish_elephants$Element$text('Start game')
+														}) : (model.waitingForOthers ? A2(
+														_mdgriffith$stylish_elephants$Element$el,
+														{ctor: '[]'},
+														_mdgriffith$stylish_elephants$Element$text('waiting to start...')) : _mdgriffith$stylish_elephants$Element$none),
+													_1: {ctor: '[]'}
+												}
+											});
+									}
+								}(),
+								_1: {ctor: '[]'}
 							}
 						}
 					}
 				});
 		}
 	});
-var _user$project$MainLobbyView$gameMetaView = function (_p9) {
-	var _p10 = _p9;
+var _user$project$MainLobbyView$gameMetaView = function (_p10) {
+	var _p11 = _p10;
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -324,7 +364,7 @@ var _user$project$MainLobbyView$gameMetaView = function (_p9) {
 					_1: {
 						ctor: '::',
 						_0: _mdgriffith$stylish_elephants$Element_Events$onClick(
-							_user$project$MainLobbyTypes$SelectGame(_p10)),
+							_user$project$MainLobbyTypes$SelectGame(_p11)),
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$stylish_elephants$Element$pointer,
@@ -364,7 +404,7 @@ var _user$project$MainLobbyView$gameMetaView = function (_p9) {
 					_0: _mdgriffith$stylish_elephants$Element_Font$bold,
 					_1: {ctor: '[]'}
 				},
-				_mdgriffith$stylish_elephants$Element$text(_p10.name)),
+				_mdgriffith$stylish_elephants$Element$text(_p11.name)),
 			_1: {
 				ctor: '::',
 				_0: A2(
@@ -374,7 +414,7 @@ var _user$project$MainLobbyView$gameMetaView = function (_p9) {
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							'Min players: ',
-							_elm_lang$core$Basics$toString(_p10.minPlayers)))),
+							_elm_lang$core$Basics$toString(_p11.minPlayers)))),
 				_1: {
 					ctor: '::',
 					_0: A2(
@@ -384,7 +424,7 @@ var _user$project$MainLobbyView$gameMetaView = function (_p9) {
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								'Max players: ',
-								_elm_lang$core$Basics$toString(_p10.maxPlayers)))),
+								_elm_lang$core$Basics$toString(_p11.maxPlayers)))),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -394,7 +434,7 @@ var _user$project$MainLobbyView$gameMetaView = function (_p9) {
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									'Has AI: ',
-									_elm_lang$core$Basics$toString(_p10.hasIA)))),
+									_elm_lang$core$Basics$toString(_p11.hasIA)))),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -402,8 +442,8 @@ var _user$project$MainLobbyView$gameMetaView = function (_p9) {
 		});
 };
 var _user$project$MainLobbyView$gamesSetupView = function (model) {
-	var _p11 = model.currentSelectedGame;
-	if (_p11.ctor === 'Nothing') {
+	var _p12 = model.currentSelectedGame;
+	if (_p12.ctor === 'Nothing') {
 		var rows = A2(
 			_elm_lang$core$List$map,
 			function (r) {
@@ -444,7 +484,7 @@ var _user$project$MainLobbyView$gamesSetupView = function (model) {
 				}
 			});
 	} else {
-		var _p12 = _p11._0;
+		var _p13 = _p12._0;
 		return A2(
 			_mdgriffith$stylish_elephants$Element$column,
 			{
@@ -461,7 +501,7 @@ var _user$project$MainLobbyView$gamesSetupView = function (model) {
 						_0: _mdgriffith$stylish_elephants$Element_Font$bold,
 						_1: {ctor: '[]'}
 					},
-					_mdgriffith$stylish_elephants$Element$text(_p12.name)),
+					_mdgriffith$stylish_elephants$Element$text(_p13.name)),
 				_1: {
 					ctor: '::',
 					_0: A2(
@@ -483,7 +523,7 @@ var _user$project$MainLobbyView$gamesSetupView = function (model) {
 									_elm_lang$core$Dict$filter,
 									F2(
 										function (k, v) {
-											return _elm_lang$core$Native_Utils.eq(v.gameMeta.name, _p12.name);
+											return _elm_lang$core$Native_Utils.eq(v.gameMeta.name, _p13.name);
 										}),
 									model.gamesSetup)))),
 					_1: {
@@ -570,17 +610,17 @@ var _user$project$MainLobbyView$gamesSetupView = function (model) {
 };
 var _user$project$MainLobbyView$channelStatusView = F2(
 	function (model, topic) {
-		var _p13 = A2(_elm_lang$core$Dict$get, topic, model.phxSocket.channels);
-		if (_p13.ctor === 'Nothing') {
+		var _p14 = A2(_elm_lang$core$Dict$get, topic, model.phxSocket.channels);
+		if (_p14.ctor === 'Nothing') {
 			return A2(
 				_mdgriffith$stylish_elephants$Element$el,
 				{ctor: '[]'},
 				_mdgriffith$stylish_elephants$Element$text('no channel corresponding to that topic'));
 		} else {
-			var _p15 = _p13._0;
+			var _p16 = _p14._0;
 			var controlButton = function () {
-				var _p14 = _p15.state;
-				if (_p14.ctor === 'Joined') {
+				var _p15 = _p16.state;
+				if (_p15.ctor === 'Joined') {
 					return A2(
 						_mdgriffith$stylish_elephants$Element_Input$button,
 						{
@@ -655,7 +695,7 @@ var _user$project$MainLobbyView$channelStatusView = F2(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							'Channel status: ',
-							_elm_lang$core$Basics$toString(_p15.state))),
+							_elm_lang$core$Basics$toString(_p16.state))),
 					_1: {
 						ctor: '::',
 						_0: controlButton,
@@ -759,8 +799,8 @@ var _user$project$MainLobbyView$prettyDate = function (timeStamp) {
 				_elm_lang$core$Basics$toString(minute))));
 };
 var _user$project$MainLobbyView$chatLogView = function (model) {
-	var messageView = function (_p16) {
-		var _p17 = _p16;
+	var messageView = function (_p17) {
+		var _p18 = _p17;
 		return A2(
 			_mdgriffith$stylish_elephants$Element$column,
 			{
@@ -798,7 +838,7 @@ var _user$project$MainLobbyView$chatLogView = function (model) {
 									}
 								}
 							},
-							_mdgriffith$stylish_elephants$Element$text(_p17.author.username)),
+							_mdgriffith$stylish_elephants$Element$text(_p18.author.username)),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -821,7 +861,7 @@ var _user$project$MainLobbyView$chatLogView = function (model) {
 									}
 								},
 								_mdgriffith$stylish_elephants$Element$text(
-									_user$project$MainLobbyView$prettyDate(_p17.timeStamp))),
+									_user$project$MainLobbyView$prettyDate(_p18.timeStamp))),
 							_1: {ctor: '[]'}
 						}
 					}),
@@ -849,7 +889,7 @@ var _user$project$MainLobbyView$chatLogView = function (model) {
 						},
 						{
 							ctor: '::',
-							_0: _mdgriffith$stylish_elephants$Element$text(_p17.message),
+							_0: _mdgriffith$stylish_elephants$Element$text(_p18.message),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}

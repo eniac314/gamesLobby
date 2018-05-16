@@ -244,7 +244,7 @@ gameMetaView ({ name, minPlayers, maxPlayers, hasIA } as gamesMeta) =
 
 
 gameSetupView : Model -> GameSetup -> Element Msg
-gameSetupView model { gameMeta, joined, hasStarted, host, gameId } =
+gameSetupView model { gameMeta, joined, hasStarted, host, gameId, launchUrl } =
     case host of
         Nothing ->
             Element.none
@@ -295,52 +295,67 @@ gameSetupView model { gameMeta, joined, hasStarted, host, gameId } =
                     , scrollbarY
                     ]
                     (List.map usrView joined)
-                , if isGameSetupHost then
-                    Input.button
-                        [ Background.color Color.lightRed
-                        , padding 10
-                        , Border.rounded 5
-                        , mouseOver [ Font.glow Color.lightRed 7 ]
-                        ]
-                        { onPress = Just <| DeleteGame gameId
-                        , label = text "Delete Game"
-                        }
-                  else if not (hasJoined model) && not (isHost model) then
-                    Input.button
-                        [ Background.color Color.lightBlue
-                        , padding 10
-                        , Border.rounded 5
-                        , mouseOver [ Font.glow Color.lightBlue 7 ]
-                        ]
-                        { onPress = Just <| JoinGame gameId
-                        , label = text "Join game!"
-                        }
-                  else if hasJoinedGameSetup then
-                    Input.button
-                        [ Background.color Color.lightBlue
-                        , padding 10
-                        , Border.rounded 5
-                        , mouseOver [ Font.glow Color.lightBlue 7 ]
-                        ]
-                        { onPress = Just <| LeaveGame gameId
-                        , label = text "Leave game"
-                        }
-                  else
-                    Element.none
-                , if canStart && not model.waitingForOthers then
-                    Input.button
-                        [ Background.color Color.lightGreen
-                        , padding 10
-                        , Border.rounded 5
-                        , mouseOver [ Font.glow Color.lightGreen 7 ]
-                        ]
-                        { onPress = Just <| StartGame gameId
-                        , label = text "Start game"
-                        }
-                  else if model.waitingForOthers then
-                    el [] (text "waiting to start...")
-                  else
-                    Element.none
+                , case launchUrl of
+                    Just url ->
+                        newTabLink
+                            [ Events.onClick Launched
+                            , Background.color Color.lightGreen
+                            , padding 10
+                            , Border.rounded 5
+                            ]
+                            { url = url
+                            , label = text "Launch! "
+                            }
+
+                    Nothing ->
+                        column [ spacing 5 ]
+                            [ if isGameSetupHost then
+                                Input.button
+                                    [ Background.color Color.lightRed
+                                    , padding 10
+                                    , Border.rounded 5
+                                    , mouseOver [ Font.glow Color.lightRed 7 ]
+                                    ]
+                                    { onPress = Just <| DeleteGame gameId
+                                    , label = text "Delete Game"
+                                    }
+                              else if not (hasJoined model) && not (isHost model) then
+                                Input.button
+                                    [ Background.color Color.lightBlue
+                                    , padding 10
+                                    , Border.rounded 5
+                                    , mouseOver [ Font.glow Color.lightBlue 7 ]
+                                    ]
+                                    { onPress = Just <| JoinGame gameId
+                                    , label = text "Join game!"
+                                    }
+                              else if hasJoinedGameSetup then
+                                Input.button
+                                    [ Background.color Color.lightBlue
+                                    , padding 10
+                                    , Border.rounded 5
+                                    , mouseOver [ Font.glow Color.lightBlue 7 ]
+                                    ]
+                                    { onPress = Just <| LeaveGame gameId
+                                    , label = text "Leave game"
+                                    }
+                              else
+                                Element.none
+                            , if canStart && not model.waitingForOthers then
+                                Input.button
+                                    [ Background.color Color.lightGreen
+                                    , padding 10
+                                    , Border.rounded 5
+                                    , mouseOver [ Font.glow Color.lightGreen 7 ]
+                                    ]
+                                    { onPress = Just <| StartGame gameId
+                                    , label = text "Start game"
+                                    }
+                              else if model.waitingForOthers then
+                                el [] (text "waiting to start...")
+                              else
+                                Element.none
+                            ]
                 ]
 
 

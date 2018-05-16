@@ -9,11 +9,16 @@
         const elmContainer = document.querySelector("#elm-container");
 
         if (elmContainer){
-         Elm.MainLobby.embed(elmContainer, {
+          var app = Elm.MainLobby.embed(elmContainer, {
             authToken: elmContainer.getAttribute("data-auth-token"),
             authSalt : elmContainer.getAttribute("data-auth-salt"),
             wsUrl: elmContainer.getAttribute("data-ws-url")
           })
+
+          app.ports.extUrl.subscribe(function(url){
+          	window.open(url,'_blank');
+          });
+          
         };
 
 </script>

@@ -9,8 +9,20 @@ var _user$project$Hexaboard_ScoresView$capitalize = function (s) {
 			_elm_lang$core$String$toList(s)));
 };
 var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
+	var canPlay = function (id) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			false,
+			A2(
+				_elm_lang$core$Maybe$map,
+				function (fid) {
+					return _elm_lang$core$Native_Utils.eq(fid, id);
+				},
+				_elm_lang$core$List$head(model.playingOrder)));
+	};
 	var playerView = function (_p0) {
 		var _p1 = _p0;
+		var _p2 = _p1._1;
 		return A2(
 			_mdgriffith$stylish_elephants$Element$row,
 			{
@@ -28,7 +40,7 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$stylish_elephants$Element_Background$color(
-								_user$project$Hexaboard_ScoresView$playerColorRgb(_p1._1)),
+								_user$project$Hexaboard_ScoresView$playerColorRgb(_p2)),
 							_1: {
 								ctor: '::',
 								_0: _mdgriffith$stylish_elephants$Element$width(
@@ -38,16 +50,20 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 									_0: _mdgriffith$stylish_elephants$Element_Font$center,
 									_1: {
 										ctor: '::',
-										_0: _mdgriffith$stylish_elephants$Element_Border$rounded(3),
+										_0: canPlay(_p2) ? _mdgriffith$stylish_elephants$Element_Font$bold : _mdgriffith$stylish_elephants$Element_Font$unitalicized,
 										_1: {
 											ctor: '::',
-											_0: _mdgriffith$stylish_elephants$Element_Font$family(
-												{
-													ctor: '::',
-													_0: _mdgriffith$stylish_elephants$Element_Font$typeface('monospace'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
+											_0: _mdgriffith$stylish_elephants$Element_Border$rounded(3),
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element_Font$family(
+													{
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element_Font$typeface('monospace'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								}
@@ -87,8 +103,8 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 				}
 			});
 	};
-	var _p2 = model.scores;
-	if (_p2.ctor === '[]') {
+	var _p3 = model.scores;
+	if (_p3.ctor === '[]') {
 		return _mdgriffith$stylish_elephants$Element$none;
 	} else {
 		return A2(
@@ -115,6 +131,6 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 					}
 				}
 			},
-			A2(_elm_lang$core$List$map, playerView, _p2));
+			A2(_elm_lang$core$List$map, playerView, _p3));
 	}
 };

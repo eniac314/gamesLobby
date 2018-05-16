@@ -1,4 +1,4 @@
-module MainLobby exposing (..)
+port module MainLobby exposing (..)
 
 import Color exposing (..)
 import Date exposing (..)
@@ -103,6 +103,9 @@ initialSocket flags =
         |> Phoenix.Socket.on "ready_to_launch" "lobby:mainlobby" Launch
         --|> Phoenix.Socket.withoutHeartbeat
         |> Phoenix.Socket.withDebug
+
+
+port extUrl : String -> Cmd msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -428,13 +431,47 @@ update msg model =
 
                         _ ->
                             ""
+
+                gameId name id =
+                    name ++ " " ++ toString id
+
+                newGamesSetup name id randName =
+                    model.gamesSetup
+                        |> Dict.update
+                            (gameId name id)
+                            (\mv ->
+                                Maybe.map
+                                    (\gs ->
+                                        { gs
+                                            | launchUrl =
+                                                Just <| gameUrl randName
+                                        }
+                                    )
+                                    mv
+                            )
             in
             case decodeGameIdWithName model jsonVal of
                 Ok ( name, id, randName ) ->
-                    model ! [ load (gameUrl randName) ]
+                    { model
+                        | gamesSetup = newGamesSetup name id randName
+                    }
+                        ! [--extUrl (gameUrl randName)
+                           -- load (gameUrl randName)
+                          ]
 
                 Err e ->
                     { model | errors = e } ! []
+
+        Launched ->
+            let
+                pushMsg =
+                    Phoenix.Push.init "game_launched" "lobby:mainlobby"
+
+                ( newSocket, phxCmd ) =
+                    Phoenix.Socket.push pushMsg model.phxSocket
+            in
+            { model | waitingForOthers = False }
+                ! [ Cmd.map PhoenixMsg phxCmd ]
 
         Default ->
             model ! []

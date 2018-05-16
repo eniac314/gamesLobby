@@ -140,7 +140,7 @@ viewSelection model =
             winLoseView model
 
         EndGame ->
-            none
+            endGameView model
 
 
 consoleView model =
@@ -336,6 +336,27 @@ gameMsgView { timeStamp, message } =
             --, htmlAttribute (Attr.attribute "pre" "true")
             ]
             [ text message ]
+        ]
+
+
+endGameView { scores } =
+    let
+        winner =
+            List.sortBy (\( a, b, c ) -> c) scores
+                |> List.reverse
+                |> List.map (\( a, _, _ ) -> a)
+                |> List.head
+                |> Maybe.withDefault ""
+    in
+    column
+        [ spacing 20 ]
+        [ el
+            [ Font.size 25
+            , centerX
+            ]
+            (text "Game Over")
+        , el [ centerX ]
+            (text <| "The winner is " ++ winner)
         ]
 
 

@@ -10,12 +10,18 @@
         const elmContainer = document.querySelector("#elm-container");
 
         if (elmContainer){
-         Elm.Hexaboard.embed(elmContainer, {
+          var app = Elm.Hexaboard.embed(elmContainer, {
             authToken: elmContainer.getAttribute("data-auth-token"),
             authSalt : elmContainer.getAttribute("data-auth-salt"),
             wsUrl: elmContainer.getAttribute("data-ws-url"),
             gameId: elmContainer.getAttribute("game-id")
           })
+          
+          app.ports.extUrl.subscribe(function(url){
+          	window.open(url,'_blank');
+          });
+
+
         };
 
 </script>

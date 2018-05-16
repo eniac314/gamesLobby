@@ -60,6 +60,7 @@ type alias GameSetup =
     , hasStarted : List Username
     , host : Maybe Username
     , gameId : GameId
+    , launchUrl : Maybe String
     }
 
 
@@ -109,4 +110,5 @@ type Msg
     | JoinGame GameId
     | LeaveGame GameId
     | Launch Decode.Value
+    | Launched
     | StartGame GameId

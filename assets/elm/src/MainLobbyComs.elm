@@ -161,12 +161,13 @@ gamesSetupDecoder model =
 
 
 gameSetupDecoder model =
-    Decode.map5 GameSetup
+    Decode.map6 GameSetup
         (Decode.field "game_meta" gameMetaDecoder)
         (Decode.field "joined" (joinedDecoder model))
         (Decode.field "has_started" (hasStartedDecoder model))
         (Decode.field "host" (hostDecoder model))
         (Decode.field "game_id" (gameIdDecoder model))
+        (Decode.succeed Nothing)
 
 
 hostDecoder model =

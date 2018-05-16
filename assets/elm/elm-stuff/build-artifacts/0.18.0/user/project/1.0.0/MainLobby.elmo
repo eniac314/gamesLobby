@@ -532,6 +532,16 @@ var _user$project$MainLobby$update = F2(
 							_1: {ctor: '[]'}
 						});
 				case 'Launch':
+					var gameId = F2(
+						function (name, id) {
+							return A2(
+								_elm_lang$core$Basics_ops['++'],
+								name,
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									' ',
+									_elm_lang$core$Basics$toString(id)));
+						});
 					var gameName = A2(
 						_elm_lang$core$Maybe$withDefault,
 						'',
@@ -552,17 +562,36 @@ var _user$project$MainLobby$update = F2(
 								return '';
 						}
 					};
+					var newGamesSetup = F3(
+						function (name, id, randName) {
+							return A3(
+								_elm_lang$core$Dict$update,
+								A2(gameId, name, id),
+								function (mv) {
+									return A2(
+										_elm_lang$core$Maybe$map,
+										function (gs) {
+											return _elm_lang$core$Native_Utils.update(
+												gs,
+												{
+													launchUrl: _elm_lang$core$Maybe$Just(
+														gameUrl(randName))
+												});
+										},
+										mv);
+								},
+								model.gamesSetup);
+						});
 					var _p22 = A2(_user$project$MainLobbyComs$decodeGameIdWithName, model, _p0._0);
 					if (_p22.ctor === 'Ok') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
-							model,
-							{
-								ctor: '::',
-								_0: _elm_lang$navigation$Navigation$load(
-									gameUrl(_p22._0._2)),
-								_1: {ctor: '[]'}
-							});
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{
+									gamesSetup: A3(newGamesSetup, _p22._0._0, _p22._0._1, _p22._0._2)
+								}),
+							{ctor: '[]'});
 					} else {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
@@ -571,6 +600,21 @@ var _user$project$MainLobby$update = F2(
 								{errors: _p22._0}),
 							{ctor: '[]'});
 					}
+				case 'Launched':
+					var pushMsg = A2(_fbonetti$elm_phoenix_socket$Phoenix_Push$init, 'game_launched', 'lobby:mainlobby');
+					var _p23 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$push, pushMsg, model.phxSocket);
+					var newSocket = _p23._0;
+					var phxCmd = _p23._1;
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{waitingForOthers: false}),
+						{
+							ctor: '::',
+							_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$MainLobbyTypes$PhoenixMsg, phxCmd),
+							_1: {ctor: '[]'}
+						});
 				default:
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
@@ -582,15 +626,15 @@ var _user$project$MainLobby$update = F2(
 var _user$project$MainLobby$init = function (flags) {
 	var lobbyMainlobby = _user$project$MainLobby$initPhoenixChannel('lobby:mainlobby');
 	var lobbyChat = _user$project$MainLobby$initPhoenixChannel('lobby:chat');
-	var _p23 = A2(
+	var _p24 = A2(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
 		lobbyChat,
 		_user$project$MainLobby$initialSocket(flags));
-	var newSocket1 = _p23._0;
-	var phxCmd1 = _p23._1;
-	var _p24 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
-	var newSocket2 = _p24._0;
-	var phxCmd2 = _p24._1;
+	var newSocket1 = _p24._0;
+	var phxCmd1 = _p24._1;
+	var _p25 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, lobbyMainlobby, newSocket1);
+	var newSocket2 = _p25._0;
+	var phxCmd2 = _p25._1;
 	var phxCmd = _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',
@@ -645,3 +689,8 @@ var _user$project$MainLobby$main = _elm_lang$html$Html$programWithFlags(
 				A2(_elm_lang$core$Json_Decode$field, 'authToken', _elm_lang$core$Json_Decode$string));
 		},
 		A2(_elm_lang$core$Json_Decode$field, 'authSalt', _elm_lang$core$Json_Decode$string)));
+var _user$project$MainLobby$extUrl = _elm_lang$core$Native_Platform.outgoingPort(
+	'extUrl',
+	function (v) {
+		return v;
+	});

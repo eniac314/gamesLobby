@@ -18,6 +18,11 @@ import Phoenix.Channel exposing (State(..))
 
 scoresView model =
     let
+        canPlay id =
+            List.head model.playingOrder
+                |> Maybe.map (\fid -> fid == id)
+                |> Maybe.withDefault False
+
         playerView ( player, id, score ) =
             row [ spacing 15 ]
                 [ el
@@ -27,6 +32,10 @@ scoresView model =
                     , Background.color (playerColorRgb id)
                     , width <| fillPortion 4
                     , Font.center
+                    , if canPlay id then
+                        Font.bold
+                      else
+                        Font.unitalicized
                     , Border.rounded 3
                     , Font.family
                         [ Font.typeface "monospace" ]
@@ -40,6 +49,9 @@ scoresView model =
                     , Border.rounded 3
                     ]
                     (text <| toString score)
+
+                --, text <| toString id
+                --, text <| toString model.playingOrder
                 ]
     in
     case model.scores of

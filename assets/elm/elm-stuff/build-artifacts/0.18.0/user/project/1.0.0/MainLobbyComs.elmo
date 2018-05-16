@@ -85,8 +85,8 @@ var _user$project$MainLobbyComs$gameMetaDecoder = A5(
 	A2(_elm_lang$core$Json_Decode$field, 'max_players', _elm_lang$core$Json_Decode$int),
 	A2(_elm_lang$core$Json_Decode$field, 'has_ia', _elm_lang$core$Json_Decode$bool));
 var _user$project$MainLobbyComs$gameSetupDecoder = function (model) {
-	return A6(
-		_elm_lang$core$Json_Decode$map5,
+	return A7(
+		_elm_lang$core$Json_Decode$map6,
 		_user$project$MainLobbyTypes$GameSetup,
 		A2(_elm_lang$core$Json_Decode$field, 'game_meta', _user$project$MainLobbyComs$gameMetaDecoder),
 		A2(
@@ -104,7 +104,8 @@ var _user$project$MainLobbyComs$gameSetupDecoder = function (model) {
 		A2(
 			_elm_lang$core$Json_Decode$field,
 			'game_id',
-			_user$project$MainLobbyComs$gameIdDecoder(model)));
+			_user$project$MainLobbyComs$gameIdDecoder(model)),
+		_elm_lang$core$Json_Decode$succeed(_elm_lang$core$Maybe$Nothing));
 };
 var _user$project$MainLobbyComs$gamesSetupDecoder = function (model) {
 	return _elm_lang$core$Json_Decode$dict(
