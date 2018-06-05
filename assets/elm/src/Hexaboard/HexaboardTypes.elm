@@ -35,6 +35,7 @@ type alias Model =
     , scores : List ( String, Int, Int )
     , deck : List Piece
     , gameState : GameState
+    , displayHints : Bool
     , device : Device
     , winSize : Size
     }
@@ -75,6 +76,8 @@ type Msg
     | PieceDown Decode.Value
     | RoundOver Decode.Value
     | GameOver Decode.Value
+    | HideHints
+    | ShowHints
     | Resizes Size
 
 

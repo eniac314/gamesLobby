@@ -21,7 +21,9 @@ var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
 																		return function (s) {
 																			return function (t) {
 																				return function (u) {
-																					return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, canChooseTurn: m, choosenTurn: n, availableTurns: o, playingOrder: p, scores: q, deck: r, gameState: s, device: t, winSize: u};
+																					return function (v) {
+																						return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, canChooseTurn: m, choosenTurn: n, availableTurns: o, playingOrder: p, scores: q, deck: r, gameState: s, displayHints: t, device: u, winSize: v};
+																					};
 																				};
 																			};
 																		};
@@ -70,6 +72,8 @@ var _user$project$Hexaboard_HexaboardTypes$Piece = F2(
 var _user$project$Hexaboard_HexaboardTypes$Resizes = function (a) {
 	return {ctor: 'Resizes', _0: a};
 };
+var _user$project$Hexaboard_HexaboardTypes$ShowHints = {ctor: 'ShowHints'};
+var _user$project$Hexaboard_HexaboardTypes$HideHints = {ctor: 'HideHints'};
 var _user$project$Hexaboard_HexaboardTypes$GameOver = function (a) {
 	return {ctor: 'GameOver', _0: a};
 };

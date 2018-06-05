@@ -48,23 +48,22 @@ winLoseView model =
                             else
                                 Color.white
                     in
-                    el
-                        [ Background.color color
-                        , width (fillPortion 1)
-                        , height (fillPortion 1)
-                        ]
-                        (el
-                            [ Background.uncropped <|
-                                "/images/hexaboard/pieces/piece"
-                                    ++ toString v
-                                    ++ ".png"
-
-                            --, Background.uncropped
-                            , width fill
-                            , height (px 55)
+                        el
+                            [ Background.color color
+                            , width (fillPortion 1)
+                            , height (fillPortion 1)
                             ]
-                            none
-                        )
+                            (el
+                                [ Background.uncropped <|
+                                    "/images/hexaboard/pieces/piece"
+                                        ++ toString v
+                                        ++ ".png"
+                                  --, Background.uncropped
+                                , width fill
+                                , height (px 55)
+                                ]
+                                none
+                            )
 
                 losersCells =
                     List.map makeCell losers
@@ -72,35 +71,58 @@ winLoseView model =
                 winnersCells =
                     List.map makeCell winners
             in
-            column
-                [ spacing 3
-                , if model.device.tablet then
-                    width (maximum 350 fill)
-                  else if model.device.desktop then
-                    width (maximum 450 fill)
-                  else
-                    width (maximum 600 fill)
-                , Border.solid
-                , Border.width 2
-                , padding 5
-                , height shrink
-                , alignTop
-
-                --, Font.family
-                --    [ Font.typeface "monospace" ]
-                --, Font.size 15
-                ]
-                [ row [ spacing 3 ]
-                    (el [ width (minimum 110 (fillPortion 2)) ]
-                        (text "loses to: ")
-                        :: losersCells
+                column
+                    [ spacing 3
+                    , if model.device.tablet then
+                        width (maximum 350 fill)
+                      else if model.device.desktop then
+                        width (maximum 450 fill)
+                      else
+                        width (maximum 600 fill)
+                    , Border.solid
+                    , Border.width 2
+                    , padding 5
+                    , height shrink
+                    , alignTop
+                      --, Font.family
+                      --    [ Font.typeface "monospace" ]
+                      --, Font.size 15
+                    ]
+                    (if model.displayHints then
+                        [ row [ spacing 3 ]
+                            (el [ width (minimum 110 (fillPortion 2)) ]
+                                (text "loses to: ")
+                                :: losersCells
+                            )
+                        , row [ spacing 3 ]
+                            (el [ width (minimum 110 (fillPortion 2)) ]
+                                (text "wins against: ")
+                                :: winnersCells
+                            )
+                        , Input.button
+                            [ Background.color Color.lightBlue
+                            , padding 10
+                            , Border.rounded 5
+                            , alignBottom
+                            , mouseOver [ Font.glow Color.lightBlue 7 ]
+                            ]
+                            { onPress = Just (HideHints)
+                            , label = text "Hide hints"
+                            }
+                        ]
+                     else
+                        [ Input.button
+                            [ Background.color Color.lightBlue
+                            , padding 10
+                            , Border.rounded 5
+                            , alignBottom
+                            , mouseOver [ Font.glow Color.lightBlue 7 ]
+                            ]
+                            { onPress = Just (ShowHints)
+                            , label = text "Show hints"
+                            }
+                        ]
                     )
-                , row [ spacing 3 ]
-                    (el [ width (minimum 110 (fillPortion 2)) ]
-                        (text "wins against: ")
-                        :: winnersCells
-                    )
-                ]
 
         Nothing ->
             none

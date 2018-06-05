@@ -63,4 +63,5 @@ Postgres:
 Deployment to heroku:
   cf elm-phoenix book p36.
 - comment off elm-plugin config and remove elm from watched folders in brunch-config.js
+- megaUgly priv/static/js
 - git add -A && git commit -m "deployment commit" && git push heroku master

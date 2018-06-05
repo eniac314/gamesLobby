@@ -61,31 +61,32 @@ init flags =
         defWinSize =
             { height = 768, width = 1024 }
     in
-    { wsUrl = flags.wsUrl
-    , authToken = flags.authToken
-    , authSalt = flags.authSalt
-    , gameId = flags.gameId
-    , phxSocket = newSocket2
-    , playerInfo = defPlayer
-    , presences = Dict.empty
-    , chatMessageInput = ""
-    , consoleLog = []
-    , chatMessageBoxFocused = False
-    , board = boardWithEdge n (hexaBoard n)
-    , choice = Nothing
-    , canChooseTurn = False
-    , choosenTurn = Nothing
-    , availableTurns = []
-    , playingOrder = []
-    , scores = []
-    , deck = []
-    , gameState = PieceSelection
-    , device = classifyDevice defWinSize
-    , winSize = defWinSize
-    }
-        ! [ Cmd.map PhoenixMsg phxCmd
-          , Task.perform Resizes Window.size
-          ]
+        { wsUrl = flags.wsUrl
+        , authToken = flags.authToken
+        , authSalt = flags.authSalt
+        , gameId = flags.gameId
+        , phxSocket = newSocket2
+        , playerInfo = defPlayer
+        , presences = Dict.empty
+        , chatMessageInput = ""
+        , consoleLog = []
+        , chatMessageBoxFocused = False
+        , board = boardWithEdge n (hexaBoard n)
+        , choice = Nothing
+        , canChooseTurn = False
+        , choosenTurn = Nothing
+        , availableTurns = []
+        , playingOrder = []
+        , scores = []
+        , deck = []
+        , displayHints = False
+        , gameState = PieceSelection
+        , device = classifyDevice defWinSize
+        , winSize = defWinSize
+        }
+            ! [ Cmd.map PhoenixMsg phxCmd
+              , Task.perform Resizes Window.size
+              ]
 
 
 initPhoenixChannel : String -> Encode.Value -> Phoenix.Channel.Channel Msg
@@ -110,22 +111,22 @@ initialSocket flags =
         gameChannel =
             "hexaboard:game:" ++ flags.gameId
     in
-    Phoenix.Socket.init wsUrlWithAuth
-        |> Phoenix.Socket.on "greetings" chatChannel ReceivePlayerInfo
-        |> Phoenix.Socket.on "greetings" gameChannel RequestGameState
-        |> Phoenix.Socket.on "presence_state" chatChannel ReceivePresenceState
-        |> Phoenix.Socket.on "presence_diff" chatChannel ReceivePresenceDiff
-        |> Phoenix.Socket.on "new_chat_message" chatChannel ReceiveChatMessage
-        |> Phoenix.Socket.on "chat_history" chatChannel UpdateChatLog
-        |> Phoenix.Socket.on "game_state" gameChannel UpdateGameState
-        |> Phoenix.Socket.on "piece_picked_up" gameChannel PiecePickedUp
-        |> Phoenix.Socket.on "pieces_all_set" gameChannel PiecesAllSet
-        |> Phoenix.Socket.on "turn_selected" gameChannel TurnSelected
-        |> Phoenix.Socket.on "turns_all_set" gameChannel TurnsAllSet
-        |> Phoenix.Socket.on "piece_down" gameChannel PieceDown
-        |> Phoenix.Socket.on "round_over" gameChannel RoundOver
-        |> Phoenix.Socket.on "game_over" gameChannel GameOver
-        |> Phoenix.Socket.withDebug
+        Phoenix.Socket.init wsUrlWithAuth
+            |> Phoenix.Socket.on "greetings" chatChannel ReceivePlayerInfo
+            |> Phoenix.Socket.on "greetings" gameChannel RequestGameState
+            |> Phoenix.Socket.on "presence_state" chatChannel ReceivePresenceState
+            |> Phoenix.Socket.on "presence_diff" chatChannel ReceivePresenceDiff
+            |> Phoenix.Socket.on "new_chat_message" chatChannel ReceiveChatMessage
+            |> Phoenix.Socket.on "chat_history" chatChannel UpdateChatLog
+            |> Phoenix.Socket.on "game_state" gameChannel UpdateGameState
+            |> Phoenix.Socket.on "piece_picked_up" gameChannel PiecePickedUp
+            |> Phoenix.Socket.on "pieces_all_set" gameChannel PiecesAllSet
+            |> Phoenix.Socket.on "turn_selected" gameChannel TurnSelected
+            |> Phoenix.Socket.on "turns_all_set" gameChannel TurnsAllSet
+            |> Phoenix.Socket.on "piece_down" gameChannel PieceDown
+            |> Phoenix.Socket.on "round_over" gameChannel RoundOver
+            |> Phoenix.Socket.on "game_over" gameChannel GameOver
+            |> Phoenix.Socket.withDebug
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -136,9 +137,9 @@ update msg model =
                 ( newSocket, phxCmd ) =
                     Phoenix.Socket.update msg model.phxSocket
             in
-            ( { model | phxSocket = newSocket }
-            , Cmd.map PhoenixMsg phxCmd
-            )
+                ( { model | phxSocket = newSocket }
+                , Cmd.map PhoenixMsg phxCmd
+                )
 
         ReceivePlayerInfo jsonVal ->
             case decodePlayerInfo jsonVal of
@@ -153,7 +154,7 @@ update msg model =
                         newModel =
                             { model | playerInfo = newPlInf }
                     in
-                    update (RequestDate <| AddServerMsg ("connexion established to game: " ++ model.gameId)) newModel
+                        update (RequestDate <| AddServerMsg ("connexion established to game: " ++ model.gameId)) newModel
 
                 Err s ->
                     model ! []
@@ -173,14 +174,14 @@ update msg model =
                     decodePresenceState jsonVal
                         |> Result.map (\state -> Presence.syncState state model.presences)
             in
-            case presences of
-                Ok ps ->
-                    { model | presences = ps } ! []
+                case presences of
+                    Ok ps ->
+                        { model | presences = ps } ! []
 
-                Err e ->
-                    update
-                        (RequestDate <| AddServerError ("receive presence_state: " ++ e))
-                        model
+                    Err e ->
+                        update
+                            (RequestDate <| AddServerError ("receive presence_state: " ++ e))
+                            model
 
         ReceivePresenceDiff jsonVal ->
             let
@@ -188,14 +189,14 @@ update msg model =
                     decodePresenceDiff jsonVal
                         |> Result.map (\diff -> Presence.syncDiff diff model.presences)
             in
-            case presences of
-                Ok ps ->
-                    { model | presences = ps } ! []
+                case presences of
+                    Ok ps ->
+                        { model | presences = ps } ! []
 
-                Err e ->
-                    update
-                        (RequestDate <| AddServerError ("receive presence_diff: " ++ e))
-                        model
+                    Err e ->
+                        update
+                            (RequestDate <| AddServerError ("receive presence_diff: " ++ e))
+                            model
 
         SendChatMessage date ->
             let
@@ -214,11 +215,11 @@ update msg model =
                 ( newSocket, phxCmd ) =
                     Phoenix.Socket.push pushMsg model.phxSocket
             in
-            { model
-                | phxSocket = newSocket
-                , chatMessageInput = ""
-            }
-                ! [ Cmd.map PhoenixMsg phxCmd ]
+                { model
+                    | phxSocket = newSocket
+                    , chatMessageInput = ""
+                }
+                    ! [ Cmd.map PhoenixMsg phxCmd ]
 
         RequestGameState jsonVal ->
             case decodePlayerInfo jsonVal of
@@ -233,8 +234,8 @@ update msg model =
                         ( newModel, phxCmd ) =
                             pushGameMsg model "requesting_gamestate" Nothing Nothing
                     in
-                    { newModel | playerInfo = newPlInf }
-                        ! [ Cmd.map PhoenixMsg phxCmd ]
+                        { newModel | playerInfo = newPlInf }
+                            ! [ Cmd.map PhoenixMsg phxCmd ]
 
                 Err s ->
                     model ! []
@@ -320,9 +321,9 @@ update msg model =
                                 , scores = scores
                             }
                     in
-                    update
-                        (RequestDate <| AddGameMsg "initial game state loaded")
-                        newModel
+                        update
+                            (RequestDate <| AddGameMsg "initial game state loaded")
+                            newModel
 
                 Err e ->
                     update
@@ -343,7 +344,7 @@ update msg model =
                                 payload
                                 Nothing
                     in
-                    newModel ! [ Cmd.map PhoenixMsg phxCmd ]
+                        newModel ! [ Cmd.map PhoenixMsg phxCmd ]
 
                 _ ->
                     model ! []
@@ -397,8 +398,8 @@ update msg model =
                         payload
                         Nothing
             in
-            { newModel | choosenTurn = Nothing }
-                ! [ Cmd.map PhoenixMsg phxCmd ]
+                { newModel | choosenTurn = Nothing }
+                    ! [ Cmd.map PhoenixMsg phxCmd ]
 
         TurnSelected jsonVal ->
             case decodeTurnsInfo jsonVal of
@@ -427,17 +428,17 @@ update msg model =
                                 |> Maybe.map (\id -> id == model.playerInfo.playerId)
                                 |> Maybe.withDefault False
                     in
-                    { model
-                        | gameState =
-                            if canPlay then
-                                Playing
-                            else
-                                WaitingForOwnTurn
-                        , availableTurns = []
-                        , playingOrder = playingOrder
-                        , canChooseTurn = False
-                    }
-                        ! []
+                        { model
+                            | gameState =
+                                if canPlay then
+                                    Playing
+                                else
+                                    WaitingForOwnTurn
+                            , availableTurns = []
+                            , playingOrder = playingOrder
+                            , canChooseTurn = False
+                        }
+                            ! []
 
                 Err e ->
                     update
@@ -463,11 +464,11 @@ update msg model =
                                 payload
                                 Nothing
                     in
-                    { newModel
-                        | choice = Nothing
-                        , gameState = WaitingForEndOfRound
-                    }
-                        ! [ Cmd.map PhoenixMsg phxCmd ]
+                        { newModel
+                            | choice = Nothing
+                            , gameState = WaitingForEndOfRound
+                        }
+                            ! [ Cmd.map PhoenixMsg phxCmd ]
 
                 _ ->
                     model ! []
@@ -481,17 +482,17 @@ update msg model =
                                 |> Maybe.map (\id -> id == model.playerInfo.playerId)
                                 |> Maybe.withDefault False
                     in
-                    { model
-                        | board = board
-                        , playingOrder = playingOrder
-                        , scores = scores
-                        , gameState =
-                            if canPlay then
-                                Playing
-                            else
-                                WaitingForEndOfRound
-                    }
-                        ! []
+                        { model
+                            | board = board
+                            , playingOrder = playingOrder
+                            , scores = scores
+                            , gameState =
+                                if canPlay then
+                                    Playing
+                                else
+                                    WaitingForEndOfRound
+                        }
+                            ! []
 
                 Err e ->
                     update
@@ -515,6 +516,12 @@ update msg model =
         RequestDate callback ->
             model ! [ perform callback Date.now ]
 
+        HideHints ->
+            { model | displayHints = False } ! []
+
+        ShowHints ->
+            { model | displayHints = True } ! []
+
         Resizes size ->
             { model
                 | device = classifyDevice size
@@ -532,7 +539,7 @@ update msg model =
                 newConsoleLog =
                     ServerComMsg sysMsg :: model.consoleLog
             in
-            { model | consoleLog = newConsoleLog } ! []
+                { model | consoleLog = newConsoleLog } ! []
 
         AddServerError msg date ->
             let
@@ -544,7 +551,7 @@ update msg model =
                 newConsoleLog =
                     ServerErrorMsg sysMsg :: model.consoleLog
             in
-            { model | consoleLog = newConsoleLog } ! []
+                { model | consoleLog = newConsoleLog } ! []
 
         ServerMsg jsonVal ->
             case Decode.decodeValue Decode.string jsonVal of
@@ -580,7 +587,7 @@ update msg model =
                 newConsoleLog =
                     GameMsg sysMsg :: model.consoleLog
             in
-            { model | consoleLog = newConsoleLog } ! []
+                { model | consoleLog = newConsoleLog } ! []
 
         DebugJson getter jsonVal ->
             case debugJson getter jsonVal of
@@ -629,4 +636,4 @@ pushGameMsg model topic mbPayload mbOkHandler =
         ( newSocket, phxCmd ) =
             Phoenix.Socket.push msg model.phxSocket
     in
-    ( { model | phxSocket = newSocket }, phxCmd )
+        ( { model | phxSocket = newSocket }, phxCmd )

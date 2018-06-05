@@ -630,6 +630,20 @@ var _user$project$Hexaboard$update = F2(
 							_0: A2(_elm_lang$core$Task$perform, _p1._0, _elm_lang$core$Date$now),
 							_1: {ctor: '[]'}
 						});
+				case 'HideHints':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{displayHints: false}),
+						{ctor: '[]'});
+				case 'ShowHints':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{displayHints: true}),
+						{ctor: '[]'});
 				case 'Resizes':
 					var _p29 = _p1._0;
 					return A2(
@@ -912,6 +926,7 @@ var _user$project$Hexaboard$init = function (flags) {
 			playingOrder: {ctor: '[]'},
 			scores: {ctor: '[]'},
 			deck: {ctor: '[]'},
+			displayHints: false,
 			gameState: _user$project$Hexaboard_HexaboardTypes$PieceSelection,
 			device: _mdgriffith$stylish_elephants$Element$classifyDevice(defWinSize),
 			winSize: defWinSize

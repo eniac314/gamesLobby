@@ -119,7 +119,7 @@ var _user$project$Hexaboard_WinLoseView$winLoseView = function (model) {
 					}
 				}
 			},
-			{
+			model.displayHints ? {
 				ctor: '::',
 				_0: A2(
 					_mdgriffith$stylish_elephants$Element$row,
@@ -169,8 +169,78 @@ var _user$project$Hexaboard_WinLoseView$winLoseView = function (model) {
 								_mdgriffith$stylish_elephants$Element$text('wins against: ')),
 							_1: winnersCells
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_mdgriffith$stylish_elephants$Element_Input$button,
+							{
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$padding(10),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$stylish_elephants$Element$alignBottom,
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+													{
+														ctor: '::',
+														_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							},
+							{
+								onPress: _elm_lang$core$Maybe$Just(_user$project$Hexaboard_HexaboardTypes$HideHints),
+								label: _mdgriffith$stylish_elephants$Element$text('Hide hints')
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
+			} : {
+				ctor: '::',
+				_0: A2(
+					_mdgriffith$stylish_elephants$Element_Input$button,
+					{
+						ctor: '::',
+						_0: _mdgriffith$stylish_elephants$Element_Background$color(_elm_lang$core$Color$lightBlue),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$stylish_elephants$Element$padding(10),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$stylish_elephants$Element_Border$rounded(5),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$stylish_elephants$Element$alignBottom,
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$stylish_elephants$Element$mouseOver(
+											{
+												ctor: '::',
+												_0: A2(_mdgriffith$stylish_elephants$Element_Font$glow, _elm_lang$core$Color$lightBlue, 7),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					},
+					{
+						onPress: _elm_lang$core$Maybe$Just(_user$project$Hexaboard_HexaboardTypes$ShowHints),
+						label: _mdgriffith$stylish_elephants$Element$text('Show hints')
+					}),
+				_1: {ctor: '[]'}
 			});
 	} else {
 		return _mdgriffith$stylish_elephants$Element$none;

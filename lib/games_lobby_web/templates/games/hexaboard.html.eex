@@ -17,9 +17,7 @@
             gameId: elmContainer.getAttribute("game-id")
           })
           
-          app.ports.extUrl.subscribe(function(url){
-          	window.open(url,'_blank');
-          });
+          
 
 
         };

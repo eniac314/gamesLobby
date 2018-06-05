@@ -58,4 +58,4 @@ config :games_lobby, GamesLobby.Repo,
   pool_size: 10
 
 config :games_lobby, GamesLobbyWeb.Endpoint,
-  ws_url: "ws://192.168.0.12:4000/socket/websocket"
+  ws_url: "ws://192.168.0.14:4000/socket/websocket"
