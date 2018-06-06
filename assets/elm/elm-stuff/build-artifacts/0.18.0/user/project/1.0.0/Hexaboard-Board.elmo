@@ -15,6 +15,14 @@ var _user$project$Hexaboard_Board$boardWithEdge = F2(
 						cell,
 						{
 							state: function () {
+								var toHexString = function (f) {
+									return A3(
+										_elm_lang$core$String$padLeft,
+										2,
+										_elm_lang$core$Native_Utils.chr('0'),
+										_rtfeldman$hex$Hex$toString(
+											_elm_lang$core$Basics$round(f)));
+								};
 								if (!A2(_user$project$Hexaboard_Board$isEdge, n, cell)) {
 									return cell.state;
 								} else {
@@ -26,12 +34,10 @@ var _user$project$Hexaboard_Board$boardWithEdge = F2(
 											'#',
 											A2(
 												_elm_lang$core$Basics_ops['++'],
-												_rtfeldman$hex$Hex$toString(
-													_elm_lang$core$Basics$round(percent * 255)),
+												toHexString(percent * 255),
 												A2(
 													_elm_lang$core$Basics_ops['++'],
-													_rtfeldman$hex$Hex$toString(
-														_elm_lang$core$Basics$round(percent * 255)),
+													toHexString(percent * 255),
 													'00')));
 										return _user$project$Hexaboard_HexaboardTypes$UnPlayable(
 											_user$project$Hexaboard_HexaboardTypes$Rainbow(color_string));
@@ -44,12 +50,10 @@ var _user$project$Hexaboard_Board$boardWithEdge = F2(
 												'#',
 												A2(
 													_elm_lang$core$Basics_ops['++'],
-													_rtfeldman$hex$Hex$toString(
-														_elm_lang$core$Basics$round(percent * 255)),
+													toHexString(percent * 255),
 													A2(
 														_elm_lang$core$Basics_ops['++'],
-														_rtfeldman$hex$Hex$toString(
-															_elm_lang$core$Basics$round(percent * 127)),
+														toHexString(percent * 127),
 														'00')));
 											return _user$project$Hexaboard_HexaboardTypes$UnPlayable(
 												_user$project$Hexaboard_HexaboardTypes$Rainbow(color_string));
@@ -62,8 +66,7 @@ var _user$project$Hexaboard_Board$boardWithEdge = F2(
 													'#00',
 													A2(
 														_elm_lang$core$Basics_ops['++'],
-														_rtfeldman$hex$Hex$toString(
-															_elm_lang$core$Basics$round(percent * 255)),
+														toHexString(percent * 255),
 														'00'));
 												return _user$project$Hexaboard_HexaboardTypes$UnPlayable(
 													_user$project$Hexaboard_HexaboardTypes$Rainbow(color_string));
@@ -76,8 +79,7 @@ var _user$project$Hexaboard_Board$boardWithEdge = F2(
 														'#',
 														A2(
 															_elm_lang$core$Basics_ops['++'],
-															_rtfeldman$hex$Hex$toString(
-																_elm_lang$core$Basics$round(percent * 255)),
+															toHexString(percent * 255),
 															'0000'));
 													return _user$project$Hexaboard_HexaboardTypes$UnPlayable(
 														_user$project$Hexaboard_HexaboardTypes$Rainbow(color_string));
@@ -91,8 +93,7 @@ var _user$project$Hexaboard_Board$boardWithEdge = F2(
 															A2(
 																_elm_lang$core$Basics_ops['++'],
 																'0000',
-																_rtfeldman$hex$Hex$toString(
-																	_elm_lang$core$Basics$round(percent * 255))));
+																toHexString(percent * 255)));
 														return _user$project$Hexaboard_HexaboardTypes$UnPlayable(
 															_user$project$Hexaboard_HexaboardTypes$Rainbow(color_string));
 													} else {
@@ -103,13 +104,11 @@ var _user$project$Hexaboard_Board$boardWithEdge = F2(
 															'#',
 															A2(
 																_elm_lang$core$Basics_ops['++'],
-																_rtfeldman$hex$Hex$toString(
-																	_elm_lang$core$Basics$round(percent * 180)),
+																toHexString(percent * 180),
 																A2(
 																	_elm_lang$core$Basics_ops['++'],
 																	'00',
-																	_rtfeldman$hex$Hex$toString(
-																		_elm_lang$core$Basics$round(percent * 255)))));
+																	toHexString(percent * 255))));
 														return _user$project$Hexaboard_HexaboardTypes$UnPlayable(
 															_user$project$Hexaboard_HexaboardTypes$Rainbow(color_string));
 													}

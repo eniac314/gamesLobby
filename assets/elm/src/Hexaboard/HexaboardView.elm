@@ -89,6 +89,7 @@ view model =
                         ]
                     ]
                     (text "EADIUNKAL")
+                  --(text "HEXABOARD")
                 , selectedSvg model
                 , scoresView model
                   --, el [] (text <| toString model.gameState)

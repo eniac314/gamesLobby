@@ -317,7 +317,16 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 										_1: {
 											ctor: '::',
 											_0: _mdgriffith$stylish_elephants$Element_Border$rounded(3),
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$stylish_elephants$Element_Font$family(
+													{
+														ctor: '::',
+														_0: _mdgriffith$stylish_elephants$Element_Font$typeface('monospace'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								}
@@ -327,7 +336,7 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 							_elm_lang$core$Basics$toString(_p10.score))),
 					_1: {
 						ctor: '::',
-						_0: _elm_lang$core$Native_Utils.eq(model.gameState, _user$project$Hexaboard_HexaboardTypes$TurnSelection) ? _user$project$Hexaboard_ScoresView$selectedSvg(_p10.piece) : _user$project$Hexaboard_ScoresView$selectedSvg(_elm_lang$core$Maybe$Nothing),
+						_0: (_elm_lang$core$Native_Utils.eq(model.gameState, _user$project$Hexaboard_HexaboardTypes$TurnSelection) || (_elm_lang$core$Native_Utils.eq(model.gameState, _user$project$Hexaboard_HexaboardTypes$WaitingForOwnTurn) || (_elm_lang$core$Native_Utils.eq(model.gameState, _user$project$Hexaboard_HexaboardTypes$Playing) || _elm_lang$core$Native_Utils.eq(model.gameState, _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfRound)))) ? _user$project$Hexaboard_ScoresView$selectedSvg(_p10.piece) : _user$project$Hexaboard_ScoresView$selectedSvg(_elm_lang$core$Maybe$Nothing),
 						_1: {ctor: '[]'}
 					}
 				}

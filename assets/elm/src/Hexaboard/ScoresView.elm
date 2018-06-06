@@ -49,11 +49,22 @@ scoresView model =
                     , width <| fillPortion 1
                     , Font.center
                     , Border.rounded 3
+                    , Font.family
+                        [ Font.typeface "monospace" ]
                     ]
                     (Element.text <| toString score)
                   --, text <| toString id
                   --, text <| toString model.playingOrder
-                , if model.gameState == TurnSelection then
+                , if
+                    model.gameState
+                        == TurnSelection
+                        || model.gameState
+                        == WaitingForOwnTurn
+                        || model.gameState
+                        == Playing
+                        || model.gameState
+                        == WaitingForEndOfRound
+                  then
                     selectedSvg piece
                   else
                     selectedSvg Nothing
