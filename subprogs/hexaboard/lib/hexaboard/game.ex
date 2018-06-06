@@ -31,6 +31,8 @@ defmodule Hexaboard.Game do
   end 
 
   def encodable_state(game) do 
+    game = compute_scores(game)
+
     encodable_cell = 
       fn (%{state: state} = cell) -> 
         case state do 

@@ -53,7 +53,10 @@ scoresView model =
                     (Element.text <| toString score)
                   --, text <| toString id
                   --, text <| toString model.playingOrder
-                , selectedSvg piece
+                , if model.gameState == TurnSelection then
+                    selectedSvg piece
+                  else
+                    selectedSvg Nothing
                 ]
     in
         case model.players of
