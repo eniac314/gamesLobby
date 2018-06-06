@@ -37,8 +37,8 @@ exports.config = {
   // Phoenix paths configuration
   paths: {
     // Dependencies and current project directories to watch
-    // watched: ["static", "css", "js", "vendor", "elm"],
-    watched: ["static", "css", "js", "vendor"],
+    watched: ["static", "css", "js", "vendor", "elm"],
+    // watched: ["static", "css", "js", "vendor"],
     // Where to compile files to
     public: "../priv/static"
   },
@@ -47,15 +47,15 @@ exports.config = {
   plugins: {
     babel: {
       // Do not use ES6 compiler in vendor code
-      ignore: [/vendor/, "../priv/static/js"]},
-      // ignore: [/vendor/, "js/mainlobby.js", "js/hexaboard.js"]},
+      // ignore: [/vendor/, "../priv/static/js"]},
+      ignore: [/vendor/, "js/mainlobby.js", "js/hexaboard.js"]},
     
-    // elmBrunch: {
-    //   elmFolder: "elm",
-    //   mainModules: ["src/MainLobby.elm", "src/Hexaboard/Hexaboard.elm"],
-    //   makeParameters: [],
-    //   outputFolder: "../../priv/static/js"
-    // }
+    elmBrunch: {
+      elmFolder: "elm",
+      mainModules: ["src/MainLobby.elm", "src/Hexaboard/Hexaboard.elm"],
+      makeParameters: [],
+      outputFolder: "../../priv/static/js"
+    }
 
   },
 

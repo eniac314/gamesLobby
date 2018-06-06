@@ -33,7 +33,7 @@ encodeChatMessage { timeStamp, author, message } =
         ]
 
 
-encodePlayer : Player -> Encode.Value
+encodePlayer : PresPlayer -> Encode.Value
 encodePlayer { username, onlineAt } =
     Encode.object
         [ ( "username", Encode.string username )
@@ -86,9 +86,9 @@ decodeChatHistory jsonVal =
         chatHistoryDecoder =
             Decode.list chatMessageDecoder
     in
-    Decode.decodeValue
-        (Decode.field "chat_history" chatHistoryDecoder)
-        jsonVal
+        Decode.decodeValue
+            (Decode.field "chat_history" chatHistoryDecoder)
+            jsonVal
 
 
 decodeDate =
@@ -124,7 +124,7 @@ decodeGameState player jsonVal =
                     (Decode.field "game_over" Decode.bool)
                     (Decode.field "players" decodeScores)
     in
-    Decode.decodeValue gameStateDecoder jsonVal
+        Decode.decodeValue gameStateDecoder jsonVal
 
 
 decodePieceDown =
@@ -173,11 +173,11 @@ decodeCellState =
             Decode.field "unplayable" Decode.string
                 |> Decode.map (\_ -> UnPlayable Grey)
     in
-    Decode.oneOf
-        [ decodeEmpty
-        , decodeContainPiece
-        , decodeUnplayable
-        ]
+        Decode.oneOf
+            [ decodeEmpty
+            , decodeContainPiece
+            , decodeUnplayable
+            ]
 
 
 decodePiece =
@@ -238,13 +238,13 @@ decodeTurnsInfo jsonVal =
             , playingOrder = po
             }
     in
-    Decode.decodeValue
-        (Decode.map3 turnsInfo
-            (Decode.field "available_turns" decodeAvlTurns)
-            (Decode.field "turn_selection_order" decodeTurnSelOrd)
-            (Decode.field "playing_order" decodePlayingOrder)
-        )
-        jsonVal
+        Decode.decodeValue
+            (Decode.map3 turnsInfo
+                (Decode.field "available_turns" decodeAvlTurns)
+                (Decode.field "turn_selection_order" decodeTurnSelOrd)
+                (Decode.field "playing_order" decodePlayingOrder)
+            )
+            jsonVal
 
 
 debugJson getter =

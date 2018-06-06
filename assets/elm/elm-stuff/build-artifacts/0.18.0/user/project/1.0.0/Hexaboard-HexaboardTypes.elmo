@@ -57,7 +57,7 @@ var _user$project$Hexaboard_HexaboardTypes$SystemMessage = F2(
 	function (a, b) {
 		return {timeStamp: a, message: b};
 	});
-var _user$project$Hexaboard_HexaboardTypes$Player = F3(
+var _user$project$Hexaboard_HexaboardTypes$PresPlayer = F3(
 	function (a, b, c) {
 		return {onlineAt: a, username: b, playerId: c};
 	});

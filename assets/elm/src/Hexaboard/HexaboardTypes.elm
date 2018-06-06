@@ -21,8 +21,8 @@ type alias Model =
     , authSalt : String
     , gameId : String
     , phxSocket : Phoenix.Socket.Socket Msg
-    , playerInfo : Player
-    , presences : Presence.PresenceState Player
+    , playerInfo : PresPlayer
+    , presences : Presence.PresenceState PresPlayer
     , chatMessageInput : String
     , consoleLog : List ConsoleMsg
     , chatMessageBoxFocused : Bool
@@ -98,7 +98,7 @@ type ConsoleMsg
 
 type alias ChatMessage =
     { timeStamp : Date
-    , author : Player
+    , author : PresPlayer
     , message : String
     }
 
@@ -109,7 +109,7 @@ type alias SystemMessage =
     }
 
 
-type alias Player =
+type alias PresPlayer =
     { onlineAt : String
     , username : Username
     , playerId : Int
