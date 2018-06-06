@@ -14,13 +14,13 @@ import Phoenix.Socket
 
 decodePresenceState jsonVal =
     Decode.decodeValue
-        (Presence.presenceStateDecoder playerDecoder)
+        (Presence.presenceStateDecoder presPlayerDecoder)
         jsonVal
 
 
 decodePresenceDiff jsonVal =
     Decode.decodeValue
-        (Presence.presenceDiffDecoder playerDecoder)
+        (Presence.presenceDiffDecoder presPlayerDecoder)
         jsonVal
 
 
@@ -57,11 +57,11 @@ decodePlayerInfo jsonVal =
     Decode.decodeValue
         (Decode.field "username" Decode.string)
         jsonVal
-        |> Result.map (\name -> { defPlayer | username = name })
+        |> Result.map (\name -> { defPresPlayer | username = name })
 
 
-playerDecoder =
-    Decode.map2 (\j u -> { defPlayer | onlineAt = j, username = u })
+presPlayerDecoder =
+    Decode.map2 (\j u -> { defPresPlayer | onlineAt = j, username = u })
         (Decode.field "joined_at" Decode.string)
         (Decode.field "username" Decode.string)
 
@@ -76,7 +76,7 @@ decodeChatMessage jsonVal =
 chatMessageDecoder =
     Decode.map3 ChatMessage
         (Decode.field "time_stamp" decodeDate)
-        (Decode.field "author" playerDecoder)
+        (Decode.field "author" presPlayerDecoder)
         (Decode.field "message" Decode.string)
         |> Decode.map ChatMsg
 
@@ -101,7 +101,7 @@ decodeDate =
 
 decodeGameState player jsonVal =
     let
-        gameState b ( d, id, p ) at tso po go s =
+        gameState b ( d, id, p ) at tso po go ps =
             { board = b
             , deck = List.map (\v -> { value = v, playerId = id }) d
             , id = id
@@ -109,8 +109,10 @@ decodeGameState player jsonVal =
             , turnSelectionOrder = tso
             , piece = p
             , playingOrder = po
-            , gameOver = go
-            , scores = s
+            , gameOver =
+                go
+                --, scores = s
+            , players = ps
             }
 
         gameStateDecoder =
@@ -122,7 +124,8 @@ decodeGameState player jsonVal =
                     (Decode.field "turn_selection_order" decodeTurnSelOrd)
                     (Decode.field "playing_order" decodePlayingOrder)
                     (Decode.field "game_over" Decode.bool)
-                    (Decode.field "players" decodeScores)
+                    --(Decode.field "players" decodeScores)
+                    (Decode.field "players" decodePlayers)
     in
         Decode.decodeValue gameStateDecoder jsonVal
 
@@ -201,6 +204,30 @@ decodePlayingOrder =
 decodePlayer player =
     Decode.decodeValue <|
         Decode.field "players" (playerDecoder2 player)
+
+
+decodePlayers =
+    let
+        decodePiece id =
+            Decode.nullable Decode.int
+                |> Decode.map
+                    (Maybe.map (\v -> Piece v id))
+
+        decodePlayer =
+            Decode.map4 Player
+                (Decode.field "name" Decode.string)
+                (Decode.field "id" Decode.int)
+                (Decode.field "score" Decode.int)
+                (Decode.field "id" Decode.int
+                    |> Decode.andThen
+                        (\id ->
+                            Decode.field "piece"
+                                (decodePiece id)
+                        )
+                )
+    in
+        Decode.dict decodePlayer
+            |> Decode.map (Dict.values)
 
 
 playerDecoder2 player =

@@ -25,23 +25,20 @@ view model =
     Element.layout
         [ padding 15
         , Font.size 18
-
-        --, Background.color Color.blue
+          --, Background.color Color.blue
         , height (px <| model.winSize.height)
         , Background.tiled "/images/hexaboard/tiles/ep_naturalwhite.png"
         ]
     <|
         row
             [ spacing 20
-
-            --, Background.color Color.green
+              --, Background.color Color.green
             , height fill
             ]
             [ consoleView model
             , column
                 [ spacing 10
-
-                --, Background.color Color.green
+                  --, Background.color Color.green
                 , if model.device.tablet then
                     width (maximum 350 fill)
                   else if model.device.desktop then
@@ -66,8 +63,7 @@ view model =
                 ]
             , column
                 [ spacing 70
-
-                --, Background.color Color.red
+                  --, Background.color Color.red
                 ]
                 [ el
                     [ Region.heading 1
@@ -92,15 +88,14 @@ view model =
                         , Font.typeface "Anurati"
                         ]
                     ]
-                    (text "HEXABOARD")
+                    (text "EADIUNKAL")
                 , selectedSvg model
                 , scoresView model
-
-                --, el [] (text <| toString model.gameState)
-                --, el [] (text <| toString model.playingOrder)
-                --, el [] (text <| toString model.availableTurns)
-                --, el [] (text <| toString model.scores)
-                --, paragraph [] [ text <| toString model ]
+                  --, el [] (text <| toString model.gameState)
+                  --, el [] (text <| toString model.playingOrder)
+                  --, el [] (text <| toString model.availableTurns)
+                  --, paragraph [] [ text <| toString model.players ]
+                  --, paragraph [] [ text <| toString model ]
                 ]
             ]
 
@@ -112,8 +107,7 @@ viewSelection model =
                 [ width fill
                 , alignTop
                 , alignRight
-
-                --, Background.color Color.red
+                  --, Background.color Color.red
                 ]
                 (deckSvg model)
 
@@ -122,8 +116,7 @@ viewSelection model =
                 [ width fill
                 , alignTop
                 , alignRight
-
-                --, Background.color Color.red
+                  --, Background.color Color.red
                 ]
                 (deckSvg model)
 
@@ -193,19 +186,19 @@ consoleLogView model =
                 GameMsg msg ->
                     gameMsgView msg
     in
-    column
-        [ spacing 10
-        , padding 10
-        , Border.solid
-        , Border.rounded 5
-        , Border.width 2
-        , Border.color Color.lightGrey
-        , width fill
-        , scrollbarY
-        , htmlAttribute (Attr.id "chatLogContainer")
-        , Background.color Color.white
-        ]
-        (List.map messageView model.consoleLog |> List.reverse)
+        column
+            [ spacing 10
+            , padding 10
+            , Border.solid
+            , Border.rounded 5
+            , Border.width 2
+            , Border.color Color.lightGrey
+            , width fill
+            , scrollbarY
+            , htmlAttribute (Attr.id "chatLogContainer")
+            , Background.color Color.white
+            ]
+            (List.map messageView model.consoleLog |> List.reverse)
 
 
 chatMsgView { timeStamp, author, message } =
@@ -266,8 +259,7 @@ serverComMsgView { timeStamp, message } =
                 [ Font.typeface "monospace" ]
             , Font.size 15
             , width fill
-
-            --, htmlAttribute (Attr.attribute "pre" "true")
+              --, htmlAttribute (Attr.attribute "pre" "true")
             ]
             [ text message ]
         ]
@@ -332,32 +324,31 @@ gameMsgView { timeStamp, message } =
                 [ Font.typeface "monospace" ]
             , Font.size 15
             , width fill
-
-            --, htmlAttribute (Attr.attribute "pre" "true")
+              --, htmlAttribute (Attr.attribute "pre" "true")
             ]
             [ text message ]
         ]
 
 
-endGameView { scores } =
+endGameView { players } =
     let
         winner =
-            List.sortBy (\( a, b, c ) -> c) scores
+            List.sortBy .score players
                 |> List.reverse
-                |> List.map (\( a, _, _ ) -> a)
+                |> List.map .username
                 |> List.head
                 |> Maybe.withDefault ""
     in
-    column
-        [ spacing 20 ]
-        [ el
-            [ Font.size 25
-            , centerX
+        column
+            [ spacing 20 ]
+            [ el
+                [ Font.size 25
+                , centerX
+                ]
+                (text "Game Over")
+            , el [ centerX ]
+                (text <| "The winner is " ++ winner)
             ]
-            (text "Game Over")
-        , el [ centerX ]
-            (text <| "The winner is " ++ winner)
-        ]
 
 
 
@@ -399,6 +390,6 @@ prettyDate timeStamp =
         minute =
             Date.minute timeStamp
     in
-    String.padLeft 2 '0' (toString hour)
-        ++ ":"
-        ++ String.padLeft 2 '0' (toString minute)
+        String.padLeft 2 '0' (toString hour)
+            ++ ":"
+            ++ String.padLeft 2 '0' (toString minute)

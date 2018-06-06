@@ -81,7 +81,8 @@ defmodule GamesLobbyWeb.HexaboardChannel do
     
     end
 
-    push(socket, "piece_picked_up", %{players: players})   
+    push(socket, "piece_picked_up", %{players: players})
+    broadcast!(socket, "players_update", %{players: players})   
 
     {:noreply, socket}
   end   

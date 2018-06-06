@@ -1,3 +1,77 @@
+var _user$project$Hexaboard_ScoresView$piecesPatterns = A2(
+	_elm_lang$core$List$map,
+	function (n) {
+		return A2(
+			_elm_lang$svg$Svg$pattern,
+			{
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$id(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'piece',
+						_elm_lang$core$Basics$toString(n))),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$x('0%'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$y('0%'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$width('100%'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$height('100%'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$viewBox('0 0 100 100'),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$svg$Svg$image,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$x('10'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$y('10'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$height('80'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$width('80'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$xlinkHref(
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'images/hexaboard/pieces/piece',
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													_elm_lang$core$Basics$toString(n),
+													'.png'))),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			});
+	},
+	A2(_elm_lang$core$List$range, 0, 14));
+var _user$project$Hexaboard_ScoresView$playerColor = function (playerId) {
+	return _elm_lang$core$Native_Utils.eq(playerId, 1) ? '#ff0000' : (_elm_lang$core$Native_Utils.eq(playerId, 2) ? '#ff7f00' : (_elm_lang$core$Native_Utils.eq(playerId, 3) ? '#ffff00' : (_elm_lang$core$Native_Utils.eq(playerId, 4) ? '#00ff00' : (_elm_lang$core$Native_Utils.eq(playerId, 5) ? '#0000ff' : (_elm_lang$core$Native_Utils.eq(playerId, 6) ? '#b400ff' : 'white')))));
+};
 var _user$project$Hexaboard_ScoresView$playerColorRgb = function (playerId) {
 	return _elm_lang$core$Native_Utils.eq(playerId, 1) ? A4(_elm_lang$core$Color$rgba, 255, 0, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 2) ? A4(_elm_lang$core$Color$rgba, 255, 127, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 3) ? A4(_elm_lang$core$Color$rgba, 255, 255, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 4) ? A4(_elm_lang$core$Color$rgba, 0, 255, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 5) ? A4(_elm_lang$core$Color$rgba, 0, 0, 255, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 6) ? A4(_elm_lang$core$Color$rgba, 180, 0, 255, 0.7) : _elm_lang$core$Color$white)))));
 };
@@ -7,6 +81,158 @@ var _user$project$Hexaboard_ScoresView$capitalize = function (s) {
 			_elm_lang$core$List$map,
 			_elm_lang$core$Char$toUpper,
 			_elm_lang$core$String$toList(s)));
+};
+var _user$project$Hexaboard_ScoresView$selectedHexaSvg = F2(
+	function (radius, _p0) {
+		var _p1 = _p0;
+		var points = A3(
+			_elm_lang$core$List$foldr,
+			F2(
+				function (_p2, acc) {
+					var _p3 = _p2;
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						acc,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Basics$toString(_p3._0),
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								', ',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(_p3._1),
+									' '))));
+				}),
+			'',
+			A2(
+				_elm_lang$core$List$map,
+				function (_p4) {
+					var _p5 = _p4;
+					return {ctor: '_Tuple2', _0: _p5._0 + 50, _1: _p5._1 + 50};
+				},
+				A2(
+					_elm_lang$core$List$map,
+					_elm_lang$core$Basics$fromPolar,
+					A2(
+						_elm_lang$core$List$map,
+						function (_p6) {
+							var _p7 = _p6;
+							return {ctor: '_Tuple2', _0: _p7._0, _1: _p7._1 + (_elm_lang$core$Basics$pi / 6)};
+						},
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: radius, _1: 0},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: radius, _1: _elm_lang$core$Basics$pi / 3},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: radius, _1: (2 * _elm_lang$core$Basics$pi) / 3},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: radius, _1: _elm_lang$core$Basics$pi},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: radius, _1: (4 * _elm_lang$core$Basics$pi) / 3},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: radius, _1: (5 * _elm_lang$core$Basics$pi) / 3},
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}))));
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$svg$Svg$polygon,
+				{
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$fill(
+						_user$project$Hexaboard_ScoresView$playerColor(_p1.playerId)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$points(points),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$svg$Svg$polygon,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$fill(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'url(#piece',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(_p1.value),
+									')'))),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$stroke('black'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$strokeWidth('2px'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$points(points),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		};
+	});
+var _user$project$Hexaboard_ScoresView$selectedSvg = function (piece) {
+	var box = _mdgriffith$stylish_elephants$Element$el(
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$width(
+				_mdgriffith$stylish_elephants$Element$px(50)),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$height(
+					_mdgriffith$stylish_elephants$Element$px(50)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$centerX,
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+	var _p8 = piece;
+	if (_p8.ctor === 'Nothing') {
+		return box(_mdgriffith$stylish_elephants$Element$none);
+	} else {
+		return box(
+			_mdgriffith$stylish_elephants$Element$html(
+				A2(
+					_elm_lang$svg$Svg$svg,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$viewBox('0 0 100 100'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$width('100%'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$height('100%'),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					A2(_user$project$Hexaboard_ScoresView$selectedHexaSvg, 35, _p8._0))));
+	}
 };
 var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 	var canPlay = function (id) {
@@ -20,9 +246,9 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 				},
 				_elm_lang$core$List$head(model.playingOrder)));
 	};
-	var playerView = function (_p0) {
-		var _p1 = _p0;
-		var _p2 = _p1._1;
+	var playerView = function (_p9) {
+		var _p10 = _p9;
+		var _p11 = _p10.playerId;
 		return A2(
 			_mdgriffith$stylish_elephants$Element$row,
 			{
@@ -40,7 +266,7 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$stylish_elephants$Element_Background$color(
-								_user$project$Hexaboard_ScoresView$playerColorRgb(_p2)),
+								_user$project$Hexaboard_ScoresView$playerColorRgb(_p11)),
 							_1: {
 								ctor: '::',
 								_0: _mdgriffith$stylish_elephants$Element$width(
@@ -50,7 +276,7 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 									_0: _mdgriffith$stylish_elephants$Element_Font$center,
 									_1: {
 										ctor: '::',
-										_0: canPlay(_p2) ? _mdgriffith$stylish_elephants$Element_Font$bold : _mdgriffith$stylish_elephants$Element_Font$unitalicized,
+										_0: canPlay(_p11) ? _mdgriffith$stylish_elephants$Element_Font$bold : _mdgriffith$stylish_elephants$Element_Font$unitalicized,
 										_1: {
 											ctor: '::',
 											_0: _mdgriffith$stylish_elephants$Element_Border$rounded(3),
@@ -70,7 +296,7 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 							}
 						}
 					},
-					_mdgriffith$stylish_elephants$Element$text(_p1._0)),
+					_mdgriffith$stylish_elephants$Element$text(_p10.username)),
 				_1: {
 					ctor: '::',
 					_0: A2(
@@ -98,13 +324,17 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 							}
 						},
 						_mdgriffith$stylish_elephants$Element$text(
-							_elm_lang$core$Basics$toString(_p1._2))),
-					_1: {ctor: '[]'}
+							_elm_lang$core$Basics$toString(_p10.score))),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Hexaboard_ScoresView$selectedSvg(_p10.piece),
+						_1: {ctor: '[]'}
+					}
 				}
 			});
 	};
-	var _p3 = model.scores;
-	if (_p3.ctor === '[]') {
+	var _p12 = model.players;
+	if (_p12.ctor === '[]') {
 		return _mdgriffith$stylish_elephants$Element$none;
 	} else {
 		return A2(
@@ -131,6 +361,6 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 					}
 				}
 			},
-			A2(_elm_lang$core$List$map, playerView, _p3));
+			A2(_elm_lang$core$List$map, playerView, _p12));
 	}
 };

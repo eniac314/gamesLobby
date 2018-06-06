@@ -66,7 +66,7 @@ init flags =
         , authSalt = flags.authSalt
         , gameId = flags.gameId
         , phxSocket = newSocket2
-        , playerInfo = defPlayer
+        , playerInfo = defPresPlayer
         , presences = Dict.empty
         , chatMessageInput = ""
         , consoleLog = []
@@ -77,7 +77,7 @@ init flags =
         , choosenTurn = Nothing
         , availableTurns = []
         , playingOrder = []
-        , scores = []
+        , players = []
         , deck = []
         , displayHints = False
         , gameState = PieceSelection
@@ -119,6 +119,7 @@ initialSocket flags =
             |> Phoenix.Socket.on "new_chat_message" chatChannel ReceiveChatMessage
             |> Phoenix.Socket.on "chat_history" chatChannel UpdateChatLog
             |> Phoenix.Socket.on "game_state" gameChannel UpdateGameState
+            |> Phoenix.Socket.on "players_update" gameChannel PlayersUpdate
             |> Phoenix.Socket.on "piece_picked_up" gameChannel PiecePickedUp
             |> Phoenix.Socket.on "pieces_all_set" gameChannel PiecesAllSet
             |> Phoenix.Socket.on "turn_selected" gameChannel TurnSelected
@@ -266,7 +267,7 @@ update msg model =
 
         UpdateGameState jsonVal ->
             case decodeGameState model.playerInfo.username jsonVal of
-                Ok { board, deck, id, availableTurns, turnSelectionOrder, playingOrder, piece, gameOver, scores } ->
+                Ok { board, deck, id, availableTurns, turnSelectionOrder, playingOrder, piece, gameOver, players } ->
                     let
                         plInf =
                             model.playerInfo
@@ -318,7 +319,7 @@ update msg model =
                                 , playerInfo = { plInf | playerId = id }
                                 , canChooseTurn = canChooseTurn
                                 , gameState = gameState
-                                , scores = scores
+                                , players = players
                             }
                     in
                         update
@@ -348,6 +349,16 @@ update msg model =
 
                 _ ->
                     model ! []
+
+        PlayersUpdate jsonVal ->
+            case Decode.decodeValue (Decode.field "players" decodePlayers) jsonVal of
+                Ok players ->
+                    { model | players = players } ! []
+
+                Err e ->
+                    update
+                        (RequestDate <| AddServerError ("players update - json error: " ++ e))
+                        model
 
         PiecePickedUp jsonVal ->
             case decodePlayer model.playerInfo.username jsonVal of
@@ -475,7 +486,7 @@ update msg model =
 
         PieceDown jsonVal ->
             case decodePieceDown model.playerInfo.username jsonVal of
-                Ok { board, playingOrder, scores } ->
+                Ok { board, playingOrder, players } ->
                     let
                         canPlay =
                             List.head playingOrder
@@ -485,7 +496,7 @@ update msg model =
                         { model
                             | board = board
                             , playingOrder = playingOrder
-                            , scores = scores
+                            , players = players
                             , gameState =
                                 if canPlay then
                                     Playing

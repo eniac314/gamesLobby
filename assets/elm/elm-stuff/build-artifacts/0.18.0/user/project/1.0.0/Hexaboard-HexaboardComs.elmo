@@ -37,6 +37,36 @@ var _user$project$Hexaboard_HexaboardComs$playerDecoder2 = function (player) {
 				'piece',
 				_elm_lang$core$Json_Decode$nullable(_elm_lang$core$Json_Decode$int))));
 };
+var _user$project$Hexaboard_HexaboardComs$decodePlayers = function () {
+	var decodePiece = function (id) {
+		return A2(
+			_elm_lang$core$Json_Decode$map,
+			_elm_lang$core$Maybe$map(
+				function (v) {
+					return A2(_user$project$Hexaboard_HexaboardTypes$Piece, v, id);
+				}),
+			_elm_lang$core$Json_Decode$nullable(_elm_lang$core$Json_Decode$int));
+	};
+	var decodePlayer = A5(
+		_elm_lang$core$Json_Decode$map4,
+		_user$project$Hexaboard_HexaboardTypes$Player,
+		A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
+		A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int),
+		A2(_elm_lang$core$Json_Decode$field, 'score', _elm_lang$core$Json_Decode$int),
+		A2(
+			_elm_lang$core$Json_Decode$andThen,
+			function (id) {
+				return A2(
+					_elm_lang$core$Json_Decode$field,
+					'piece',
+					decodePiece(id));
+			},
+			A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int)));
+	return A2(
+		_elm_lang$core$Json_Decode$map,
+		_elm_lang$core$Dict$values,
+		_elm_lang$core$Json_Decode$dict(decodePlayer));
+}();
 var _user$project$Hexaboard_HexaboardComs$decodePlayer = function (player) {
 	return _elm_lang$core$Json_Decode$decodeValue(
 		A2(
@@ -126,7 +156,7 @@ var _user$project$Hexaboard_HexaboardComs$decodeBoard = A2(
 var _user$project$Hexaboard_HexaboardComs$decodeGameState = F2(
 	function (player, jsonVal) {
 		var gameState = F7(
-			function (b, _p1, at, tso, po, go, s) {
+			function (b, _p1, at, tso, po, go, ps) {
 				var _p2 = _p1;
 				var _p3 = _p2._1;
 				return {
@@ -143,7 +173,7 @@ var _user$project$Hexaboard_HexaboardComs$decodeGameState = F2(
 					piece: _p2._2,
 					playingOrder: po,
 					gameOver: go,
-					scores: s
+					players: ps
 				};
 			});
 		var gameStateDecoder = A2(
@@ -161,7 +191,7 @@ var _user$project$Hexaboard_HexaboardComs$decodeGameState = F2(
 				A2(_elm_lang$core$Json_Decode$field, 'turn_selection_order', _user$project$Hexaboard_HexaboardComs$decodeTurnSelOrd),
 				A2(_elm_lang$core$Json_Decode$field, 'playing_order', _user$project$Hexaboard_HexaboardComs$decodePlayingOrder),
 				A2(_elm_lang$core$Json_Decode$field, 'game_over', _elm_lang$core$Json_Decode$bool),
-				A2(_elm_lang$core$Json_Decode$field, 'players', _user$project$Hexaboard_HexaboardComs$decodeScores)));
+				A2(_elm_lang$core$Json_Decode$field, 'players', _user$project$Hexaboard_HexaboardComs$decodePlayers)));
 		return A2(_elm_lang$core$Json_Decode$decodeValue, gameStateDecoder, jsonVal);
 	});
 var _user$project$Hexaboard_HexaboardComs$decodePieceDown = _user$project$Hexaboard_HexaboardComs$decodeGameState;
@@ -171,12 +201,12 @@ var _user$project$Hexaboard_HexaboardComs$decodeDate = A2(
 		return _elm_lang$core$Date$fromTime(v);
 	},
 	_elm_lang$core$Json_Decode$float);
-var _user$project$Hexaboard_HexaboardComs$playerDecoder = A3(
+var _user$project$Hexaboard_HexaboardComs$presPlayerDecoder = A3(
 	_elm_lang$core$Json_Decode$map2,
 	F2(
 		function (j, u) {
 			return _elm_lang$core$Native_Utils.update(
-				_user$project$Hexaboard_HexaboardTypes$defPlayer,
+				_user$project$Hexaboard_HexaboardTypes$defPresPlayer,
 				{onlineAt: j, username: u});
 		}),
 	A2(_elm_lang$core$Json_Decode$field, 'joined_at', _elm_lang$core$Json_Decode$string),
@@ -188,7 +218,7 @@ var _user$project$Hexaboard_HexaboardComs$chatMessageDecoder = A2(
 		_elm_lang$core$Json_Decode$map3,
 		_user$project$Hexaboard_HexaboardTypes$ChatMessage,
 		A2(_elm_lang$core$Json_Decode$field, 'time_stamp', _user$project$Hexaboard_HexaboardComs$decodeDate),
-		A2(_elm_lang$core$Json_Decode$field, 'author', _user$project$Hexaboard_HexaboardComs$playerDecoder),
+		A2(_elm_lang$core$Json_Decode$field, 'author', _user$project$Hexaboard_HexaboardComs$presPlayerDecoder),
 		A2(_elm_lang$core$Json_Decode$field, 'message', _elm_lang$core$Json_Decode$string)));
 var _user$project$Hexaboard_HexaboardComs$decodeChatMessage = function (jsonVal) {
 	return A2(_elm_lang$core$Json_Decode$decodeValue, _user$project$Hexaboard_HexaboardComs$chatMessageDecoder, jsonVal);
@@ -205,7 +235,7 @@ var _user$project$Hexaboard_HexaboardComs$decodePlayerInfo = function (jsonVal) 
 		_elm_lang$core$Result$map,
 		function (name) {
 			return _elm_lang$core$Native_Utils.update(
-				_user$project$Hexaboard_HexaboardTypes$defPlayer,
+				_user$project$Hexaboard_HexaboardTypes$defPresPlayer,
 				{username: name});
 		},
 		A2(
@@ -306,12 +336,12 @@ var _user$project$Hexaboard_HexaboardComs$encodeChatMessage = function (_p9) {
 var _user$project$Hexaboard_HexaboardComs$decodePresenceDiff = function (jsonVal) {
 	return A2(
 		_elm_lang$core$Json_Decode$decodeValue,
-		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceDiffDecoder(_user$project$Hexaboard_HexaboardComs$playerDecoder),
+		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceDiffDecoder(_user$project$Hexaboard_HexaboardComs$presPlayerDecoder),
 		jsonVal);
 };
 var _user$project$Hexaboard_HexaboardComs$decodePresenceState = function (jsonVal) {
 	return A2(
 		_elm_lang$core$Json_Decode$decodeValue,
-		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceStateDecoder(_user$project$Hexaboard_HexaboardComs$playerDecoder),
+		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceStateDecoder(_user$project$Hexaboard_HexaboardComs$presPlayerDecoder),
 		jsonVal);
 };

@@ -32,7 +32,7 @@ type alias Model =
     , choosenTurn : Maybe Int
     , availableTurns : List Int
     , playingOrder : List Int
-    , scores : List ( String, Int, Int )
+    , players : List Player
     , deck : List Piece
     , gameState : GameState
     , displayHints : Bool
@@ -68,6 +68,7 @@ type Msg
       --| TimeUpdate Time
     | PickUpPiece Piece
     | PiecePickedUp Decode.Value
+    | PlayersUpdate Decode.Value
     | PiecesAllSet Decode.Value
     | SelectTurn Int
     | TurnSelected Decode.Value
@@ -109,6 +110,10 @@ type alias SystemMessage =
     }
 
 
+
+-- used for player info field and the chat
+
+
 type alias PresPlayer =
     { onlineAt : String
     , username : Username
@@ -116,7 +121,15 @@ type alias PresPlayer =
     }
 
 
-defPlayer =
+type alias Player =
+    { username : String
+    , playerId : Int
+    , score : Int
+    , piece : Maybe Piece
+    }
+
+
+defPresPlayer =
     { onlineAt = ""
     , username = ""
     , playerId = -1

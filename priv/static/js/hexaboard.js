@@ -23534,7 +23534,7 @@ var _mdgriffith$stylish_elephants$Element_Input$Row = {ctor: 'Row'};
 var _mdgriffith$stylish_elephants$Element_Input$radioRow = _mdgriffith$stylish_elephants$Element_Input$radioHelper(_mdgriffith$stylish_elephants$Element_Input$Row);
 
 var _user$project$Hexaboard_HexaboardTypes$dummyPiece = {value: 0, playerId: -1};
-var _user$project$Hexaboard_HexaboardTypes$defPlayer = {onlineAt: '', username: '', playerId: -1};
+var _user$project$Hexaboard_HexaboardTypes$defPresPlayer = {onlineAt: '', username: '', playerId: -1};
 var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
 	return function (b) {
 		return function (c) {
@@ -23557,7 +23557,7 @@ var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
 																			return function (t) {
 																				return function (u) {
 																					return function (v) {
-																						return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, canChooseTurn: m, choosenTurn: n, availableTurns: o, playingOrder: p, scores: q, deck: r, gameState: s, displayHints: t, device: u, winSize: v};
+																						return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, canChooseTurn: m, choosenTurn: n, availableTurns: o, playingOrder: p, players: q, deck: r, gameState: s, displayHints: t, device: u, winSize: v};
 																					};
 																				};
 																			};
@@ -23596,6 +23596,10 @@ var _user$project$Hexaboard_HexaboardTypes$PresPlayer = F3(
 	function (a, b, c) {
 		return {onlineAt: a, username: b, playerId: c};
 	});
+var _user$project$Hexaboard_HexaboardTypes$Player = F4(
+	function (a, b, c, d) {
+		return {username: a, playerId: b, score: c, piece: d};
+	});
 var _user$project$Hexaboard_HexaboardTypes$Cell = F3(
 	function (a, b, c) {
 		return {xPos: a, yPos: b, state: c};
@@ -23632,6 +23636,9 @@ var _user$project$Hexaboard_HexaboardTypes$SelectTurn = function (a) {
 };
 var _user$project$Hexaboard_HexaboardTypes$PiecesAllSet = function (a) {
 	return {ctor: 'PiecesAllSet', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$PlayersUpdate = function (a) {
+	return {ctor: 'PlayersUpdate', _0: a};
 };
 var _user$project$Hexaboard_HexaboardTypes$PiecePickedUp = function (a) {
 	return {ctor: 'PiecePickedUp', _0: a};
@@ -24171,6 +24178,36 @@ var _user$project$Hexaboard_HexaboardComs$playerDecoder2 = function (player) {
 				'piece',
 				_elm_lang$core$Json_Decode$nullable(_elm_lang$core$Json_Decode$int))));
 };
+var _user$project$Hexaboard_HexaboardComs$decodePlayers = function () {
+	var decodePiece = function (id) {
+		return A2(
+			_elm_lang$core$Json_Decode$map,
+			_elm_lang$core$Maybe$map(
+				function (v) {
+					return A2(_user$project$Hexaboard_HexaboardTypes$Piece, v, id);
+				}),
+			_elm_lang$core$Json_Decode$nullable(_elm_lang$core$Json_Decode$int));
+	};
+	var decodePlayer = A5(
+		_elm_lang$core$Json_Decode$map4,
+		_user$project$Hexaboard_HexaboardTypes$Player,
+		A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
+		A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int),
+		A2(_elm_lang$core$Json_Decode$field, 'score', _elm_lang$core$Json_Decode$int),
+		A2(
+			_elm_lang$core$Json_Decode$andThen,
+			function (id) {
+				return A2(
+					_elm_lang$core$Json_Decode$field,
+					'piece',
+					decodePiece(id));
+			},
+			A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int)));
+	return A2(
+		_elm_lang$core$Json_Decode$map,
+		_elm_lang$core$Dict$values,
+		_elm_lang$core$Json_Decode$dict(decodePlayer));
+}();
 var _user$project$Hexaboard_HexaboardComs$decodePlayer = function (player) {
 	return _elm_lang$core$Json_Decode$decodeValue(
 		A2(
@@ -24260,7 +24297,7 @@ var _user$project$Hexaboard_HexaboardComs$decodeBoard = A2(
 var _user$project$Hexaboard_HexaboardComs$decodeGameState = F2(
 	function (player, jsonVal) {
 		var gameState = F7(
-			function (b, _p1, at, tso, po, go, s) {
+			function (b, _p1, at, tso, po, go, ps) {
 				var _p2 = _p1;
 				var _p3 = _p2._1;
 				return {
@@ -24277,7 +24314,7 @@ var _user$project$Hexaboard_HexaboardComs$decodeGameState = F2(
 					piece: _p2._2,
 					playingOrder: po,
 					gameOver: go,
-					scores: s
+					players: ps
 				};
 			});
 		var gameStateDecoder = A2(
@@ -24295,7 +24332,7 @@ var _user$project$Hexaboard_HexaboardComs$decodeGameState = F2(
 				A2(_elm_lang$core$Json_Decode$field, 'turn_selection_order', _user$project$Hexaboard_HexaboardComs$decodeTurnSelOrd),
 				A2(_elm_lang$core$Json_Decode$field, 'playing_order', _user$project$Hexaboard_HexaboardComs$decodePlayingOrder),
 				A2(_elm_lang$core$Json_Decode$field, 'game_over', _elm_lang$core$Json_Decode$bool),
-				A2(_elm_lang$core$Json_Decode$field, 'players', _user$project$Hexaboard_HexaboardComs$decodeScores)));
+				A2(_elm_lang$core$Json_Decode$field, 'players', _user$project$Hexaboard_HexaboardComs$decodePlayers)));
 		return A2(_elm_lang$core$Json_Decode$decodeValue, gameStateDecoder, jsonVal);
 	});
 var _user$project$Hexaboard_HexaboardComs$decodePieceDown = _user$project$Hexaboard_HexaboardComs$decodeGameState;
@@ -24305,12 +24342,12 @@ var _user$project$Hexaboard_HexaboardComs$decodeDate = A2(
 		return _elm_lang$core$Date$fromTime(v);
 	},
 	_elm_lang$core$Json_Decode$float);
-var _user$project$Hexaboard_HexaboardComs$playerDecoder = A3(
+var _user$project$Hexaboard_HexaboardComs$presPlayerDecoder = A3(
 	_elm_lang$core$Json_Decode$map2,
 	F2(
 		function (j, u) {
 			return _elm_lang$core$Native_Utils.update(
-				_user$project$Hexaboard_HexaboardTypes$defPlayer,
+				_user$project$Hexaboard_HexaboardTypes$defPresPlayer,
 				{onlineAt: j, username: u});
 		}),
 	A2(_elm_lang$core$Json_Decode$field, 'joined_at', _elm_lang$core$Json_Decode$string),
@@ -24322,7 +24359,7 @@ var _user$project$Hexaboard_HexaboardComs$chatMessageDecoder = A2(
 		_elm_lang$core$Json_Decode$map3,
 		_user$project$Hexaboard_HexaboardTypes$ChatMessage,
 		A2(_elm_lang$core$Json_Decode$field, 'time_stamp', _user$project$Hexaboard_HexaboardComs$decodeDate),
-		A2(_elm_lang$core$Json_Decode$field, 'author', _user$project$Hexaboard_HexaboardComs$playerDecoder),
+		A2(_elm_lang$core$Json_Decode$field, 'author', _user$project$Hexaboard_HexaboardComs$presPlayerDecoder),
 		A2(_elm_lang$core$Json_Decode$field, 'message', _elm_lang$core$Json_Decode$string)));
 var _user$project$Hexaboard_HexaboardComs$decodeChatMessage = function (jsonVal) {
 	return A2(_elm_lang$core$Json_Decode$decodeValue, _user$project$Hexaboard_HexaboardComs$chatMessageDecoder, jsonVal);
@@ -24339,7 +24376,7 @@ var _user$project$Hexaboard_HexaboardComs$decodePlayerInfo = function (jsonVal) 
 		_elm_lang$core$Result$map,
 		function (name) {
 			return _elm_lang$core$Native_Utils.update(
-				_user$project$Hexaboard_HexaboardTypes$defPlayer,
+				_user$project$Hexaboard_HexaboardTypes$defPresPlayer,
 				{username: name});
 		},
 		A2(
@@ -24440,13 +24477,13 @@ var _user$project$Hexaboard_HexaboardComs$encodeChatMessage = function (_p9) {
 var _user$project$Hexaboard_HexaboardComs$decodePresenceDiff = function (jsonVal) {
 	return A2(
 		_elm_lang$core$Json_Decode$decodeValue,
-		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceDiffDecoder(_user$project$Hexaboard_HexaboardComs$playerDecoder),
+		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceDiffDecoder(_user$project$Hexaboard_HexaboardComs$presPlayerDecoder),
 		jsonVal);
 };
 var _user$project$Hexaboard_HexaboardComs$decodePresenceState = function (jsonVal) {
 	return A2(
 		_elm_lang$core$Json_Decode$decodeValue,
-		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceStateDecoder(_user$project$Hexaboard_HexaboardComs$playerDecoder),
+		_fbonetti$elm_phoenix_socket$Phoenix_Presence$presenceStateDecoder(_user$project$Hexaboard_HexaboardComs$presPlayerDecoder),
 		jsonVal);
 };
 
@@ -24954,6 +24991,80 @@ var _user$project$Hexaboard_DeckView$deckSvg = function (_p19) {
 		});
 };
 
+var _user$project$Hexaboard_ScoresView$piecesPatterns = A2(
+	_elm_lang$core$List$map,
+	function (n) {
+		return A2(
+			_elm_lang$svg$Svg$pattern,
+			{
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$id(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'piece',
+						_elm_lang$core$Basics$toString(n))),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$x('0%'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$y('0%'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$width('100%'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$height('100%'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$viewBox('0 0 100 100'),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$svg$Svg$image,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$x('10'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$y('10'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$height('80'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$width('80'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$xlinkHref(
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'images/hexaboard/pieces/piece',
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													_elm_lang$core$Basics$toString(n),
+													'.png'))),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			});
+	},
+	A2(_elm_lang$core$List$range, 0, 14));
+var _user$project$Hexaboard_ScoresView$playerColor = function (playerId) {
+	return _elm_lang$core$Native_Utils.eq(playerId, 1) ? '#ff0000' : (_elm_lang$core$Native_Utils.eq(playerId, 2) ? '#ff7f00' : (_elm_lang$core$Native_Utils.eq(playerId, 3) ? '#ffff00' : (_elm_lang$core$Native_Utils.eq(playerId, 4) ? '#00ff00' : (_elm_lang$core$Native_Utils.eq(playerId, 5) ? '#0000ff' : (_elm_lang$core$Native_Utils.eq(playerId, 6) ? '#b400ff' : 'white')))));
+};
 var _user$project$Hexaboard_ScoresView$playerColorRgb = function (playerId) {
 	return _elm_lang$core$Native_Utils.eq(playerId, 1) ? A4(_elm_lang$core$Color$rgba, 255, 0, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 2) ? A4(_elm_lang$core$Color$rgba, 255, 127, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 3) ? A4(_elm_lang$core$Color$rgba, 255, 255, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 4) ? A4(_elm_lang$core$Color$rgba, 0, 255, 0, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 5) ? A4(_elm_lang$core$Color$rgba, 0, 0, 255, 0.7) : (_elm_lang$core$Native_Utils.eq(playerId, 6) ? A4(_elm_lang$core$Color$rgba, 180, 0, 255, 0.7) : _elm_lang$core$Color$white)))));
 };
@@ -24963,6 +25074,158 @@ var _user$project$Hexaboard_ScoresView$capitalize = function (s) {
 			_elm_lang$core$List$map,
 			_elm_lang$core$Char$toUpper,
 			_elm_lang$core$String$toList(s)));
+};
+var _user$project$Hexaboard_ScoresView$selectedHexaSvg = F2(
+	function (radius, _p0) {
+		var _p1 = _p0;
+		var points = A3(
+			_elm_lang$core$List$foldr,
+			F2(
+				function (_p2, acc) {
+					var _p3 = _p2;
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						acc,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Basics$toString(_p3._0),
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								', ',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(_p3._1),
+									' '))));
+				}),
+			'',
+			A2(
+				_elm_lang$core$List$map,
+				function (_p4) {
+					var _p5 = _p4;
+					return {ctor: '_Tuple2', _0: _p5._0 + 50, _1: _p5._1 + 50};
+				},
+				A2(
+					_elm_lang$core$List$map,
+					_elm_lang$core$Basics$fromPolar,
+					A2(
+						_elm_lang$core$List$map,
+						function (_p6) {
+							var _p7 = _p6;
+							return {ctor: '_Tuple2', _0: _p7._0, _1: _p7._1 + (_elm_lang$core$Basics$pi / 6)};
+						},
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: radius, _1: 0},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: radius, _1: _elm_lang$core$Basics$pi / 3},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: radius, _1: (2 * _elm_lang$core$Basics$pi) / 3},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: radius, _1: _elm_lang$core$Basics$pi},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: radius, _1: (4 * _elm_lang$core$Basics$pi) / 3},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: radius, _1: (5 * _elm_lang$core$Basics$pi) / 3},
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}))));
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$svg$Svg$polygon,
+				{
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$fill(
+						_user$project$Hexaboard_ScoresView$playerColor(_p1.playerId)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$points(points),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$svg$Svg$polygon,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$fill(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'url(#piece',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(_p1.value),
+									')'))),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$stroke('black'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$strokeWidth('2px'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$points(points),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		};
+	});
+var _user$project$Hexaboard_ScoresView$selectedSvg = function (piece) {
+	var box = _mdgriffith$stylish_elephants$Element$el(
+		{
+			ctor: '::',
+			_0: _mdgriffith$stylish_elephants$Element$width(
+				_mdgriffith$stylish_elephants$Element$px(50)),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$stylish_elephants$Element$height(
+					_mdgriffith$stylish_elephants$Element$px(50)),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$stylish_elephants$Element$centerX,
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+	var _p8 = piece;
+	if (_p8.ctor === 'Nothing') {
+		return box(_mdgriffith$stylish_elephants$Element$none);
+	} else {
+		return box(
+			_mdgriffith$stylish_elephants$Element$html(
+				A2(
+					_elm_lang$svg$Svg$svg,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$viewBox('0 0 100 100'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$width('100%'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$height('100%'),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					A2(_user$project$Hexaboard_ScoresView$selectedHexaSvg, 35, _p8._0))));
+	}
 };
 var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 	var canPlay = function (id) {
@@ -24976,9 +25239,9 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 				},
 				_elm_lang$core$List$head(model.playingOrder)));
 	};
-	var playerView = function (_p0) {
-		var _p1 = _p0;
-		var _p2 = _p1._1;
+	var playerView = function (_p9) {
+		var _p10 = _p9;
+		var _p11 = _p10.playerId;
 		return A2(
 			_mdgriffith$stylish_elephants$Element$row,
 			{
@@ -24996,7 +25259,7 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$stylish_elephants$Element_Background$color(
-								_user$project$Hexaboard_ScoresView$playerColorRgb(_p2)),
+								_user$project$Hexaboard_ScoresView$playerColorRgb(_p11)),
 							_1: {
 								ctor: '::',
 								_0: _mdgriffith$stylish_elephants$Element$width(
@@ -25006,7 +25269,7 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 									_0: _mdgriffith$stylish_elephants$Element_Font$center,
 									_1: {
 										ctor: '::',
-										_0: canPlay(_p2) ? _mdgriffith$stylish_elephants$Element_Font$bold : _mdgriffith$stylish_elephants$Element_Font$unitalicized,
+										_0: canPlay(_p11) ? _mdgriffith$stylish_elephants$Element_Font$bold : _mdgriffith$stylish_elephants$Element_Font$unitalicized,
 										_1: {
 											ctor: '::',
 											_0: _mdgriffith$stylish_elephants$Element_Border$rounded(3),
@@ -25026,7 +25289,7 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 							}
 						}
 					},
-					_mdgriffith$stylish_elephants$Element$text(_p1._0)),
+					_mdgriffith$stylish_elephants$Element$text(_p10.username)),
 				_1: {
 					ctor: '::',
 					_0: A2(
@@ -25054,13 +25317,17 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 							}
 						},
 						_mdgriffith$stylish_elephants$Element$text(
-							_elm_lang$core$Basics$toString(_p1._2))),
-					_1: {ctor: '[]'}
+							_elm_lang$core$Basics$toString(_p10.score))),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Hexaboard_ScoresView$selectedSvg(_p10.piece),
+						_1: {ctor: '[]'}
+					}
 				}
 			});
 	};
-	var _p3 = model.scores;
-	if (_p3.ctor === '[]') {
+	var _p12 = model.players;
+	if (_p12.ctor === '[]') {
 		return _mdgriffith$stylish_elephants$Element$none;
 	} else {
 		return A2(
@@ -25087,7 +25354,7 @@ var _user$project$Hexaboard_ScoresView$scoresView = function (model) {
 					}
 				}
 			},
-			A2(_elm_lang$core$List$map, playerView, _p3));
+			A2(_elm_lang$core$List$map, playerView, _p12));
 	}
 };
 
@@ -27378,18 +27645,16 @@ var _user$project$Hexaboard_HexaboardView$endGameView = function (_p0) {
 		_elm_lang$core$List$head(
 			A2(
 				_elm_lang$core$List$map,
-				function (_p2) {
-					var _p3 = _p2;
-					return _p3._0;
+				function (_) {
+					return _.username;
 				},
 				_elm_lang$core$List$reverse(
 					A2(
 						_elm_lang$core$List$sortBy,
-						function (_p4) {
-							var _p5 = _p4;
-							return _p5._2;
+						function (_) {
+							return _.score;
 						},
-						_p1.scores)))));
+						_p1.players)))));
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -27426,8 +27691,8 @@ var _user$project$Hexaboard_HexaboardView$endGameView = function (_p0) {
 			}
 		});
 };
-var _user$project$Hexaboard_HexaboardView$gameMsgView = function (_p6) {
-	var _p7 = _p6;
+var _user$project$Hexaboard_HexaboardView$gameMsgView = function (_p2) {
+	var _p3 = _p2;
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -27496,7 +27761,7 @@ var _user$project$Hexaboard_HexaboardView$gameMsgView = function (_p6) {
 								}
 							},
 							_mdgriffith$stylish_elephants$Element$text(
-								_user$project$Hexaboard_HexaboardView$prettyDate(_p7.timeStamp))),
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p3.timeStamp))),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -27524,15 +27789,15 @@ var _user$project$Hexaboard_HexaboardView$gameMsgView = function (_p6) {
 					},
 					{
 						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$text(_p7.message),
+						_0: _mdgriffith$stylish_elephants$Element$text(_p3.message),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Hexaboard_HexaboardView$serverErrorMsgView = function (_p8) {
-	var _p9 = _p8;
+var _user$project$Hexaboard_HexaboardView$serverErrorMsgView = function (_p4) {
+	var _p5 = _p4;
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -27601,7 +27866,7 @@ var _user$project$Hexaboard_HexaboardView$serverErrorMsgView = function (_p8) {
 								}
 							},
 							_mdgriffith$stylish_elephants$Element$text(
-								_user$project$Hexaboard_HexaboardView$prettyDate(_p9.timeStamp))),
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p5.timeStamp))),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -27629,15 +27894,15 @@ var _user$project$Hexaboard_HexaboardView$serverErrorMsgView = function (_p8) {
 					},
 					{
 						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$text(_p9.message),
+						_0: _mdgriffith$stylish_elephants$Element$text(_p5.message),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Hexaboard_HexaboardView$serverComMsgView = function (_p10) {
-	var _p11 = _p10;
+var _user$project$Hexaboard_HexaboardView$serverComMsgView = function (_p6) {
+	var _p7 = _p6;
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -27706,7 +27971,7 @@ var _user$project$Hexaboard_HexaboardView$serverComMsgView = function (_p10) {
 								}
 							},
 							_mdgriffith$stylish_elephants$Element$text(
-								_user$project$Hexaboard_HexaboardView$prettyDate(_p11.timeStamp))),
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p7.timeStamp))),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -27734,15 +27999,15 @@ var _user$project$Hexaboard_HexaboardView$serverComMsgView = function (_p10) {
 					},
 					{
 						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$text(_p11.message),
+						_0: _mdgriffith$stylish_elephants$Element$text(_p7.message),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p12) {
-	var _p13 = _p12;
+var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p8) {
+	var _p9 = _p8;
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -27784,7 +28049,7 @@ var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p12) {
 								}
 							}
 						},
-						_mdgriffith$stylish_elephants$Element$text(_p13.author.username)),
+						_mdgriffith$stylish_elephants$Element$text(_p9.author.username)),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -27807,7 +28072,7 @@ var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p12) {
 								}
 							},
 							_mdgriffith$stylish_elephants$Element$text(
-								_user$project$Hexaboard_HexaboardView$prettyDate(_p13.timeStamp))),
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p9.timeStamp))),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -27835,7 +28100,7 @@ var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p12) {
 					},
 					{
 						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$text(_p13.message),
+						_0: _mdgriffith$stylish_elephants$Element$text(_p9.message),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
@@ -27844,16 +28109,16 @@ var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p12) {
 };
 var _user$project$Hexaboard_HexaboardView$consoleLogView = function (model) {
 	var messageView = function (msg) {
-		var _p14 = msg;
-		switch (_p14.ctor) {
+		var _p10 = msg;
+		switch (_p10.ctor) {
 			case 'ChatMsg':
-				return _user$project$Hexaboard_HexaboardView$chatMsgView(_p14._0);
+				return _user$project$Hexaboard_HexaboardView$chatMsgView(_p10._0);
 			case 'ServerComMsg':
-				return _user$project$Hexaboard_HexaboardView$serverComMsgView(_p14._0);
+				return _user$project$Hexaboard_HexaboardView$serverComMsgView(_p10._0);
 			case 'ServerErrorMsg':
-				return _user$project$Hexaboard_HexaboardView$serverErrorMsgView(_p14._0);
+				return _user$project$Hexaboard_HexaboardView$serverErrorMsgView(_p10._0);
 			default:
-				return _user$project$Hexaboard_HexaboardView$gameMsgView(_p14._0);
+				return _user$project$Hexaboard_HexaboardView$gameMsgView(_p10._0);
 		}
 	};
 	return A2(
@@ -28010,8 +28275,8 @@ var _user$project$Hexaboard_HexaboardView$consoleView = function (model) {
 		});
 };
 var _user$project$Hexaboard_HexaboardView$viewSelection = function (model) {
-	var _p15 = model.gameState;
-	switch (_p15.ctor) {
+	var _p11 = model.gameState;
+	switch (_p11.ctor) {
 		case 'PieceSelection':
 			return A2(
 				_mdgriffith$stylish_elephants$Element$el,
@@ -28178,7 +28443,7 @@ var _user$project$Hexaboard_HexaboardView$view = function (model) {
 											}
 										}
 									},
-									_mdgriffith$stylish_elephants$Element$text('HEXABOARD')),
+									_mdgriffith$stylish_elephants$Element$text('EADIUNKAL')),
 								_1: {
 									ctor: '::',
 									_0: _user$project$Hexaboard_DeckView$selectedSvg(model),
@@ -28525,7 +28790,7 @@ var _user$project$Hexaboard$update = F2(
 									{playerId: _p13}),
 								canChooseTurn: canChooseTurn,
 								gameState: gameState,
-								scores: _p11._0.scores
+								players: _p11._0.players
 							});
 						var _v16 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddGameMsg('initial game state loaded')),
@@ -28564,10 +28829,31 @@ var _user$project$Hexaboard$update = F2(
 							model,
 							{ctor: '[]'});
 					}
-				case 'PiecePickedUp':
-					var _p18 = A2(_user$project$Hexaboard_HexaboardComs$decodePlayer, model.playerInfo.username, _p1._0);
+				case 'PlayersUpdate':
+					var _p18 = A2(
+						_elm_lang$core$Json_Decode$decodeValue,
+						A2(_elm_lang$core$Json_Decode$field, 'players', _user$project$Hexaboard_HexaboardComs$decodePlayers),
+						_p1._0);
 					if (_p18.ctor === 'Ok') {
-						var _p19 = _p18._0._1;
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{players: _p18._0}),
+							{ctor: '[]'});
+					} else {
+						var _v22 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+							_user$project$Hexaboard_HexaboardTypes$AddServerError(
+								A2(_elm_lang$core$Basics_ops['++'], 'players update - json error: ', _p18._0))),
+							_v23 = model;
+						msg = _v22;
+						model = _v23;
+						continue update;
+					}
+				case 'PiecePickedUp':
+					var _p19 = A2(_user$project$Hexaboard_HexaboardComs$decodePlayer, model.playerInfo.username, _p1._0);
+					if (_p19.ctor === 'Ok') {
+						var _p20 = _p19._0._1;
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
@@ -28577,36 +28863,36 @@ var _user$project$Hexaboard$update = F2(
 									deck: A2(
 										_elm_lang$core$List$map,
 										function (v) {
-											return {value: v, playerId: _p19};
+											return {value: v, playerId: _p20};
 										},
-										_p18._0._0),
+										_p19._0._0),
 									choice: A2(
 										_elm_lang$core$Maybe$map,
 										function (v) {
-											return {value: v, playerId: _p19};
+											return {value: v, playerId: _p20};
 										},
-										_p18._0._2)
+										_p19._0._2)
 								}),
 							{ctor: '[]'});
 					} else {
-						var _v22 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+						var _v25 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'pieces all set - json error: ', _p18._0))),
-							_v23 = model;
-						msg = _v22;
-						model = _v23;
+								A2(_elm_lang$core$Basics_ops['++'], 'pieces all set - json error: ', _p19._0))),
+							_v26 = model;
+						msg = _v25;
+						model = _v26;
 						continue update;
 					}
 				case 'PiecesAllSet':
-					var _p20 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
-					if (_p20.ctor === 'Ok') {
+					var _p21 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
+					if (_p21.ctor === 'Ok') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
 								{
 									gameState: _user$project$Hexaboard_HexaboardTypes$TurnSelection,
-									availableTurns: _p20._0.availableTurns,
+									availableTurns: _p21._0.availableTurns,
 									canChooseTurn: A2(
 										_elm_lang$core$Maybe$withDefault,
 										false,
@@ -28615,16 +28901,16 @@ var _user$project$Hexaboard$update = F2(
 											function (id) {
 												return _elm_lang$core$Native_Utils.eq(id, model.playerInfo.playerId);
 											},
-											_elm_lang$core$List$head(_p20._0.turnSelectionOrder)))
+											_elm_lang$core$List$head(_p21._0.turnSelectionOrder)))
 								}),
 							{ctor: '[]'});
 					} else {
-						var _v25 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+						var _v28 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'pieces all set - json error: ', _p20._0))),
-							_v26 = model;
-						msg = _v25;
-						model = _v26;
+								A2(_elm_lang$core$Basics_ops['++'], 'pieces all set - json error: ', _p21._0))),
+							_v29 = model;
+						msg = _v28;
+						model = _v29;
 						continue update;
 					}
 				case 'SelectTurn':
@@ -28639,9 +28925,9 @@ var _user$project$Hexaboard$update = F2(
 								},
 								_1: {ctor: '[]'}
 							}));
-					var _p21 = A4(_user$project$Hexaboard$pushGameMsg, model, 'turn_selected', payload, _elm_lang$core$Maybe$Nothing);
-					var newModel = _p21._0;
-					var phxCmd = _p21._1;
+					var _p22 = A4(_user$project$Hexaboard$pushGameMsg, model, 'turn_selected', payload, _elm_lang$core$Maybe$Nothing);
+					var newModel = _p22._0;
+					var phxCmd = _p22._1;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
@@ -28653,15 +28939,15 @@ var _user$project$Hexaboard$update = F2(
 							_1: {ctor: '[]'}
 						});
 				case 'TurnSelected':
-					var _p22 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
-					if (_p22.ctor === 'Ok') {
+					var _p23 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
+					if (_p23.ctor === 'Ok') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
 								{
 									gameState: _user$project$Hexaboard_HexaboardTypes$TurnSelection,
-									availableTurns: _p22._0.availableTurns,
+									availableTurns: _p23._0.availableTurns,
 									canChooseTurn: A2(
 										_elm_lang$core$Maybe$withDefault,
 										false,
@@ -28670,22 +28956,22 @@ var _user$project$Hexaboard$update = F2(
 											function (id) {
 												return _elm_lang$core$Native_Utils.eq(id, model.playerInfo.playerId);
 											},
-											_elm_lang$core$List$head(_p22._0.turnSelectionOrder)))
+											_elm_lang$core$List$head(_p23._0.turnSelectionOrder)))
 								}),
 							{ctor: '[]'});
 					} else {
-						var _v28 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+						var _v31 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'turn selected - json error: ', _p22._0))),
-							_v29 = model;
-						msg = _v28;
-						model = _v29;
+								A2(_elm_lang$core$Basics_ops['++'], 'turn selected - json error: ', _p23._0))),
+							_v32 = model;
+						msg = _v31;
+						model = _v32;
 						continue update;
 					}
 				case 'TurnsAllSet':
-					var _p23 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
-					if (_p23.ctor === 'Ok') {
-						var _p24 = _p23._0.playingOrder;
+					var _p24 = _user$project$Hexaboard_HexaboardComs$decodeTurnsInfo(_p1._0);
+					if (_p24.ctor === 'Ok') {
+						var _p25 = _p24._0.playingOrder;
 						var canPlay = A2(
 							_elm_lang$core$Maybe$withDefault,
 							false,
@@ -28694,7 +28980,7 @@ var _user$project$Hexaboard$update = F2(
 								function (id) {
 									return _elm_lang$core$Native_Utils.eq(id, model.playerInfo.playerId);
 								},
-								_elm_lang$core$List$head(_p24)));
+								_elm_lang$core$List$head(_p25)));
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
@@ -28702,22 +28988,22 @@ var _user$project$Hexaboard$update = F2(
 								{
 									gameState: canPlay ? _user$project$Hexaboard_HexaboardTypes$Playing : _user$project$Hexaboard_HexaboardTypes$WaitingForOwnTurn,
 									availableTurns: {ctor: '[]'},
-									playingOrder: _p24,
+									playingOrder: _p25,
 									canChooseTurn: false
 								}),
 							{ctor: '[]'});
 					} else {
-						var _v31 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+						var _v34 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'turns all set - json error: ', _p23._0))),
-							_v32 = model;
-						msg = _v31;
-						model = _v32;
+								A2(_elm_lang$core$Basics_ops['++'], 'turns all set - json error: ', _p24._0))),
+							_v35 = model;
+						msg = _v34;
+						model = _v35;
 						continue update;
 					}
 				case 'PutDownPiece':
-					var _p25 = model.gameState;
-					if (_p25.ctor === 'Playing') {
+					var _p26 = model.gameState;
+					if (_p26.ctor === 'Playing') {
 						var payload = _elm_lang$core$Maybe$Just(
 							_elm_lang$core$Json_Encode$object(
 								{
@@ -28745,9 +29031,9 @@ var _user$project$Hexaboard$update = F2(
 										}
 									}
 								}));
-						var _p26 = A4(_user$project$Hexaboard$pushGameMsg, model, 'put_down_piece', payload, _elm_lang$core$Maybe$Nothing);
-						var newModel = _p26._0;
-						var phxCmd = _p26._1;
+						var _p27 = A4(_user$project$Hexaboard$pushGameMsg, model, 'put_down_piece', payload, _elm_lang$core$Maybe$Nothing);
+						var newModel = _p27._0;
+						var phxCmd = _p27._1;
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
@@ -28765,9 +29051,9 @@ var _user$project$Hexaboard$update = F2(
 							{ctor: '[]'});
 					}
 				case 'PieceDown':
-					var _p27 = A2(_user$project$Hexaboard_HexaboardComs$decodePieceDown, model.playerInfo.username, _p1._0);
-					if (_p27.ctor === 'Ok') {
-						var _p28 = _p27._0.playingOrder;
+					var _p28 = A2(_user$project$Hexaboard_HexaboardComs$decodePieceDown, model.playerInfo.username, _p1._0);
+					if (_p28.ctor === 'Ok') {
+						var _p29 = _p28._0.playingOrder;
 						var canPlay = A2(
 							_elm_lang$core$Maybe$withDefault,
 							false,
@@ -28776,25 +29062,25 @@ var _user$project$Hexaboard$update = F2(
 								function (id) {
 									return _elm_lang$core$Native_Utils.eq(id, model.playerInfo.playerId);
 								},
-								_elm_lang$core$List$head(_p28)));
+								_elm_lang$core$List$head(_p29)));
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
 								model,
 								{
-									board: _p27._0.board,
-									playingOrder: _p28,
-									scores: _p27._0.scores,
+									board: _p28._0.board,
+									playingOrder: _p29,
+									players: _p28._0.players,
 									gameState: canPlay ? _user$project$Hexaboard_HexaboardTypes$Playing : _user$project$Hexaboard_HexaboardTypes$WaitingForEndOfRound
 								}),
 							{ctor: '[]'});
 					} else {
-						var _v35 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+						var _v38 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'piece down - json error: ', _p27._0))),
-							_v36 = model;
-						msg = _v35;
-						model = _v36;
+								A2(_elm_lang$core$Basics_ops['++'], 'piece down - json error: ', _p28._0))),
+							_v39 = model;
+						msg = _v38;
+						model = _v39;
 						continue update;
 					}
 				case 'RoundOver':
@@ -28842,14 +29128,14 @@ var _user$project$Hexaboard$update = F2(
 							{displayHints: true}),
 						{ctor: '[]'});
 				case 'Resizes':
-					var _p29 = _p1._0;
+					var _p30 = _p1._0;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							model,
 							{
-								device: _mdgriffith$stylish_elephants$Element$classifyDevice(_p29),
-								winSize: _p29
+								device: _mdgriffith$stylish_elephants$Element$classifyDevice(_p30),
+								winSize: _p30
 							}),
 						{ctor: '[]'});
 				case 'AddServerMsg':
@@ -28879,41 +29165,41 @@ var _user$project$Hexaboard$update = F2(
 							{consoleLog: newConsoleLog}),
 						{ctor: '[]'});
 				case 'ServerMsg':
-					var _p30 = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$string, _p1._0);
-					if (_p30.ctor === 'Ok') {
-						var _v38 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
-							_user$project$Hexaboard_HexaboardTypes$AddServerMsg(
-								A2(_elm_lang$core$Basics_ops['++'], 'ServerMsg: ', _p30._0))),
-							_v39 = model;
-						msg = _v38;
-						model = _v39;
-						continue update;
-					} else {
-						var _v40 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
-							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'ServerMsg: json decoding error: ', _p30._0))),
-							_v41 = model;
-						msg = _v40;
-						model = _v41;
-						continue update;
-					}
-				case 'ServerError':
 					var _p31 = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$string, _p1._0);
 					if (_p31.ctor === 'Ok') {
+						var _v41 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+							_user$project$Hexaboard_HexaboardTypes$AddServerMsg(
+								A2(_elm_lang$core$Basics_ops['++'], 'ServerMsg: ', _p31._0))),
+							_v42 = model;
+						msg = _v41;
+						model = _v42;
+						continue update;
+					} else {
 						var _v43 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'ServerError: ', _p31._0))),
+								A2(_elm_lang$core$Basics_ops['++'], 'ServerMsg: json decoding error: ', _p31._0))),
 							_v44 = model;
 						msg = _v43;
 						model = _v44;
 						continue update;
-					} else {
-						var _v45 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+					}
+				case 'ServerError':
+					var _p32 = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$string, _p1._0);
+					if (_p32.ctor === 'Ok') {
+						var _v46 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'ServerErr: json decoding error: ', _p31._0))),
-							_v46 = model;
-						msg = _v45;
-						model = _v46;
+								A2(_elm_lang$core$Basics_ops['++'], 'ServerError: ', _p32._0))),
+							_v47 = model;
+						msg = _v46;
+						model = _v47;
+						continue update;
+					} else {
+						var _v48 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+							_user$project$Hexaboard_HexaboardTypes$AddServerError(
+								A2(_elm_lang$core$Basics_ops['++'], 'ServerErr: json decoding error: ', _p32._0))),
+							_v49 = model;
+						msg = _v48;
+						model = _v49;
 						continue update;
 					}
 				case 'AddGameMsg':
@@ -28930,22 +29216,22 @@ var _user$project$Hexaboard$update = F2(
 							{consoleLog: newConsoleLog}),
 						{ctor: '[]'});
 				case 'DebugJson':
-					var _p32 = A2(_user$project$Hexaboard_HexaboardComs$debugJson, _p1._0, _p1._1);
-					if (_p32.ctor === 'Ok') {
-						var _v48 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+					var _p33 = A2(_user$project$Hexaboard_HexaboardComs$debugJson, _p1._0, _p1._1);
+					if (_p33.ctor === 'Ok') {
+						var _v51 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerMsg(
-								A2(_elm_lang$core$Basics_ops['++'], 'Json value: ', _p32._0))),
-							_v49 = model;
-						msg = _v48;
-						model = _v49;
+								A2(_elm_lang$core$Basics_ops['++'], 'Json value: ', _p33._0))),
+							_v52 = model;
+						msg = _v51;
+						model = _v52;
 						continue update;
 					} else {
-						var _v50 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
+						var _v53 = _user$project$Hexaboard_HexaboardTypes$RequestDate(
 							_user$project$Hexaboard_HexaboardTypes$AddServerError(
-								A2(_elm_lang$core$Basics_ops['++'], 'Debug json error: ', _p32._0))),
-							_v51 = model;
-						msg = _v50;
-						model = _v51;
+								A2(_elm_lang$core$Basics_ops['++'], 'Debug json error: ', _p33._0))),
+							_v54 = model;
+						msg = _v53;
+						model = _v54;
 						continue update;
 					}
 				case 'DropRes':
@@ -29017,40 +29303,45 @@ var _user$project$Hexaboard$initialSocket = function (flags) {
 									_user$project$Hexaboard_HexaboardTypes$PiecePickedUp,
 									A4(
 										_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-										'game_state',
+										'players_update',
 										gameChannel,
-										_user$project$Hexaboard_HexaboardTypes$UpdateGameState,
+										_user$project$Hexaboard_HexaboardTypes$PlayersUpdate,
 										A4(
 											_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-											'chat_history',
-											chatChannel,
-											_user$project$Hexaboard_HexaboardTypes$UpdateChatLog,
+											'game_state',
+											gameChannel,
+											_user$project$Hexaboard_HexaboardTypes$UpdateGameState,
 											A4(
 												_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-												'new_chat_message',
+												'chat_history',
 												chatChannel,
-												_user$project$Hexaboard_HexaboardTypes$ReceiveChatMessage,
+												_user$project$Hexaboard_HexaboardTypes$UpdateChatLog,
 												A4(
 													_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-													'presence_diff',
+													'new_chat_message',
 													chatChannel,
-													_user$project$Hexaboard_HexaboardTypes$ReceivePresenceDiff,
+													_user$project$Hexaboard_HexaboardTypes$ReceiveChatMessage,
 													A4(
 														_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-														'presence_state',
+														'presence_diff',
 														chatChannel,
-														_user$project$Hexaboard_HexaboardTypes$ReceivePresenceState,
+														_user$project$Hexaboard_HexaboardTypes$ReceivePresenceDiff,
 														A4(
 															_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
-															'greetings',
-															gameChannel,
-															_user$project$Hexaboard_HexaboardTypes$RequestGameState,
+															'presence_state',
+															chatChannel,
+															_user$project$Hexaboard_HexaboardTypes$ReceivePresenceState,
 															A4(
 																_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
 																'greetings',
-																chatChannel,
-																_user$project$Hexaboard_HexaboardTypes$ReceivePlayerInfo,
-																_fbonetti$elm_phoenix_socket$Phoenix_Socket$init(wsUrlWithAuth))))))))))))))));
+																gameChannel,
+																_user$project$Hexaboard_HexaboardTypes$RequestGameState,
+																A4(
+																	_fbonetti$elm_phoenix_socket$Phoenix_Socket$on,
+																	'greetings',
+																	chatChannel,
+																	_user$project$Hexaboard_HexaboardTypes$ReceivePlayerInfo,
+																	_fbonetti$elm_phoenix_socket$Phoenix_Socket$init(wsUrlWithAuth)))))))))))))))));
 };
 var _user$project$Hexaboard$initPhoenixChannel = F2(
 	function (topic, payload) {
@@ -29076,19 +29367,19 @@ var _user$project$Hexaboard$init = function (flags) {
 		_user$project$Hexaboard$initPhoenixChannel,
 		A2(_elm_lang$core$Basics_ops['++'], 'hexaboard:chat:', flags.gameId),
 		payload);
-	var _p33 = A2(
+	var _p34 = A2(
 		_fbonetti$elm_phoenix_socket$Phoenix_Socket$join,
 		hexaboardChat,
 		_user$project$Hexaboard$initialSocket(flags));
-	var newSocket1 = _p33._0;
-	var phxCmd1 = _p33._1;
+	var newSocket1 = _p34._0;
+	var phxCmd1 = _p34._1;
 	var hexaboardGame = A2(
 		_user$project$Hexaboard$initPhoenixChannel,
 		A2(_elm_lang$core$Basics_ops['++'], 'hexaboard:game:', flags.gameId),
 		payload);
-	var _p34 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, hexaboardGame, newSocket1);
-	var newSocket2 = _p34._0;
-	var phxCmd2 = _p34._1;
+	var _p35 = A2(_fbonetti$elm_phoenix_socket$Phoenix_Socket$join, hexaboardGame, newSocket1);
+	var newSocket2 = _p35._0;
+	var phxCmd2 = _p35._1;
 	var phxCmd = _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',
@@ -29107,7 +29398,7 @@ var _user$project$Hexaboard$init = function (flags) {
 			authSalt: flags.authSalt,
 			gameId: flags.gameId,
 			phxSocket: newSocket2,
-			playerInfo: _user$project$Hexaboard_HexaboardTypes$defPlayer,
+			playerInfo: _user$project$Hexaboard_HexaboardTypes$defPresPlayer,
 			presences: _elm_lang$core$Dict$empty,
 			chatMessageInput: '',
 			consoleLog: {ctor: '[]'},
@@ -29121,7 +29412,7 @@ var _user$project$Hexaboard$init = function (flags) {
 			choosenTurn: _elm_lang$core$Maybe$Nothing,
 			availableTurns: {ctor: '[]'},
 			playingOrder: {ctor: '[]'},
-			scores: {ctor: '[]'},
+			players: {ctor: '[]'},
 			deck: {ctor: '[]'},
 			displayHints: false,
 			gameState: _user$project$Hexaboard_HexaboardTypes$PieceSelection,

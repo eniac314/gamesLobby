@@ -1,5 +1,5 @@
 var _user$project$Hexaboard_HexaboardTypes$dummyPiece = {value: 0, playerId: -1};
-var _user$project$Hexaboard_HexaboardTypes$defPlayer = {onlineAt: '', username: '', playerId: -1};
+var _user$project$Hexaboard_HexaboardTypes$defPresPlayer = {onlineAt: '', username: '', playerId: -1};
 var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
 	return function (b) {
 		return function (c) {
@@ -22,7 +22,7 @@ var _user$project$Hexaboard_HexaboardTypes$Model = function (a) {
 																			return function (t) {
 																				return function (u) {
 																					return function (v) {
-																						return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, canChooseTurn: m, choosenTurn: n, availableTurns: o, playingOrder: p, scores: q, deck: r, gameState: s, displayHints: t, device: u, winSize: v};
+																						return {wsUrl: a, authToken: b, authSalt: c, gameId: d, phxSocket: e, playerInfo: f, presences: g, chatMessageInput: h, consoleLog: i, chatMessageBoxFocused: j, board: k, choice: l, canChooseTurn: m, choosenTurn: n, availableTurns: o, playingOrder: p, players: q, deck: r, gameState: s, displayHints: t, device: u, winSize: v};
 																					};
 																				};
 																			};
@@ -61,6 +61,10 @@ var _user$project$Hexaboard_HexaboardTypes$PresPlayer = F3(
 	function (a, b, c) {
 		return {onlineAt: a, username: b, playerId: c};
 	});
+var _user$project$Hexaboard_HexaboardTypes$Player = F4(
+	function (a, b, c, d) {
+		return {username: a, playerId: b, score: c, piece: d};
+	});
 var _user$project$Hexaboard_HexaboardTypes$Cell = F3(
 	function (a, b, c) {
 		return {xPos: a, yPos: b, state: c};
@@ -97,6 +101,9 @@ var _user$project$Hexaboard_HexaboardTypes$SelectTurn = function (a) {
 };
 var _user$project$Hexaboard_HexaboardTypes$PiecesAllSet = function (a) {
 	return {ctor: 'PiecesAllSet', _0: a};
+};
+var _user$project$Hexaboard_HexaboardTypes$PlayersUpdate = function (a) {
+	return {ctor: 'PlayersUpdate', _0: a};
 };
 var _user$project$Hexaboard_HexaboardTypes$PiecePickedUp = function (a) {
 	return {ctor: 'PiecePickedUp', _0: a};

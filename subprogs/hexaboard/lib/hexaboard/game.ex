@@ -7,7 +7,7 @@ defmodule Hexaboard.Game do
 	defp initial_state({n, players, name}) do 
     nbr_players = length(players)
     %{ board: Board.board_with_edge(n),
-       players: Enum.zip(Range.new(0, nbr_players - 1), players)
+       players: Enum.zip(Range.new(1, nbr_players), players)
                 |> Enum.map(fn({id, n}) -> {id, %Player{id: id, name: n, deck: Range.new(0,14) |> MapSet.new}} end)
                 |> Map.new,
        turn_selection_order: [],

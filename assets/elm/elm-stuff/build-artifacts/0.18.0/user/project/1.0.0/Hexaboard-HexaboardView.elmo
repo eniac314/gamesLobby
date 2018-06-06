@@ -28,18 +28,16 @@ var _user$project$Hexaboard_HexaboardView$endGameView = function (_p0) {
 		_elm_lang$core$List$head(
 			A2(
 				_elm_lang$core$List$map,
-				function (_p2) {
-					var _p3 = _p2;
-					return _p3._0;
+				function (_) {
+					return _.username;
 				},
 				_elm_lang$core$List$reverse(
 					A2(
 						_elm_lang$core$List$sortBy,
-						function (_p4) {
-							var _p5 = _p4;
-							return _p5._2;
+						function (_) {
+							return _.score;
 						},
-						_p1.scores)))));
+						_p1.players)))));
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -76,8 +74,8 @@ var _user$project$Hexaboard_HexaboardView$endGameView = function (_p0) {
 			}
 		});
 };
-var _user$project$Hexaboard_HexaboardView$gameMsgView = function (_p6) {
-	var _p7 = _p6;
+var _user$project$Hexaboard_HexaboardView$gameMsgView = function (_p2) {
+	var _p3 = _p2;
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -146,7 +144,7 @@ var _user$project$Hexaboard_HexaboardView$gameMsgView = function (_p6) {
 								}
 							},
 							_mdgriffith$stylish_elephants$Element$text(
-								_user$project$Hexaboard_HexaboardView$prettyDate(_p7.timeStamp))),
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p3.timeStamp))),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -174,15 +172,15 @@ var _user$project$Hexaboard_HexaboardView$gameMsgView = function (_p6) {
 					},
 					{
 						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$text(_p7.message),
+						_0: _mdgriffith$stylish_elephants$Element$text(_p3.message),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Hexaboard_HexaboardView$serverErrorMsgView = function (_p8) {
-	var _p9 = _p8;
+var _user$project$Hexaboard_HexaboardView$serverErrorMsgView = function (_p4) {
+	var _p5 = _p4;
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -251,7 +249,7 @@ var _user$project$Hexaboard_HexaboardView$serverErrorMsgView = function (_p8) {
 								}
 							},
 							_mdgriffith$stylish_elephants$Element$text(
-								_user$project$Hexaboard_HexaboardView$prettyDate(_p9.timeStamp))),
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p5.timeStamp))),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -279,15 +277,15 @@ var _user$project$Hexaboard_HexaboardView$serverErrorMsgView = function (_p8) {
 					},
 					{
 						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$text(_p9.message),
+						_0: _mdgriffith$stylish_elephants$Element$text(_p5.message),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Hexaboard_HexaboardView$serverComMsgView = function (_p10) {
-	var _p11 = _p10;
+var _user$project$Hexaboard_HexaboardView$serverComMsgView = function (_p6) {
+	var _p7 = _p6;
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -356,7 +354,7 @@ var _user$project$Hexaboard_HexaboardView$serverComMsgView = function (_p10) {
 								}
 							},
 							_mdgriffith$stylish_elephants$Element$text(
-								_user$project$Hexaboard_HexaboardView$prettyDate(_p11.timeStamp))),
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p7.timeStamp))),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -384,15 +382,15 @@ var _user$project$Hexaboard_HexaboardView$serverComMsgView = function (_p10) {
 					},
 					{
 						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$text(_p11.message),
+						_0: _mdgriffith$stylish_elephants$Element$text(_p7.message),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p12) {
-	var _p13 = _p12;
+var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p8) {
+	var _p9 = _p8;
 	return A2(
 		_mdgriffith$stylish_elephants$Element$column,
 		{
@@ -434,7 +432,7 @@ var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p12) {
 								}
 							}
 						},
-						_mdgriffith$stylish_elephants$Element$text(_p13.author.username)),
+						_mdgriffith$stylish_elephants$Element$text(_p9.author.username)),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -457,7 +455,7 @@ var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p12) {
 								}
 							},
 							_mdgriffith$stylish_elephants$Element$text(
-								_user$project$Hexaboard_HexaboardView$prettyDate(_p13.timeStamp))),
+								_user$project$Hexaboard_HexaboardView$prettyDate(_p9.timeStamp))),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -485,7 +483,7 @@ var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p12) {
 					},
 					{
 						ctor: '::',
-						_0: _mdgriffith$stylish_elephants$Element$text(_p13.message),
+						_0: _mdgriffith$stylish_elephants$Element$text(_p9.message),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
@@ -494,16 +492,16 @@ var _user$project$Hexaboard_HexaboardView$chatMsgView = function (_p12) {
 };
 var _user$project$Hexaboard_HexaboardView$consoleLogView = function (model) {
 	var messageView = function (msg) {
-		var _p14 = msg;
-		switch (_p14.ctor) {
+		var _p10 = msg;
+		switch (_p10.ctor) {
 			case 'ChatMsg':
-				return _user$project$Hexaboard_HexaboardView$chatMsgView(_p14._0);
+				return _user$project$Hexaboard_HexaboardView$chatMsgView(_p10._0);
 			case 'ServerComMsg':
-				return _user$project$Hexaboard_HexaboardView$serverComMsgView(_p14._0);
+				return _user$project$Hexaboard_HexaboardView$serverComMsgView(_p10._0);
 			case 'ServerErrorMsg':
-				return _user$project$Hexaboard_HexaboardView$serverErrorMsgView(_p14._0);
+				return _user$project$Hexaboard_HexaboardView$serverErrorMsgView(_p10._0);
 			default:
-				return _user$project$Hexaboard_HexaboardView$gameMsgView(_p14._0);
+				return _user$project$Hexaboard_HexaboardView$gameMsgView(_p10._0);
 		}
 	};
 	return A2(
@@ -660,8 +658,8 @@ var _user$project$Hexaboard_HexaboardView$consoleView = function (model) {
 		});
 };
 var _user$project$Hexaboard_HexaboardView$viewSelection = function (model) {
-	var _p15 = model.gameState;
-	switch (_p15.ctor) {
+	var _p11 = model.gameState;
+	switch (_p11.ctor) {
 		case 'PieceSelection':
 			return A2(
 				_mdgriffith$stylish_elephants$Element$el,
@@ -828,7 +826,7 @@ var _user$project$Hexaboard_HexaboardView$view = function (model) {
 											}
 										}
 									},
-									_mdgriffith$stylish_elephants$Element$text('HEXABOARD')),
+									_mdgriffith$stylish_elephants$Element$text('EADIUNKAL')),
 								_1: {
 									ctor: '::',
 									_0: _user$project$Hexaboard_DeckView$selectedSvg(model),
