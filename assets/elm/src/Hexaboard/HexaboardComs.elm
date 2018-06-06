@@ -3,6 +3,7 @@ module Hexaboard.HexaboardComs exposing (..)
 import Date exposing (..)
 import Dict exposing (..)
 import Hexaboard.HexaboardTypes exposing (..)
+import Hexaboard.Board as Board
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Json.PrettyPrint as PrettyPrint
@@ -144,6 +145,7 @@ decodeBoard =
                 )
                 Dict.empty
             )
+        |> Decode.map (Board.boardWithEdge 6)
 
 
 decodeCell =
